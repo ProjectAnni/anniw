@@ -18,7 +18,7 @@ const DrawerItems: DrawerItem[] = [
 
 export const DrawerIsOpen = atom({
   key: "DrawerIsOpen",
-  default: false,
+  default: true,
 });
 
 function ListItemRoute(

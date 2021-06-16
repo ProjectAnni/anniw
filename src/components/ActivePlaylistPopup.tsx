@@ -40,7 +40,7 @@ export const ActivePlaylistPopup: React.FC<ActivePlaylistPopupProps> = () => {
         className={styles.modal}
       >
         <Slide direction="up" in={expanded} timeout={100}>
-          <Paper elevation={3} square className={styles.body}>
+          <Paper elevation={5} square className={styles.body}>
             <Playlist playlist={playlist} />
           </Paper>
         </Slide>
