@@ -22,7 +22,7 @@ export const DrawerIsOpen = atom({
 });
 
 function ListItemRoute(
-  props: ListItemProps<RouterLink, { to: string; button?: true }>
+  props: ListItemProps<RouterLink, { to: string; button?: true }>,
 ) {
   return <ListItem button component={RouterLink} {...props} />;
 }

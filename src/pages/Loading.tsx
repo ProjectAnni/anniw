@@ -4,8 +4,8 @@ function Loading() {
     width: "100vw",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
-  }}>Loading...</div>
+    justifyContent: "center",
+  }}>Loading...</div>;
 }
 
-export default Loading
+export default Loading;

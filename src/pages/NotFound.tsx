@@ -1,7 +1,7 @@
 import Typography from "@material-ui/core/Typography/Typography";
 import React from "react";
 
-import styles from "./NotFound.module.scss"
+import styles from "./NotFound.module.scss";
 
 function NotFound() {
   return <div className={styles.notFound}>
