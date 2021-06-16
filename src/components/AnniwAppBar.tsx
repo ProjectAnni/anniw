@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -9,10 +9,13 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 
 import { DrawerIsOpen } from "./AnniwDrawer";
+import { SiteCanRegister, SiteInfoState } from "../api";
 import styles from "./AnniwAppBar.module.scss";
 
 export const AnniwAppBar: React.FC<{}> = () => {
-  const [, setOpen] = useRecoilState(DrawerIsOpen);
+  const setOpen = useSetRecoilState(DrawerIsOpen);
+  const info = useRecoilValue(SiteInfoState);
+  const canRegister = useRecoilValue(SiteCanRegister);
 
   return (
     <AppBar position="relative" className={styles.appBar}>
@@ -26,11 +29,10 @@ export const AnniwAppBar: React.FC<{}> = () => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" className={styles.title}>
-          {/* Website title */}
-          Anniw
+          {info.site_name}
         </Typography>
         <Button color="inherit">Login</Button>
-        <Button color="inherit">Register</Button>
+        {canRegister && <Button color="inherit">Register</Button>}
       </Toolbar>
     </AppBar>
   );

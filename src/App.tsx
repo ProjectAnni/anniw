@@ -7,12 +7,13 @@ import { StylesProvider } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 
+import styles from "./App.module.scss";
 import { AnniwAppBar } from "./components/AnniwAppBar";
 import { AnniwDrawer, DrawerIsOpen } from "./components/AnniwDrawer";
 import { PlayerController } from "./components/PlayerController";
 import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
-import styles from "./App.module.scss";
 import NotFound from "./pages/NotFound";
+import Loading from "./pages/Loading";
 
 function AppBody() {
   const open = useRecoilValue(DrawerIsOpen);
@@ -47,9 +48,11 @@ function App() {
     <RecoilRoot>
       <Router>
         <StylesProvider injectFirst>
-          <AnniwAppBar />
-          <AnniwDrawer />
-          <AppBody />
+          <React.Suspense fallback={<Loading />}>
+            <AnniwAppBar />
+            <AnniwDrawer />
+            <AppBody />
+          </React.Suspense>
         </StylesProvider>
       </Router>
     </RecoilRoot>
