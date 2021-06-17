@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import styles from "./AnniwAppBar.module.scss";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -19,7 +18,9 @@ export const AnniwAppBar: React.FC<{}> = () => {
   const canRegister = useRecoilValue(SiteCanRegister);
 
   return (
-    <AppBar position="relative" className={styles.appBar}>
+    <AppBar position="relative" sx={{
+      zIndex: (theme) => theme.zIndex.drawer + 1,
+    }}>
       <Toolbar>
         <IconButton
           edge="start"
@@ -28,7 +29,7 @@ export const AnniwAppBar: React.FC<{}> = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" className={styles.title}>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
           {info.site_name}
         </Typography>
         <Button color="inherit" component={Link} to="/user/login">Login</Button>

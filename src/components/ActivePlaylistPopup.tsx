@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { atom, useRecoilValue } from "recoil";
-import styles from "./ActivePlaylistPopup.module.scss";
 
 import Modal from "@material-ui/core/Modal";
 import IconButton from "@material-ui/core/IconButton";
@@ -37,10 +36,19 @@ export const ActivePlaylistPopup: React.FC<ActivePlaylistPopupProps> = () => {
         BackdropProps={{ open: false }}
         onClose={() => setExpanded((expanded) => !expanded)}
         disableEscapeKeyDown
-        className={styles.modal}
+        style={{
+          top: "auto",
+          left: "auto",
+          right: 0,
+          bottom: 64,
+          width: 0.3,
+          height: 0.5,
+          outline: 0,
+          zIndex: -1,
+        }}
       >
         <Slide direction="up" in={expanded} timeout={100}>
-          <Paper elevation={5} square className={styles.body}>
+          <Paper elevation={5} square style={{ height: 1 }}>
             <Playlist playlist={playlist} />
           </Paper>
         </Slide>

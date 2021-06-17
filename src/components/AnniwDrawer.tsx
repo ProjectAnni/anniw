@@ -9,8 +9,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Home from "@material-ui/icons/Home";
 import LocalLibrary from "@material-ui/icons/LocalLibrary";
-import styles from "./AnniwDrawer.module.scss";
+import Toolbar from "@material-ui/core/Toolbar";
 
+const drawerWidth = 240;
 const DrawerItems: DrawerItem[] = [
   { text: "Home", icon: <Home />, route: "/" },
   { text: "Library", icon: <LocalLibrary />, route: "/library" },
@@ -30,8 +31,19 @@ function ListItemRoute(
 export const AnniwDrawer: React.FC<{}> = () => {
   const open = useRecoilValue(DrawerIsOpen);
   return (
-    <Drawer variant="persistent" anchor="left" open={open}>
-      <div className={styles.drawerBody}>
+    <Drawer
+      variant="persistent"
+      anchor="left"
+      open={open}
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+      }}
+    >
+      {/* Placeholder Toolbar for the space of AppBar*/}
+      <Toolbar />
+      <div>
         <List component="nav" style={{ padding: 0 }}>
           {DrawerItems.map((item) => (
             <ListItemRoute key={item.text} to={item.route}>
