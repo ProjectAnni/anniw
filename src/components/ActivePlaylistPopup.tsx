@@ -36,7 +36,7 @@ export const ActivePlaylistPopup: React.FC<ActivePlaylistPopupProps> = () => {
         BackdropProps={{ open: false }}
         onClose={() => setExpanded((expanded) => !expanded)}
         disableEscapeKeyDown
-        style={{
+        sx={{
           top: "auto",
           left: "auto",
           right: 0,
@@ -48,7 +48,7 @@ export const ActivePlaylistPopup: React.FC<ActivePlaylistPopupProps> = () => {
         }}
       >
         <Slide direction="up" in={expanded} timeout={100}>
-          <Paper elevation={5} square style={{ height: 1 }}>
+          <Paper elevation={5} square sx={{ height: 1 }}>
             <Playlist playlist={playlist} />
           </Paper>
         </Slide>

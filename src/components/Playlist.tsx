@@ -22,13 +22,10 @@ function PlaylistItem({ item, index, control, button }: PlaylistItemProps) {
   };
 
   return (
-    <ListItem
-      key={`${item.catalog}/${item.track}/${index}`}
-      button={
-        // https://github.com/mui-org/material-ui/issues/14971#issuecomment-675588395
-        button as any
-      }
-    >
+    <ListItem button={
+      // https://github.com/mui-org/material-ui/issues/14971#issuecomment-675588395
+      button as any
+    }>
       {
         // Render index when provided
         index !== undefined && (
@@ -82,6 +79,7 @@ export const Playlist: React.FC<PlaylistProps> = ({
     <List>
       {playlist.map((music, index) => (
         <PlaylistItem
+          key={`${index}. ${music.catalog}/${music.track}`}
           item={music}
           index={showIndex ? index + 1 : undefined}
           control={control}
