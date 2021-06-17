@@ -9,10 +9,10 @@ export const SiteInfoState = atom<SiteInfo>({
       return Promise.resolve({} as SiteInfo);
     } else {
       return {
-        site_name: "Yesterday17's Anniw Server",
+        site_name: "Yesterday17's Anni Server",
         description: "Welcome!!",
         protocol_version: "1",
-        features: [],
+        features: ["2fa"],
       };
     }
   })(),
