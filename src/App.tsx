@@ -14,6 +14,7 @@ import { PlayerController } from "./components/PlayerController";
 import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
+import Login from "./pages/Login";
 
 function AppBody() {
   const open = useRecoilValue(DrawerIsOpen);
@@ -28,13 +29,16 @@ function AppBody() {
         <Route path="/" exact>
           Home
         </Route>
+        <Route path="/user/login" exact>
+          <Login />
+        </Route>
         <Route path="*">
           <NotFound />
         </Route>
       </Switch>
       <AppBar position="relative" color="primary" component="div">
         <Toolbar>
-          <div className={styles.grow} />
+          <div className="grow" />
           <PlayerController />
           <ActivePlaylistPopup />
         </Toolbar>
