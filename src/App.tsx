@@ -22,6 +22,7 @@ function AppBody() {
       <Container style={{
         transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
         width: open ? "240px" : 0,
+        minWidth: open ? "240px" : 0,
         padding: 0,
         margin: 0,
       }} />

@@ -1,21 +1,10 @@
 import { atom, selector } from "recoil";
 import { FEATURE_2FA, FEATURE_CLOSE, FEATURE_INVITE } from "./features";
+import { handleResponseBody } from "./request";
 
 export const SiteInfoState = atom<SiteInfo>({
   key: "SiteInfoState",
-  default: (async (): Promise<SiteInfo> => {
-    if (process.env.NODE_ENV === "production") {
-      // TODO: fetch from Anniv server
-      return Promise.resolve({} as SiteInfo);
-    } else {
-      return {
-        site_name: "Yesterday17's Anni Server",
-        description: "Welcome!!",
-        protocol_version: "1",
-        features: ["2fa"],
-      };
-    }
-  })(),
+  default: fetch("/api/info").then(res => handleResponseBody(res)),
 });
 
 export const SiteCanRegister = selector({
