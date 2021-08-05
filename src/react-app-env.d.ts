@@ -1,4 +1,6 @@
-/// <reference types="react-scripts" />
+interface Id {
+  id: string
+}
 
 interface MusicIndex {
   catalog: string;
