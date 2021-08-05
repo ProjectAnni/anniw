@@ -12,15 +12,15 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { DrawerIsOpen } from "./AnniwDrawer";
 import { SiteCanRegister, SiteInfoState } from "../api";
 
-export const AnniwAppBar: React.FC<{}> = () => {
+export const AnniwAppBar: React.FC = () => {
   const setOpen = useSetRecoilState(DrawerIsOpen);
   const info = useRecoilValue(SiteInfoState);
   const canRegister = useRecoilValue(SiteCanRegister);
 
+  document.title = `${info.site_name} | ${info.description}`;
+
   return (
-    <AppBar position="relative" sx={{
-      zIndex: (theme) => theme.zIndex.drawer + 1,
-    }}>
+    <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
         <IconButton
           edge="start"

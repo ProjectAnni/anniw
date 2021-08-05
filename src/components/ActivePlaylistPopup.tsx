@@ -13,10 +13,7 @@ import { Playlist } from "./Playlist";
 
 const ActivePlaylistState = atom<MusicIndex[]>({
   key: "ActivePlaylistState",
-  default: [
-    { catalog: "TEST-001", track: 1 },
-    { catalog: "TEST-001", track: 2 },
-  ] as MusicIndex[],
+  default: (() => JSON.parse(localStorage.getItem("playlist_active") || "[]"))(),
 });
 
 export const ActivePlaylistPopup: React.FC<ActivePlaylistPopupProps> = () => {
