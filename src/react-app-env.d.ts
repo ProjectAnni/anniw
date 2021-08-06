@@ -13,3 +13,10 @@ interface SiteInfo {
   protocol_version: string,
   features: string[]
 }
+
+interface AnnilToken {
+  name: string,
+  url: string,
+  token: string,
+  priority: number,
+}
