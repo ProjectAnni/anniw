@@ -13,28 +13,26 @@ import { DrawerIsOpen } from "./AnniwDrawer";
 import { SiteCanRegister, SiteInfoState } from "../api";
 
 export const AnniwAppBar: React.FC = () => {
-  const setOpen = useSetRecoilState(DrawerIsOpen);
-  const info = useRecoilValue(SiteInfoState);
-  const canRegister = useRecoilValue(SiteCanRegister);
+    const setOpen = useSetRecoilState(DrawerIsOpen);
+    const info = useRecoilValue(SiteInfoState);
+    const canRegister = useRecoilValue(SiteCanRegister);
 
-  document.title = `${info.site_name} | ${info.description}`;
+    document.title = `${info.site_name} | ${info.description}`;
 
-  return (
-    <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          onClick={() => setOpen((open) => !open)}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" style={{ flexGrow: 1 }}>
-          {info.site_name}
-        </Typography>
-        <Button color="inherit" component={Link} to="/user/login">Login</Button>
-        {canRegister && <Button color="inherit">Register</Button>}
-      </Toolbar>
-    </AppBar>
-  );
+    return (
+        <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <Toolbar>
+                <IconButton edge="start" color="inherit" onClick={() => setOpen((open) => !open)}>
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" style={{ flexGrow: 1 }}>
+                    {info.site_name}
+                </Typography>
+                <Button color="inherit" component={Link} to="/user/login">
+                    Login
+                </Button>
+                {canRegister && <Button color="inherit">Register</Button>}
+            </Toolbar>
+        </AppBar>
+    );
 };

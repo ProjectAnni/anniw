@@ -1,22 +1,22 @@
 interface Id {
-  id: string
+    id: string;
 }
 
 interface MusicIndex {
-  catalog: string;
-  track: number;
+    catalog: string;
+    track: number;
 }
 
 interface SiteInfo {
-  site_name: string,
-  description: string,
-  protocol_version: string,
-  features: string[]
+    site_name: string;
+    description: string;
+    protocol_version: string;
+    features: string[];
 }
 
 interface AnnilToken {
-  name: string,
-  url: string,
-  token: string,
-  priority: number,
+    name: string;
+    url: string;
+    token: string;
+    priority: number;
 }
