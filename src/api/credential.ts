@@ -1,7 +1,8 @@
 import { atom } from "recoil";
-import { handleResponseBody } from "./request";
+import { AnnilToken } from "../types/common";
+import request from "./request";
 
 export const AnnilCredentials = atom<AnnilToken[]>({
     key: "AnnilCredentials",
-    default: fetch("/api/credential").then((res) => handleResponseBody(res)),
+    default: request.get("/api/credential"),
 });

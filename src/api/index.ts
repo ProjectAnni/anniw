@@ -1,10 +1,11 @@
 import { atom, selector } from "recoil";
+import { SiteInfo } from "../types/common";
 import { FEATURE_2FA, FEATURE_CLOSE, FEATURE_INVITE } from "./features";
-import { handleResponseBody } from "./request";
+import request from "./request";
 
 export const SiteInfoState = atom<SiteInfo>({
     key: "SiteInfoState",
-    default: fetch("/api/info").then((res) => handleResponseBody(res)),
+    default: request.get("/api/info"),
 });
 
 export const SiteCanRegister = selector({

@@ -1,10 +1,7 @@
 import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
-
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-
+import { Container, AppBar, Toolbar, CssBaseline } from "@material-ui/core";
 import { AnniwAppBar } from "./components/AnniwAppBar";
 import { AnniwDrawer, DrawerIsOpen } from "./components/AnniwDrawer";
 import { PlayerController } from "./components/PlayerController";
@@ -12,8 +9,7 @@ import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import Login from "./pages/Login";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { Container } from "@material-ui/core";
+import "./index.scss";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
@@ -28,7 +24,7 @@ function AppBody() {
                     margin: 0,
                 }}
             />
-            <Container component="main" style={{ padding: 0 }}>
+            <Container component="main" className="main-container">
                 <Switch>
                     <Route path="/" exact>
                         Home

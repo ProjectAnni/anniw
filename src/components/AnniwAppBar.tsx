@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -14,10 +14,12 @@ import { SiteCanRegister, SiteInfoState } from "../api";
 
 export const AnniwAppBar: React.FC = () => {
     const setOpen = useSetRecoilState(DrawerIsOpen);
-    const info = useRecoilValue(SiteInfoState);
+    const { siteName, description } = useRecoilValue(SiteInfoState);
     const canRegister = useRecoilValue(SiteCanRegister);
 
-    document.title = `${info.site_name} | ${info.description}`;
+    useEffect(() => {
+        document.title = `${siteName} | ${description}`;
+    }, [siteName, description]);
 
     return (
         <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
@@ -26,7 +28,7 @@ export const AnniwAppBar: React.FC = () => {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" style={{ flexGrow: 1 }}>
-                    {info.site_name}
+                    {siteName}
                 </Typography>
                 <Button color="inherit" component={Link} to="/user/login">
                     Login
