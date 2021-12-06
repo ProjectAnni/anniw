@@ -2,13 +2,16 @@ import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { Container, AppBar, Toolbar, CssBaseline } from "@material-ui/core";
-import { AnniwAppBar } from "./components/AnniwAppBar";
-import { AnniwDrawer, DrawerIsOpen } from "./components/AnniwDrawer";
+import { AnniwAppBar } from "./components/AppBar";
+import { AnniwDrawer } from "./components/AnniwDrawer";
 import { PlayerController } from "./components/PlayerController";
 import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
+import ErrorBoundary from "./components/ErrorBoundary";
+import GlobalErrorMessage from "./components/GlobalErrorMessage";
 import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import Login from "./pages/Login";
+import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
 function AppBody() {
@@ -61,16 +64,23 @@ function AppBody() {
 function App() {
     return (
         <RecoilRoot>
-            <Router>
-                <React.Suspense fallback={<Loading />}>
-                    <CssBaseline />
-                    <AnniwAppBar />
-                    <>
-                        <AnniwDrawer />
-                        <AppBody />
-                    </>
-                </React.Suspense>
-            </Router>
+            <>
+                <Router>
+                    <React.Suspense fallback={<Loading />}>
+                        <CssBaseline />
+                        <ErrorBoundary>
+                            <AnniwAppBar />
+                        </ErrorBoundary>
+                        <ErrorBoundary>
+                            <AnniwDrawer />
+                        </ErrorBoundary>
+                        <ErrorBoundary>
+                            <AppBody />
+                        </ErrorBoundary>
+                    </React.Suspense>
+                </Router>
+                <GlobalErrorMessage />
+            </>
         </RecoilRoot>
     );
 }

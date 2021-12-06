@@ -12,6 +12,7 @@ import LocalLibrary from "@material-ui/icons/LocalLibrary";
 import Toolbar from "@material-ui/core/Toolbar";
 import Collapse from "@material-ui/core/Collapse";
 import PlaylistPlay from "@material-ui/icons/PlaylistPlay";
+import { DrawerIsOpen } from "../state/ui";
 
 const drawerWidth = 240;
 const DrawerItems: DrawerItem[] = [
@@ -23,11 +24,6 @@ const DrawerItems: DrawerItem[] = [
         route: [],
     },
 ];
-
-export const DrawerIsOpen = atom({
-    key: "DrawerIsOpen",
-    default: true,
-});
 
 function ListItemRoute(props: ListItemProps<RouterLink, { to?: string; button?: true }>) {
     return <ListItem button component={RouterLink} {...props} />;

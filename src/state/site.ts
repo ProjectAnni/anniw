@@ -1,11 +1,15 @@
 import { atom, selector } from "recoil";
+import { SiteFeatures } from "../constants/site";
 import { SiteInfo } from "../types/common";
-import { FEATURE_2FA, FEATURE_CLOSE, FEATURE_INVITE } from "./features";
-import request from "./request";
 
 export const SiteInfoState = atom<SiteInfo>({
     key: "SiteInfoState",
-    default: request.get("/api/info"),
+    default: {
+        siteName: "",
+        description: "",
+        features: [],
+        protocolVersion: "1",
+    },
 });
 
 export const SiteCanRegister = selector({
@@ -13,7 +17,7 @@ export const SiteCanRegister = selector({
     get: ({ get }) => {
         const { features } = get(SiteInfoState);
         // not close, or close but allow invite(invite overrides close)
-        return !features.includes(FEATURE_CLOSE) || features.includes(FEATURE_INVITE);
+        return !features.includes(SiteFeatures.CLOSE) || features.includes(SiteFeatures.INVITE);
     },
 });
 
@@ -21,6 +25,6 @@ export const SiteEnabled2FA = selector({
     key: "SiteEnabled2FA",
     get: ({ get }) => {
         const { features } = get(SiteInfoState);
-        return features.includes(FEATURE_2FA);
+        return features.includes(SiteFeatures.TWO_FACTOR_AUTH);
     },
 });
