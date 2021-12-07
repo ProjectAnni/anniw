@@ -20,3 +20,11 @@ export interface AnnilToken {
     token: string;
     priority: number;
 }
+
+export interface UserInfo {
+    userId: string;
+    username: string;
+    email: string;
+    nickname: string;
+    avatar: string;
+}

@@ -1,13 +1,32 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
-import { Button, TextField, Typography, Grid, Box } from "@material-ui/core";
-import { SiteEnabled2FA } from "../../state/site";
+import { useSetRecoilState } from "recoil";
+import {  Grid } from "@material-ui/core";
+import { CurrentUserInfo } from "../../state/user";
+import { ErrorState } from "../../state/error";
+import { login } from "./services";
 import LoginForm from "./LoginForm";
 import "./index.scss";
 
-function Login() {
-    const enabled2fa = useRecoilValue(SiteEnabled2FA);
 
+function Login() {
+    const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
+    const setErrorState = useSetRecoilState(ErrorState);
+    const handleLogin = async (email: string, password: string) => {
+        try {
+            const userInfo = await login({
+                email,
+                password,
+            });
+            setCurrentUserInfo(userInfo);
+        } catch (e) {
+            if (e instanceof Error) {
+                setErrorState({
+                    message: e.message,
+                    hasError: true,
+                });
+            }
+        }
+    };
     return (
         <Grid
             container
@@ -17,7 +36,7 @@ function Login() {
             component="div"
             className="login-form-container"
         >
-            <LoginForm />
+            <LoginForm handleLogin={handleLogin} />
         </Grid>
     );
 }

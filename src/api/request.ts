@@ -76,7 +76,7 @@ class Request {
         if (e.request.status) {
             return new AnniwRequestError(`网络错误: ${e.request.status} ${e.request.statusText}`);
         }
-        return new AnniwRequestError("未知错误");
+        return new AnniwRequestError("未知网络错误");
     }
 }
 
