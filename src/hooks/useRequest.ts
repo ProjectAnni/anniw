@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import { useSetRecoilState } from "recoil";
-import { ErrorState } from "../state/error";
+import useMessage from "./useMessage";
 
 const useRequest = <T>(queryFunction: () => Promise<T>): [T | undefined, boolean] => {
     const [response, setResponse] = useState<T>();
     const [isLoading, setIsLoading] = useState(false);
-    const setErrorState = useSetRecoilState(ErrorState);
+    const [_, { addMessage }] = useMessage();
     const queryFunctionRef = useRef(queryFunction);
     useEffect(() => {
         setIsLoading(true);
@@ -15,10 +14,7 @@ const useRequest = <T>(queryFunction: () => Promise<T>): [T | undefined, boolean
                 setResponse(data);
             })
             .catch((e) => {
-                setErrorState({
-                    hasError: true,
-                    message: e.message,
-                });
+                addMessage("error", e.message);
             })
             .finally(() => {
                 setIsLoading(false);

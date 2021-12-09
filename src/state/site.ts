@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
-import { SiteFeatures } from "../constants/site";
-import { SiteInfo } from "../types/common";
+import { SiteFeatures } from "@/constants/site";
+import { SiteInfo } from "@/types/common";
 
 export const SiteInfoState = atom<SiteInfo>({
     key: "SiteInfoState",

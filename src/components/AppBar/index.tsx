@@ -34,13 +34,17 @@ export const AnniwAppBar: React.FC = () => {
                 <IconButton edge="start" color="inherit" onClick={() => setOpen((open) => !open)}>
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" style={{ flexGrow: 1 }}>
+                <Typography variant="h6" flexGrow={1}>
                     {siteName}
                 </Typography>
                 <Button color="inherit" component={Link} to="/user/login">
                     Login
                 </Button>
-                {canRegister && <Button color="inherit">Register</Button>}
+                {canRegister && (
+                    <Button color="inherit" component={Link} to="/user/register">
+                        Register
+                    </Button>
+                )}
             </Toolbar>
         </AppBar>
     );

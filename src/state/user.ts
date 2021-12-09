@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil";
-import { UserInfo } from "../types/common";
+import { UserInfo } from "@/types/common";
 
 export const CurrentUserInfo = atom<UserInfo | null>({
     key: "CurrentUserInfo",

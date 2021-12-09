@@ -1,10 +1,9 @@
 import React from "react";
-import {  Grid } from "@material-ui/core";
-import LoginForm from "./LoginForm";
-import "./index.scss";
+import { Grid } from "@material-ui/core";
+import RegisterForm from "./RegisterForm";
+import './index.scss';
 
-
-function Login() {
+const Register = () => {
     return (
         <Grid
             container
@@ -12,11 +11,11 @@ function Login() {
             justifyContent="center"
             alignItems="center"
             component="div"
-            className="login-form-container"
+            className="register-form-container"
         >
-            <LoginForm />
+            <RegisterForm />
         </Grid>
     );
-}
+};
 
-export default Login;
+export default Register;

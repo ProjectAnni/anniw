@@ -1,33 +1,47 @@
 import React, { useState } from "react";
-import { useSetRecoilState } from "recoil";
 import { useHistory } from "react-router";
-import { TextField, Grid } from "@material-ui/core";
+import { useSetRecoilState } from "recoil";
+import { Grid, TextField } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { CurrentUserInfo } from "@/state/user";
-import { login } from "./services";
-import "./index.scss";
+import { register } from "../Login/services";
 
-const LoginForm: React.FC = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+const RegisterForm: React.FC = () => {
+    const [nickname, setNickname] = useState("");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [repeatPassword, setRepeatPassword] = React.useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
     const history = useHistory();
     const [_, { addMessage }] = useMessage();
+    const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!email || !password) {
-            addMessage("error", "Email/密码不能为空");
+        if (!password || !repeatPassword) {
+            addMessage("error", "密码不能为空");
+            return;
+        }
+        if (!nickname) {
+            addMessage("error", "昵称不能为空");
+            return;
+        }
+        if (!email) {
+            addMessage("error", "Email不能为空");
+            return;
+        }
+        if (password !== repeatPassword) {
+            addMessage("error", "两次输入的密码不一致");
             return;
         }
         setIsLoading(true);
         try {
-            const userInfo = await login({
+            const newUserInfo = await register({
+                nickname,
                 email,
                 password,
             });
-            setCurrentUserInfo(userInfo);
+            setCurrentUserInfo(newUserInfo);
             history.push("/");
         } catch (e) {
             if (e instanceof Error) {
@@ -50,6 +64,16 @@ const LoginForm: React.FC = () => {
         >
             <TextField
                 variant="outlined"
+                label="Nickname"
+                name="nickname"
+                fullWidth
+                onChange={(e) => {
+                    setNickname(e.target.value);
+                }}
+            ></TextField>
+            <br />
+            <TextField
+                variant="outlined"
                 label="Email"
                 name="email"
                 fullWidth
@@ -69,6 +93,17 @@ const LoginForm: React.FC = () => {
                 }}
             ></TextField>
             <br />
+            <TextField
+                variant="outlined"
+                label="Repeat Password"
+                name="repeatPassword"
+                type="password"
+                fullWidth
+                onChange={(e) => {
+                    setRepeatPassword(e.target.value);
+                }}
+            ></TextField>
+            <br />
             <LoadingButton
                 color="primary"
                 variant="contained"
@@ -78,10 +113,10 @@ const LoginForm: React.FC = () => {
                 type="submit"
                 loading={isLoading}
             >
-                Login
+                Register
             </LoadingButton>
         </Grid>
     );
 };
 
-export default LoginForm;
+export default RegisterForm;

@@ -7,10 +7,11 @@ import { AnniwDrawer } from "./components/AnniwDrawer";
 import { PlayerController } from "./components/PlayerController";
 import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import ErrorBoundary from "./components/ErrorBoundary";
-import GlobalErrorMessage from "./components/GlobalErrorMessage";
+import GlobalMessage from "./components/GlobalMessage";
 import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
@@ -34,6 +35,9 @@ function AppBody() {
                     </Route>
                     <Route path="/user/login" exact>
                         <Login />
+                    </Route>
+                    <Route path="/user/register" exact>
+                        <Register />
                     </Route>
                     <Route path="*">
                         <NotFound />
@@ -79,7 +83,7 @@ function App() {
                         </ErrorBoundary>
                     </React.Suspense>
                 </Router>
-                <GlobalErrorMessage />
+                <GlobalMessage />
             </>
         </RecoilRoot>
     );

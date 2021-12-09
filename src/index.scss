@@ -17,4 +17,6 @@ code {
 .main-container {
     height: calc(100vh - 128px);
     padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
