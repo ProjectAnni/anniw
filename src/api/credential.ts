@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { AnnilToken } from "../types/common";
+import { AnnilToken } from "@/types/common";
 import request from "./request";
 
 export const AnnilCredentials = atom<AnnilToken[]>({
