@@ -12,47 +12,43 @@ import Slide from "@material-ui/core/Slide";
 import { Playlist } from "./Playlist";
 
 const ActivePlaylistState = atom<MusicIndex[]>({
-  key: "ActivePlaylistState",
-  default: (() => JSON.parse(localStorage.getItem("playlist_active") || "[]"))(),
+    key: "ActivePlaylistState",
+    default: (() => JSON.parse(localStorage.getItem("playlist_active") || "[]"))(),
 });
 
 export const ActivePlaylistPopup: React.FC<ActivePlaylistPopupProps> = () => {
-  const playlist = useRecoilValue(ActivePlaylistState);
-  const [expanded, setExpanded] = useState(false);
+    const playlist = useRecoilValue(ActivePlaylistState);
+    const [expanded, setExpanded] = useState(false);
 
-  return (
-    <>
-      <IconButton
-        color="inherit"
-        onClick={() => setExpanded((expanded) => !expanded)}
-      >
-        {expanded ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-      </IconButton>
-      <Modal
-        open={expanded}
-        BackdropProps={{ open: false }}
-        onClose={() => setExpanded((expanded) => !expanded)}
-        disableEscapeKeyDown
-        sx={{
-          top: "auto",
-          left: "auto",
-          right: 0,
-          bottom: 64,
-          width: 0.3,
-          height: 0.5,
-          outline: 0,
-          zIndex: -1,
-        }}
-      >
-        <Slide direction="up" in={expanded} timeout={100}>
-          <Paper elevation={5} square sx={{ height: 1 }}>
-            <Playlist playlist={playlist} />
-          </Paper>
-        </Slide>
-      </Modal>
-    </>
-  );
+    return (
+        <>
+            <IconButton color="inherit" onClick={() => setExpanded((expanded) => !expanded)}>
+                {expanded ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+            </IconButton>
+            <Modal
+                open={expanded}
+                BackdropProps={{ open: false }}
+                onClose={() => setExpanded((expanded) => !expanded)}
+                disableEscapeKeyDown
+                sx={{
+                    top: "auto",
+                    left: "auto",
+                    right: 0,
+                    bottom: 64,
+                    width: 0.3,
+                    height: 0.5,
+                    outline: 0,
+                    zIndex: -1,
+                }}
+            >
+                <Slide direction="up" in={expanded} timeout={100}>
+                    <Paper elevation={5} square sx={{ height: 1 }}>
+                        <Playlist playlist={playlist} />
+                    </Paper>
+                </Slide>
+            </Modal>
+        </>
+    );
 };
 
-export interface ActivePlaylistPopupProps {
-}
+export interface ActivePlaylistPopupProps {}

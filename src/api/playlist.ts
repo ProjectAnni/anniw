@@ -1,20 +1,21 @@
 import { selectorFamily } from "recoil";
-import { handleResponseBody } from "./request";
+import { Indexable, MusicIndex } from "../types/common";
+import request from "./request";
 
 export interface Playlist {
-  id: string,
-  name: string,
-  description: string,
-  owner: string,
-  is_public: boolean,
-  songs: (PlaylistSong & Id)[]
+    id: string;
+    name: string;
+    description: string;
+    owner: string;
+    is_public: boolean;
+    songs: PlaylistSong[];
 }
 
-export type PlaylistSong = MusicIndex & {
-  description: string
+export interface PlaylistSong extends MusicIndex, Indexable {
+    description: string;
 }
 
 export const playlistQuery = selectorFamily<Playlist, string>({
-  key: "Playlist",
-  get: (id) => async (): Promise<Playlist> => fetch(`/api/playlist?id=${id}`).then(res => handleResponseBody(res)),
+    key: "Playlist",
+    get: (id) => async (): Promise<Playlist> => request.get<Playlist>(`/api/playlist`, { id }),
 });

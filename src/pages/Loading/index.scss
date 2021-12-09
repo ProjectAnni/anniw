@@ -1,0 +1,5 @@
+@import '../../styles/_mixin';
+
+.loading-container {
+    @include center();
+}
