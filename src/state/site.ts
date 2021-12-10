@@ -21,6 +21,14 @@ export const SiteCanRegister = selector({
     },
 });
 
+export const SiteNeedInvitation = selector({
+    key: "SiteNeedInvitation",
+    get: ({ get }) => {
+        const { features } = get(SiteInfoState);
+        return features.includes(SiteFeatures.INVITE);
+    },
+});
+
 export const SiteEnabled2FA = selector({
     key: "SiteEnabled2FA",
     get: ({ get }) => {

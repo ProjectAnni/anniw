@@ -1,4 +1,4 @@
-import { camelCase } from "lodash";
+import { camelCase, snakeCase } from "lodash";
 
 export function formatResponse(response: any): any {
     const result: Record<string, unknown> = {};
@@ -7,6 +7,18 @@ export function formatResponse(response: any): any {
             result[camelCase(key)] = formatResponse(response[key]);
         } else {
             result[camelCase(key)] = response[key];
+        }
+    }
+    return result;
+}
+
+export function formatRequest(request: any): any {
+    const result: Record<string, unknown> = {};
+    for (const key of Object.keys(request)) {
+        if (typeof request[key] === "object" && !Array.isArray(request[key])) {
+            result[snakeCase(key)] = formatRequest(request[key]);
+        } else {
+            result[snakeCase(key)] = request[key];
         }
     }
     return result;

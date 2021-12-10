@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from "axios";
-import { formatResponse } from "../utils/format";
+import { formatRequest, formatResponse } from "../utils/format";
 
 export class AnniwRequestError extends Error {}
 
@@ -33,10 +33,10 @@ class Request {
             data: {},
         };
         if (method === "GET") {
-            options.params = payload;
+            options.params = formatRequest(payload);
         }
         if (method === "POST") {
-            options.data = payload;
+            options.data = formatRequest(payload);
         }
         return new Promise(async (resolve, reject) => {
             try {

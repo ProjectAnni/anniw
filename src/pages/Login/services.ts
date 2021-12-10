@@ -18,12 +18,14 @@ interface RegisterParams {
     email: string;
     password: string;
     nickname: string;
+    inviteCode?: string;
 }
 
-export async function register({ email, password, nickname }: RegisterParams) {
+export async function register({ email, password, nickname, inviteCode }: RegisterParams) {
     return request.post<UserInfo>("/api/user/register", {
         email,
         password: await sha256(password),
         nickname,
+        ...(inviteCode ? { inviteCode } : {}),
     });
 }

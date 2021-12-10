@@ -38,11 +38,11 @@ export const AnniwAppBar: React.FC = () => {
                     {siteName}
                 </Typography>
                 <Button color="inherit" component={Link} to="/user/login">
-                    Login
+                    登录
                 </Button>
                 {canRegister && (
                     <Button color="inherit" component={Link} to="/user/register">
-                        Register
+                        注册
                     </Button>
                 )}
             </Toolbar>

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Grid, TextField } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { CurrentUserInfo } from "@/state/user";
+import { SiteNeedInvitation } from "@/state/site";
 import { register } from "../Login/services";
 
 const RegisterForm: React.FC = () => {
@@ -12,10 +13,12 @@ const RegisterForm: React.FC = () => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [repeatPassword, setRepeatPassword] = React.useState("");
+    const [inviteCode, setInviteCode] = React.useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
+    const needInvitation = useRecoilValue(SiteNeedInvitation);
     const history = useHistory();
     const [_, { addMessage }] = useMessage();
-    const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!password || !repeatPassword) {
@@ -34,12 +37,17 @@ const RegisterForm: React.FC = () => {
             addMessage("error", "两次输入的密码不一致");
             return;
         }
+        if (needInvitation && !inviteCode) {
+            addMessage("error", "邀请码不能为空");
+            return;
+        }
         setIsLoading(true);
         try {
             const newUserInfo = await register({
                 nickname,
                 email,
                 password,
+                inviteCode,
             });
             setCurrentUserInfo(newUserInfo);
             history.push("/");
@@ -64,9 +72,10 @@ const RegisterForm: React.FC = () => {
         >
             <TextField
                 variant="outlined"
-                label="Nickname"
+                label="昵称"
                 name="nickname"
                 fullWidth
+                required
                 onChange={(e) => {
                     setNickname(e.target.value);
                 }}
@@ -77,6 +86,7 @@ const RegisterForm: React.FC = () => {
                 label="Email"
                 name="email"
                 fullWidth
+                required
                 onChange={(e) => {
                     setEmail(e.target.value);
                 }}
@@ -84,10 +94,11 @@ const RegisterForm: React.FC = () => {
             <br />
             <TextField
                 variant="outlined"
-                label="Password"
+                label="密码"
                 name="password"
                 type="password"
                 fullWidth
+                required
                 onChange={(e) => {
                     setPassword(e.target.value);
                 }}
@@ -95,15 +106,31 @@ const RegisterForm: React.FC = () => {
             <br />
             <TextField
                 variant="outlined"
-                label="Repeat Password"
+                label="重复密码"
                 name="repeatPassword"
                 type="password"
                 fullWidth
+                required
                 onChange={(e) => {
                     setRepeatPassword(e.target.value);
                 }}
             ></TextField>
             <br />
+            {needInvitation && (
+                <>
+                    <TextField
+                        variant="outlined"
+                        label="邀请码"
+                        name="inviteCode"
+                        fullWidth
+                        required
+                        onChange={(e) => {
+                            setInviteCode(e.target.value);
+                        }}
+                    ></TextField>
+                    <br />
+                </>
+            )}
             <LoadingButton
                 color="primary"
                 variant="contained"
@@ -113,7 +140,7 @@ const RegisterForm: React.FC = () => {
                 type="submit"
                 loading={isLoading}
             >
-                Register
+                注册
             </LoadingButton>
         </Grid>
     );

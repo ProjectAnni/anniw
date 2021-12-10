@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useHistory } from "react-router";
 import { TextField, Grid } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
@@ -52,6 +52,7 @@ const LoginForm: React.FC = () => {
                 variant="outlined"
                 label="Email"
                 name="email"
+                required
                 fullWidth
                 onChange={(e) => {
                     setEmail(e.target.value);
@@ -60,10 +61,11 @@ const LoginForm: React.FC = () => {
             <br />
             <TextField
                 variant="outlined"
-                label="Password"
+                label="密码"
                 name="password"
                 type="password"
                 fullWidth
+                required
                 onChange={(e) => {
                     setPassword(e.target.value);
                 }}
@@ -78,7 +80,7 @@ const LoginForm: React.FC = () => {
                 type="submit"
                 loading={isLoading}
             >
-                Login
+                登录
             </LoadingButton>
         </Grid>
     );
