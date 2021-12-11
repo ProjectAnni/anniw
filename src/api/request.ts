@@ -45,7 +45,7 @@ class Request {
                 if (data.status !== 0) {
                     reject(new AnniwRequestError(data.message));
                 } else {
-                    resolve(formatResponse(data.data));
+                    resolve(formatResponse<T>(data.data));
                 }
             } catch (e) {
                 // Network Error

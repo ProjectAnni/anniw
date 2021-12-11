@@ -6,14 +6,14 @@ const MESSAGE_DISPLAY_DURATION = 5000;
 
 const GlobalMessage: React.FC = () => {
     const [messages, { hideMessage }] = useMessage();
-
+    console.log(messages)
     return (
         <>
             {messages.map((message, index) => (
                 <Snackbar
                     key={`${message.message}-${index}`}
                     open={message.isShow}
-                    color="error"
+              
                     anchorOrigin={{
                         vertical: "top",
                         horizontal: "center",
@@ -27,7 +27,7 @@ const GlobalMessage: React.FC = () => {
                         onClose={() => {
                             hideMessage(message);
                         }}
-                        severity="error"
+                        severity={message.type}
                         sx={{ width: "100%" }}
                     >
                         {message.message}

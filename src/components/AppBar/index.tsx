@@ -7,15 +7,19 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import useRequest from "../../hooks/useRequest";
-import { DrawerIsOpen } from "../../state/ui";
-import { SiteInfoState, SiteCanRegister } from "../../state/site";
+import useRequest from "@/hooks/useRequest";
+import { DrawerIsOpen } from "@/state/ui";
+import { SiteInfoState, SiteCanRegister } from "@/state/site";
+import { CurrentUserInfo, IsLogin } from "@/state/user";
 import { getSiteInfo } from "./services";
 
 export const AnniwAppBar: React.FC = () => {
     const setOpen = useSetRecoilState(DrawerIsOpen);
     const [globalSiteInfo, setGlobalSiteInfo] = useRecoilState(SiteInfoState);
     const canRegister = useRecoilValue(SiteCanRegister);
+    const isLogin = useRecoilValue(IsLogin);
+    const userInfo = useRecoilValue(CurrentUserInfo);
+    const { nickname } = userInfo || {};
     const [siteInfo] = useRequest(getSiteInfo);
     const { siteName, description } = globalSiteInfo || {};
     useEffect(() => {
@@ -37,13 +41,27 @@ export const AnniwAppBar: React.FC = () => {
                 <Typography variant="h6" flexGrow={1}>
                     {siteName}
                 </Typography>
-                <Button color="inherit" component={Link} to="/user/login">
-                    登录
-                </Button>
-                {canRegister && (
-                    <Button color="inherit" component={Link} to="/user/register">
-                        注册
-                    </Button>
+                {isLogin && (
+                    <>
+                        <Button color="inherit" component={Link} to="/user/index">
+                            {nickname}
+                        </Button>
+                        <Button color="inherit" component={Link} to="/user/logout">
+                            注销
+                        </Button>
+                    </>
+                )}
+                {!isLogin && (
+                    <>
+                        <Button color="inherit" component={Link} to="/user/login">
+                            登录
+                        </Button>
+                        {canRegister && (
+                            <Button color="inherit" component={Link} to="/user/register">
+                                注册
+                            </Button>
+                        )}
+                    </>
                 )}
             </Toolbar>
         </AppBar>

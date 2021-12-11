@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useHistory } from "react-router";
 import { TextField, Grid } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { CurrentUserInfo } from "@/state/user";
+import storage from "@/utils/storage";
 import { login } from "./services";
 import "./index.scss";
 
@@ -28,6 +29,7 @@ const LoginForm: React.FC = () => {
                 password,
             });
             setCurrentUserInfo(userInfo);
+            storage.set("userInfo", userInfo);
             history.push("/");
         } catch (e) {
             if (e instanceof Error) {

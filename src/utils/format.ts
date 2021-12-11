@@ -1,6 +1,6 @@
 import { camelCase, snakeCase } from "lodash";
 
-export function formatResponse(response: any): any {
+export function formatResponse<T = any>(response: any): T {
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(response)) {
         if (typeof response[key] === "object" && !Array.isArray(response[key])) {
@@ -9,7 +9,7 @@ export function formatResponse(response: any): any {
             result[camelCase(key)] = response[key];
         }
     }
-    return result;
+    return result as T;
 }
 
 export function formatRequest(request: any): any {

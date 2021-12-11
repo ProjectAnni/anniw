@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Logout from "./pages/Logout";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
@@ -38,6 +39,9 @@ function AppBody() {
                     </Route>
                     <Route path="/user/register" exact>
                         <Register />
+                    </Route>
+                    <Route path="/user/logout" exact>
+                        <Logout />
                     </Route>
                     <Route path="*">
                         <NotFound />

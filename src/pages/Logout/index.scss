@@ -1,0 +1,6 @@
+@import '../../styles/_mixin.scss';
+
+.logout-container {
+    height: 100%;
+    @include center();
+}
