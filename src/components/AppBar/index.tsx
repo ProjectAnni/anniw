@@ -1,26 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
+import { AppBar, Toolbar, Typography, Button, IconButton } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import useRequest from "@/hooks/useRequest";
+import useMessage from "@/hooks/useMessage";
 import { DrawerIsOpen } from "@/state/ui";
 import { SiteInfoState, SiteCanRegister } from "@/state/site";
 import { CurrentUserInfo, IsLogin } from "@/state/user";
-import { getSiteInfo } from "./services";
+import { getSiteInfo, getUserInfo } from "./services";
 
 export const AnniwAppBar: React.FC = () => {
     const setOpen = useSetRecoilState(DrawerIsOpen);
     const [globalSiteInfo, setGlobalSiteInfo] = useRecoilState(SiteInfoState);
     const canRegister = useRecoilValue(SiteCanRegister);
     const isLogin = useRecoilValue(IsLogin);
-    const userInfo = useRecoilValue(CurrentUserInfo);
-    const { nickname } = userInfo || {};
+    const [currentUserInfo, setCurrentUserInfo] = useRecoilState(CurrentUserInfo);
     const [siteInfo] = useRequest(getSiteInfo);
+    const [isLoadingUserInfo, setIsLoadingUserInfo] = useState(true);
+    const [_, { addMessage }] = useMessage();
+    const { nickname } = currentUserInfo || {};
     const { siteName, description } = globalSiteInfo || {};
     useEffect(() => {
         siteInfo && setGlobalSiteInfo(siteInfo);
@@ -32,6 +31,19 @@ export const AnniwAppBar: React.FC = () => {
         }
     }, [siteName, description]);
 
+    useEffect(() => {
+        getUserInfo()
+            .then((userInfo) => {
+                setCurrentUserInfo(userInfo);
+            })
+            .catch((e) => {
+                e.message && addMessage("error", e.message);
+            })
+            .finally(() => {
+                setIsLoadingUserInfo(false);
+            });
+    }, []);
+
     return (
         <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Toolbar>
@@ -41,7 +53,7 @@ export const AnniwAppBar: React.FC = () => {
                 <Typography variant="h6" flexGrow={1}>
                     {siteName}
                 </Typography>
-                {isLogin && (
+                {!isLoadingUserInfo && isLogin && (
                     <>
                         <Button color="inherit" component={Link} to="/user/index">
                             {nickname}
@@ -51,7 +63,7 @@ export const AnniwAppBar: React.FC = () => {
                         </Button>
                     </>
                 )}
-                {!isLogin && (
+                {!isLoadingUserInfo && !isLogin && (
                     <>
                         <Button color="inherit" component={Link} to="/user/login">
                             登录

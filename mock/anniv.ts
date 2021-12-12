@@ -32,6 +32,21 @@ export default [
         },
     },
     {
+        url: "/api/user/info",
+        method: "get",
+        response: () => {
+            return {
+                status: 0,
+                data: {
+                    user_id: "1",
+                    username: "Test-User",
+                    email: "mail@example.com",
+                    nickname: "Test-User",
+                },
+            };
+        },
+    },
+    {
         url: "/api/user/revoke",
         method: "post",
         response: () => {
