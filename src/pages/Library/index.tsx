@@ -4,13 +4,10 @@ import "./index.scss";
 
 const Library: React.FC = () => {
     return (
-        <div>
+        <div className="library-page-container">
             <Typography
                 variant="h4"
                 className="title"
-                sx={{
-                    marginTop: "20px",
-                }}
             >
                 音频仓库
             </Typography>
