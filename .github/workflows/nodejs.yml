@@ -24,3 +24,8 @@ jobs:
                   yarn build
               env:
                   CI: true
+            - name: upload dist
+              uses: actions/upload-artifact@v2
+              with:
+                  name: anniw-dist
+                  path: dist/
