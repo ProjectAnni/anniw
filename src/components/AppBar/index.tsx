@@ -8,6 +8,7 @@ import useMessage from "@/hooks/useMessage";
 import { DrawerIsOpen } from "@/state/ui";
 import { SiteInfoState, SiteCanRegister } from "@/state/site";
 import { CurrentUserInfo, IsLogin } from "@/state/user";
+import { AnniwRequestError } from "@/api/request";
 import { getSiteInfo, getUserInfo } from "./services";
 
 export const AnniwAppBar: React.FC = () => {
@@ -37,7 +38,9 @@ export const AnniwAppBar: React.FC = () => {
                 setCurrentUserInfo(userInfo);
             })
             .catch((e) => {
-                e.message && addMessage("error", e.message);
+                if (e instanceof AnniwRequestError) {
+                    addMessage("error", e.message);
+                }
             })
             .finally(() => {
                 setIsLoadingUserInfo(false);

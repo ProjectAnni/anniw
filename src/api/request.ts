@@ -3,6 +3,14 @@ import { formatRequest, formatResponse } from "../utils/format";
 
 export class AnniwRequestError extends Error {}
 
+export class AnniwBusinessError extends Error {
+    code: string;
+    constructor(code: string, message: string) {
+        super(message);
+        this.code = code;
+    }
+}
+
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
 
 class Request {
@@ -46,7 +54,7 @@ class Request {
                 const response = await this.instance.request(options);
                 const data = response.data;
                 if (data.status !== 0) {
-                    reject(new AnniwRequestError(data.message));
+                    reject(new AnniwBusinessError(data.status, data.message));
                 } else {
                     resolve(formatResponse(data.data));
                 }
