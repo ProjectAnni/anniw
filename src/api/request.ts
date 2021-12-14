@@ -24,7 +24,11 @@ class Request {
      * @param path
      * @param payload
      */
-    request<T>(method: HttpMethod = "GET", path: string = "/", payload: object = {}): Promise<T> {
+    request<T>(
+        method: HttpMethod = "GET",
+        path: string = "/",
+        payload: Record<string, unknown> = {}
+    ): Promise<T> {
         console.log(`[${new Date().toISOString()}] ${method} ${path}`);
         const options = {
             method: method,
@@ -34,8 +38,7 @@ class Request {
         };
         if (method === "GET") {
             options.params = formatRequest(payload);
-        }
-        if (method === "POST") {
+        } else {
             options.data = formatRequest(payload);
         }
         return new Promise(async (resolve, reject) => {
@@ -45,7 +48,7 @@ class Request {
                 if (data.status !== 0) {
                     reject(new AnniwRequestError(data.message));
                 } else {
-                    resolve(formatResponse<T>(data.data));
+                    resolve(formatResponse(data.data));
                 }
             } catch (e) {
                 // Network Error
@@ -59,7 +62,7 @@ class Request {
      * @param path
      * @param payload
      */
-    get<T>(path: string = "/", payload: object = {}) {
+    get<T>(path: string = "/", payload: Record<string, unknown> = {}) {
         return this.request<T>("GET", path, payload);
     }
 
@@ -68,12 +71,32 @@ class Request {
      * @param path
      * @param payload
      */
-    post<T>(path: string = "/", payload: object = {}) {
+    post<T>(path: string = "/", payload: Record<string, unknown> = {}) {
         return this.request<T>("POST", path, payload);
     }
 
+    /**
+     * HTTP PATCH
+     * @param path
+     * @param payload
+     * @returns
+     */
+    patch<T>(path: string = "/", payload: Record<string, unknown> = {}) {
+        return this.request<T>("PATCH", path, payload);
+    }
+
+    /**
+     * HTTP DELETE
+     * @param path
+     * @param payload
+     * @returns
+     */
+    delete<T>(path: string = "/", payload: Record<string, unknown> = {}) {
+        return this.request<T>("DELETE", path, payload);
+    }
+
     parseError(e: AxiosError): AnniwRequestError {
-        if (e.request.status) {
+        if (e.request?.status) {
             return new AnniwRequestError(`网络错误: ${e.request.status} ${e.request.statusText}`);
         }
         return new AnniwRequestError("未知网络错误");

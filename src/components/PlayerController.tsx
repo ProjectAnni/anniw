@@ -6,6 +6,7 @@ import PlayIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 import PreviousIcon from "@material-ui/icons/SkipPrevious";
 import NextIcon from "@material-ui/icons/SkipNext";
+import { MusicIndex } from "@/types/common";
 
 const PlayState = atom<AnniwPlayState>({
     key: "PlayState",

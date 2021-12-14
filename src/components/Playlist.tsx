@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { MusicIndex } from "@/types/common";
 
 function PlaylistItem({ item, index, control, button }: PlaylistItemProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -39,7 +40,7 @@ function PlaylistItem({ item, index, control, button }: PlaylistItemProps) {
             <ListItemText
                 primary={
                     // TODO: Render music title & artist
-                    `${item.catalog}/${item.track}`
+                    `${item.albumId}/${item.track}/${item.track}`
                 }
             />
             {control && (
@@ -81,7 +82,7 @@ export const Playlist: React.FC<PlaylistProps> = ({
         <List>
             {playlist.map((music, index) => (
                 <PlaylistItem
-                    key={`${index}. ${music.catalog}/${music.track}`}
+                    key={`${index}. ${music.albumId}/${music.track}/${music.track}`}
                     item={music}
                     index={showIndex ? index + 1 : undefined}
                     control={control}

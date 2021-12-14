@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Slide from "@material-ui/core/Slide";
 
 import { Playlist } from "./Playlist";
+import { MusicIndex } from "@/types/common";
 
 const ActivePlaylistState = atom<MusicIndex[]>({
     key: "ActivePlaylistState",
