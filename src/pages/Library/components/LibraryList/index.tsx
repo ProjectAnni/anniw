@@ -5,11 +5,12 @@ import { AnnilToken } from "@/types/common";
 
 interface Props {
     libraries: AnnilToken[];
-    handleDelete: (library: AnnilToken) => void;
+    onClick: (library: AnnilToken) => void;
+    onDelete: (library: AnnilToken) => void;
 }
 
 const LibraryList: React.FC<Props> = (props) => {
-    const { libraries, handleDelete } = props;
+    const { libraries, onClick, onDelete } = props;
     if (!libraries?.length) {
         return null;
     }
@@ -21,11 +22,14 @@ const LibraryList: React.FC<Props> = (props) => {
                         <ListItem
                             button
                             key={library.id}
+                            onClick={() => {
+                                onClick(library);
+                            }}
                             secondaryAction={
                                 <IconButton
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        handleDelete(library);
+                                        onDelete(library);
                                     }}
                                 >
                                     <DeleteIcon />

@@ -6,7 +6,22 @@ export function getAvailableAnnilTokens() {
 }
 
 export function deleteAnnilToken(id: string) {
-    return request.delete(`/api/credential/`, {
+    return request.delete(`/api/credential`, {
         id,
+    });
+}
+
+export function createAnnilToken({ name, token, url, priority }: Omit<AnnilToken, "id">) {
+    return request.post<AnnilToken>("/api/credential", {
+        name,
+        token,
+        url,
+        priority,
+    });
+}
+
+export function getLibraryAlbums(library: AnnilToken) {
+    return request.get(`${library.url}/albums`, {
+        auth: library.token,
     });
 }

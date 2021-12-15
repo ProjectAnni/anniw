@@ -43,14 +43,13 @@ const RegisterForm: React.FC = () => {
         }
         setIsLoading(true);
         try {
-            const newUserInfo = await register({
+            await register({
                 nickname,
                 email,
                 password,
                 inviteCode,
             });
-            setCurrentUserInfo(newUserInfo);
-            history.push("/");
+            history.push("/user/login");
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);

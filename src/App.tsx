@@ -9,7 +9,7 @@ import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalMessage from "./components/GlobalMessage";
 import NotFound from "./pages/NotFound";
-import Loading from "./pages/Loading";
+import Loading from "./components/Loading";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Logout from "./pages/Logout";

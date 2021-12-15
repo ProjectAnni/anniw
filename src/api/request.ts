@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from "axios";
 import { formatRequest, formatResponse } from "../utils/format";
 
 export class AnniwRequestError extends Error {}
@@ -35,14 +35,19 @@ class Request {
     request<T>(
         method: HttpMethod = "GET",
         path: string = "/",
-        payload: Record<string, unknown> = {}
+        payload: Record<string, unknown> = {},
+        config?: AxiosRequestConfig
     ): Promise<T> {
         console.log(`[${new Date().toISOString()}] ${method} ${path}`);
-        const options = {
-            method: method,
-            url: `${this.base}${path}`,
+        const options: AxiosRequestConfig = {
+            method,
+            url:
+                path.startsWith("http://") || path.startsWith("https://")
+                    ? path
+                    : `${this.base}${path}`,
             params: {},
             data: {},
+            ...config,
         };
         if (method === "GET") {
             options.params = formatRequest(payload);
@@ -70,8 +75,8 @@ class Request {
      * @param path
      * @param payload
      */
-    get<T>(path: string = "/", payload: Record<string, unknown> = {}) {
-        return this.request<T>("GET", path, payload);
+    get<T>(path: string = "/", payload: Record<string, unknown> = {}, config?: AxiosRequestConfig) {
+        return this.request<T>("GET", path, payload, config);
     }
 
     /**
@@ -79,8 +84,12 @@ class Request {
      * @param path
      * @param payload
      */
-    post<T>(path: string = "/", payload: Record<string, unknown> = {}) {
-        return this.request<T>("POST", path, payload);
+    post<T>(
+        path: string = "/",
+        payload: Record<string, unknown> = {},
+        config?: AxiosRequestConfig
+    ) {
+        return this.request<T>("POST", path, payload, config);
     }
 
     /**
@@ -89,8 +98,12 @@ class Request {
      * @param payload
      * @returns
      */
-    patch<T>(path: string = "/", payload: Record<string, unknown> = {}) {
-        return this.request<T>("PATCH", path, payload);
+    patch<T>(
+        path: string = "/",
+        payload: Record<string, unknown> = {},
+        config?: AxiosRequestConfig
+    ) {
+        return this.request<T>("PATCH", path, payload, config);
     }
 
     /**
@@ -99,8 +112,12 @@ class Request {
      * @param payload
      * @returns
      */
-    delete<T>(path: string = "/", payload: Record<string, unknown> = {}) {
-        return this.request<T>("DELETE", path, payload);
+    delete<T>(
+        path: string = "/",
+        payload: Record<string, unknown> = {},
+        config?: AxiosRequestConfig
+    ) {
+        return this.request<T>("DELETE", path, payload, config);
     }
 
     parseError(e: AxiosError): AnniwRequestError {
