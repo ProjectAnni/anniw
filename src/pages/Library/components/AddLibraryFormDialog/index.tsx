@@ -39,7 +39,7 @@ const AddLibraryFormDialog: React.FC<Props> = (props) => {
             addMessage("error", "Token不能为空");
             return;
         }
-        if (!priority) {
+        if (priority === undefined || priority === null) {
             addMessage("error", "优先级不能为空");
             return;
         }
@@ -91,6 +91,7 @@ const AddLibraryFormDialog: React.FC<Props> = (props) => {
                     label="优先级"
                     variant="standard"
                     type="number"
+                    value={0}
                     fullWidth
                     onChange={(e) => setPriority(+e.target.value)}
                 />
