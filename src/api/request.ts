@@ -72,6 +72,9 @@ class Request {
                 return formatResponse(data);
             }
         } catch (e) {
+            if (e instanceof AnniwBusinessError) {
+                throw e;
+            }
             // Network Error
             throw this.parseError(e as any);
         }
