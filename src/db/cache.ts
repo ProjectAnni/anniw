@@ -1,8 +1,8 @@
-import { openDB } from "idb";
+import { deleteDB, openDB } from "idb";
 import type { DBSchema, IDBPDatabase } from "idb";
 
 const DB_VERSION = 1;
-const DB_NAME = "anniw";
+const DB_NAME = "anniw_cache";
 const TABLE_NAME = "cache";
 
 interface CacheDB extends DBSchema {
@@ -31,7 +31,7 @@ class Cache {
 
     async get(key: string) {
         const value = await (await this.db).get(TABLE_NAME, key);
-        return !!value ? value.value : null;
+        return value ? value.value : null;
     }
 
     async set(key: string, value: any) {
@@ -47,6 +47,10 @@ class Cache {
 
     async delete(key: string) {
         return (await this.db).delete(TABLE_NAME, key);
+    }
+
+    async dropAllStores() {
+        return await deleteDB(DB_NAME);
     }
 }
 

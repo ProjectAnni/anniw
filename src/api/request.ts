@@ -11,10 +11,15 @@ export class AnniwBusinessError extends Error {
     }
 }
 
+export interface RequestOptions {
+    /** 是否从 Anniv 返回格式中直接取出 data 字段 */
+    unwrapResponse?: boolean;
+}
+
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
 
 class Request {
-    private base: string = "";
+    private base = "";
     private instance: AxiosInstance;
     constructor() {
         this.instance = axios.create({
@@ -32,11 +37,11 @@ class Request {
      * @param path
      * @param payload
      */
-    request<T>(
+    async request<T>(
         method: HttpMethod = "GET",
-        path: string = "/",
+        path = "/",
         payload: Record<string, unknown> = {},
-        config?: AxiosRequestConfig
+        requestOptions?: RequestOptions
     ): Promise<T> {
         console.log(`[${new Date().toISOString()}] ${method} ${path}`);
         const options: AxiosRequestConfig = {
@@ -47,27 +52,29 @@ class Request {
                     : `${this.base}${path}`,
             params: {},
             data: {},
-            ...config,
         };
+        const { unwrapResponse = true } = requestOptions || {};
         if (method === "GET") {
             options.params = formatRequest(payload);
         } else {
             options.data = formatRequest(payload);
         }
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await this.instance.request(options);
-                const data = response.data;
+        try {
+            const response = await this.instance.request(options);
+            const data = response.data;
+            if (unwrapResponse) {
                 if (data.status !== 0) {
-                    reject(new AnniwBusinessError(data.status, data.message));
+                    throw new AnniwBusinessError(data.status, data.message);
                 } else {
-                    resolve(formatResponse(data.data));
+                    return formatResponse(data.data);
                 }
-            } catch (e) {
-                // Network Error
-                reject(this.parseError(e as any));
+            } else {
+                return formatResponse(data);
             }
-        });
+        } catch (e) {
+            // Network Error
+            throw this.parseError(e as any);
+        }
     }
 
     /**
@@ -75,8 +82,8 @@ class Request {
      * @param path
      * @param payload
      */
-    get<T>(path: string = "/", payload: Record<string, unknown> = {}, config?: AxiosRequestConfig) {
-        return this.request<T>("GET", path, payload, config);
+    get<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
+        return this.request<T>("GET", path, payload, requestOptions);
     }
 
     /**
@@ -84,12 +91,8 @@ class Request {
      * @param path
      * @param payload
      */
-    post<T>(
-        path: string = "/",
-        payload: Record<string, unknown> = {},
-        config?: AxiosRequestConfig
-    ) {
-        return this.request<T>("POST", path, payload, config);
+    post<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
+        return this.request<T>("POST", path, payload, requestOptions);
     }
 
     /**
@@ -98,12 +101,8 @@ class Request {
      * @param payload
      * @returns
      */
-    patch<T>(
-        path: string = "/",
-        payload: Record<string, unknown> = {},
-        config?: AxiosRequestConfig
-    ) {
-        return this.request<T>("PATCH", path, payload, config);
+    patch<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
+        return this.request<T>("PATCH", path, payload, requestOptions);
     }
 
     /**
@@ -112,12 +111,8 @@ class Request {
      * @param payload
      * @returns
      */
-    delete<T>(
-        path: string = "/",
-        payload: Record<string, unknown> = {},
-        config?: AxiosRequestConfig
-    ) {
-        return this.request<T>("DELETE", path, payload, config);
+    delete<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
+        return this.request<T>("DELETE", path, payload, requestOptions);
     }
 
     parseError(e: AxiosError): AnniwRequestError {

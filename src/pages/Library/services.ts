@@ -1,5 +1,6 @@
 import request from "@/api/request";
 import { AnnilToken } from "@/types/common";
+import { LibraryInfoResponse } from "./types";
 
 export function getAvailableAnnilTokens() {
     return request.get<AnnilToken[]>("/api/credential");
@@ -21,7 +22,23 @@ export function createAnnilToken({ name, token, url, priority }: Omit<AnnilToken
 }
 
 export function getLibraryAlbums(library: AnnilToken) {
-    return request.get(`${library.url}/albums`, {
-        auth: library.token,
-    });
+    return request.get<string[]>(
+        `${library.url}/albums`,
+        {
+            auth: library.token,
+        },
+        {
+            unwrapResponse: false,
+        }
+    );
+}
+
+export function getLibraryInfo(library: AnnilToken) {
+    return request.get<LibraryInfoResponse>(
+        `${library.url}/info`,
+        {},
+        {
+            unwrapResponse: false,
+        }
+    );
 }

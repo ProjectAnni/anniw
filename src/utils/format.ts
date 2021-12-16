@@ -7,6 +7,9 @@ export function formatResponse(response: any): any {
     if (Array.isArray(response)) {
         return response.map(formatResponse);
     }
+    if (typeof response === "string") {
+        return response;
+    }
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(response)) {
         if (typeof response[key] === "object") {
@@ -21,6 +24,9 @@ export function formatResponse(response: any): any {
 export function formatRequest(request: any): any {
     if (Array.isArray(request)) {
         return request.map(formatRequest);
+    }
+    if (typeof request === "string") {
+        return request;
     }
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(request)) {

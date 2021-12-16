@@ -1,46 +1,84 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { Button, Grid, Typography } from "@material-ui/core";
-import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
-import Loading from "@/components/Loading";
+import useRequest from "@/hooks/useRequest";
 import useMessage from "@/hooks/useMessage";
+import { default as LibraryDB } from "@/db/library";
+import { default as AlbumDB } from "@/db/album";
+import Loading from "@/components/Loading";
 import { AnnilToken } from "@/types/common";
 import {
     getAvailableAnnilTokens,
     deleteAnnilToken,
     createAnnilToken,
+    getLibraryInfo,
     getLibraryAlbums,
 } from "./services";
 import LibraryList from "./components/LibraryList";
-import AddLibraryFormDialog from "./components/AddLibraryForm";
+import AddLibraryFormDialog from "./components/AddLibraryFormDialog";
+import LibrarySyncDialog from "./components/LibrarySyncDialog";
 import "./index.scss";
 
 const Library: React.FC = () => {
+    const [currentClickedLibrary, setCurrentClickedLibrary] = useState<AnnilToken | null>(null);
     const [isShowAddLibraryForm, setIsShowAddLibraryForm] = useState(false);
+    const [isShowLibrarySyncDialog, setIsShowLibrarySyncDialog] = useState(false);
     const [isAddLibrarySubmitting, setIsAddLibrarySubmitting] = useState(false);
+    const [isLibrarySyncLoading, setIsLibrarySyncLoading] = useState(false);
+    const [localInfoRefreshIndicator, setLocalInfoRefreshIndicator] = useState(0);
     const [availableTokens, loading] = useRequest(getAvailableAnnilTokens);
     const [credentials, setCredentials] = useRecoilState(CredentialState);
     const [_, { addMessage }] = useMessage();
-    const onLibraryDelete = useCallback(async (library: AnnilToken) => {
-        const { id } = library;
+    const onLibraryDelete = useCallback(
+        async (library: AnnilToken) => {
+            const { id } = library;
+            try {
+                await deleteAnnilToken(id);
+                setCredentials((prev) => {
+                    return {
+                        credentials: prev.credentials.filter((c) => c.id !== id),
+                    };
+                });
+            } catch (e) {
+                if (e instanceof Error) {
+                    addMessage("error", e.message);
+                }
+            }
+        },
+        [addMessage, setCredentials]
+    );
+    const onLibrarySync = useCallback(async () => {
+        if (!currentClickedLibrary) {
+            return;
+        }
+        setIsShowLibrarySyncDialog(true);
+        setIsLibrarySyncLoading(true);
         try {
-            await deleteAnnilToken(id);
-            setCredentials((prev) => {
-                return {
-                    credentials: prev.credentials.filter((c) => c.id !== id),
-                };
+            const libraryInfo = await getLibraryInfo(currentClickedLibrary);
+            const { lastUpdate } = libraryInfo;
+            const albums = await getLibraryAlbums(currentClickedLibrary);
+            if (albums?.length > 0) {
+                for (const albumId of albums) {
+                    await AlbumDB.addAvailableLibrary(albumId, currentClickedLibrary.url);
+                }
+            }
+            await LibraryDB.set({
+                url: currentClickedLibrary.url,
+                serverLastUpdate: new Date(lastUpdate * 1000),
+                lastSync: new Date(),
             });
+            setLocalInfoRefreshIndicator((prev) => prev + 1);
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);
             }
+        } finally {
+            addMessage("success", "音频仓库同步成功");
+            setIsLibrarySyncLoading(false);
+            setIsShowLibrarySyncDialog(false);
         }
-    }, []);
-    const onLibraryClick = async (library: AnnilToken) => {
-        // const albums = await getLibraryAlbums(library);
-        // console.log(albums)
-    };
+    }, [addMessage, currentClickedLibrary]);
     const handleAddLibraryFormSubmit = useCallback(
         async ({ name, url, token, priority }: Omit<AnnilToken, "id">) => {
             setIsAddLibrarySubmitting(true);
@@ -62,9 +100,10 @@ const Library: React.FC = () => {
                 }
             } finally {
                 setIsAddLibrarySubmitting(false);
+                setIsShowAddLibraryForm(false);
             }
         },
-        []
+        [addMessage, setCredentials]
     );
     useEffect(() => {
         if (availableTokens?.length) {
@@ -72,7 +111,7 @@ const Library: React.FC = () => {
                 credentials: availableTokens,
             });
         }
-    }, [availableTokens]);
+    }, [availableTokens, setCredentials]);
     return (
         <Grid container className="library-page-container">
             <Grid item xs={12}>
@@ -86,7 +125,11 @@ const Library: React.FC = () => {
                 ) : (
                     <LibraryList
                         libraries={credentials.credentials}
-                        onClick={onLibraryClick}
+                        localInfoRefreshIndicator={localInfoRefreshIndicator}
+                        onSync={(library) => {
+                            setIsShowLibrarySyncDialog(true);
+                            setCurrentClickedLibrary(library);
+                        }}
                         onDelete={onLibraryDelete}
                     />
                 )}
@@ -111,6 +154,14 @@ const Library: React.FC = () => {
                     setIsShowAddLibraryForm(false);
                 }}
                 onSubmit={handleAddLibraryFormSubmit}
+            />
+            <LibrarySyncDialog
+                open={isShowLibrarySyncDialog}
+                loading={isLibrarySyncLoading}
+                onCancel={() => {
+                    setIsShowLibrarySyncDialog(false);
+                }}
+                onConfirm={onLibrarySync}
             />
         </Grid>
     );
