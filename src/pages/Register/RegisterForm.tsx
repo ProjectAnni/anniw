@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { Grid, TextField } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
-import { CurrentUserInfo } from "@/state/user";
 import { SiteNeedInvitation } from "@/state/site";
 import { register } from "../Login/services";
 
 const RegisterForm: React.FC = () => {
     const [nickname, setNickname] = useState("");
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const [repeatPassword, setRepeatPassword] = React.useState("");
-    const [inviteCode, setInviteCode] = React.useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("");
+    const [inviteCode, setInviteCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
     const needInvitation = useRecoilValue(SiteNeedInvitation);
     const history = useHistory();
     const [_, { addMessage }] = useMessage();
@@ -59,88 +57,89 @@ const RegisterForm: React.FC = () => {
         }
     };
     return (
-        <Grid
-            container
-            component="form"
-            direction="column"
-            alignItems="center"
-            sx={{
-                width: "40%",
-            }}
-            onSubmit={onSubmit}
-        >
-            <TextField
-                variant="outlined"
-                label="昵称"
-                name="nickname"
-                fullWidth
-                required
-                onChange={(e) => {
-                    setNickname(e.target.value);
-                }}
-            ></TextField>
-            <br />
-            <TextField
-                variant="outlined"
-                label="Email"
-                name="email"
-                fullWidth
-                required
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                }}
-            ></TextField>
-            <br />
-            <TextField
-                variant="outlined"
-                label="密码"
-                name="password"
-                type="password"
-                fullWidth
-                required
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
-            ></TextField>
-            <br />
-            <TextField
-                variant="outlined"
-                label="重复密码"
-                name="repeatPassword"
-                type="password"
-                fullWidth
-                required
-                onChange={(e) => {
-                    setRepeatPassword(e.target.value);
-                }}
-            ></TextField>
-            <br />
-            {needInvitation && (
-                <>
+        <Grid container justifyContent="center">
+            <Grid item xs={12} lg={3}>
+                <Grid
+                    container
+                    component="form"
+                    direction="column"
+                    alignItems="center"
+                    onSubmit={onSubmit}
+                >
                     <TextField
                         variant="outlined"
-                        label="邀请码"
-                        name="inviteCode"
+                        label="昵称"
+                        name="nickname"
                         fullWidth
                         required
                         onChange={(e) => {
-                            setInviteCode(e.target.value);
+                            setNickname(e.target.value);
                         }}
                     ></TextField>
                     <br />
-                </>
-            )}
-            <LoadingButton
-                color="primary"
-                variant="contained"
-                sx={{
-                    width: "128px",
-                }}
-                type="submit"
-                loading={isLoading}
-            >
-                注册
-            </LoadingButton>
+                    <TextField
+                        variant="outlined"
+                        label="Email"
+                        name="email"
+                        fullWidth
+                        required
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                        }}
+                    ></TextField>
+                    <br />
+                    <TextField
+                        variant="outlined"
+                        label="密码"
+                        name="password"
+                        type="password"
+                        fullWidth
+                        required
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                    ></TextField>
+                    <br />
+                    <TextField
+                        variant="outlined"
+                        label="重复密码"
+                        name="repeatPassword"
+                        type="password"
+                        fullWidth
+                        required
+                        onChange={(e) => {
+                            setRepeatPassword(e.target.value);
+                        }}
+                    ></TextField>
+                    <br />
+                    {needInvitation && (
+                        <>
+                            <TextField
+                                variant="outlined"
+                                label="邀请码"
+                                name="inviteCode"
+                                fullWidth
+                                required
+                                onChange={(e) => {
+                                    setInviteCode(e.target.value);
+                                }}
+                            ></TextField>
+                            <br />
+                        </>
+                    )}
+                    <LoadingButton
+                        color="primary"
+                        variant="contained"
+                        sx={{
+                            width: "128px",
+                        }}
+                        type="submit"
+                        loading={isLoading}
+                    >
+                        注册
+                    </LoadingButton>
+                </Grid>
+            </Grid>
         </Grid>
     );
 };

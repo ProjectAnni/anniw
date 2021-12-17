@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { List, ListItemText, ListItem, Box, IconButton } from "@material-ui/core";
 import { Delete as DeleteIcon, Sync as SyncIcon } from "@material-ui/icons";
 import { default as LibraryDB } from "@/db/library";
@@ -6,6 +6,7 @@ import { AnnilToken } from "@/types/common";
 interface Props {
     libraries: AnnilToken[];
     localInfoRefreshIndicator: number;
+    onClick: (library: AnnilToken) => void;
     onSync: (library: AnnilToken) => void;
     onDelete: (library: AnnilToken) => void;
 }
@@ -16,8 +17,8 @@ interface AnnilTokenLocalInfo {
 }
 
 const LibraryList: React.FC<Props> = (props) => {
-    const { libraries, localInfoRefreshIndicator, onDelete, onSync } = props;
-    const [localLibraryInfo, setLocalLibraryInfo] = React.useState<
+    const { libraries, localInfoRefreshIndicator, onClick, onDelete, onSync } = props;
+    const [localLibraryInfo, setLocalLibraryInfo] = useState<
         (AnnilToken & AnnilTokenLocalInfo)[] | null
     >(null);
     const librariesWithLocalInfo = useMemo<(AnnilToken & AnnilTokenLocalInfo)[]>(() => {
@@ -54,6 +55,9 @@ const LibraryList: React.FC<Props> = (props) => {
                         <ListItem
                             button
                             key={library.id}
+                            onClick={() => {
+                                onClick(library);
+                            }}
                             secondaryAction={
                                 <>
                                     <IconButton

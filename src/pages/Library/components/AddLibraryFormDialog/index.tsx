@@ -10,22 +10,23 @@ import {
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { AnnilToken } from "@/types/common";
+import { createAnnilToken } from "../../services";
 
 interface Props {
     open: boolean;
-    loading: boolean;
     onCancel: () => void;
-    onSubmit: ({ name, url, token, priority }: Omit<AnnilToken, "id">) => Promise<void>;
+    onAdded: (createdAnnilToken: AnnilToken) => void;
 }
 
-const AddLibraryFormDialog: React.FC<Props> = (props) => {
-    const { open, loading, onCancel, onSubmit } = props;
+const AddLibraryDialog: React.FC<Props> = (props) => {
+    const { open, onCancel, onAdded } = props;
     const [name, setName] = useState("");
     const [url, setUrl] = useState("");
     const [token, setToken] = useState("");
     const [priority, setPriority] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [_, { addMessage }] = useMessage();
-    const onConfirm = () => {
+    const onConfirm = async () => {
         let formattedUrl;
         if (!name) {
             addMessage("error", "名称不能为空");
@@ -52,7 +53,22 @@ const AddLibraryFormDialog: React.FC<Props> = (props) => {
             addMessage("error", "URL格式不正确");
             return;
         }
-        onSubmit({ name, url: formattedUrl, token, priority });
+        setLoading(true);
+        try {
+            const createdAnnilToken = await createAnnilToken({
+                name,
+                url,
+                token,
+                priority,
+            });
+            onAdded(createdAnnilToken);
+        } catch (e) {
+            if (e instanceof Error) {
+                addMessage("error", e.message);
+            }
+        } finally {
+            setLoading(false);
+        }
     };
     return (
         <Dialog open={open} maxWidth="sm" fullWidth onBackdropClick={onCancel}>
@@ -106,4 +122,4 @@ const AddLibraryFormDialog: React.FC<Props> = (props) => {
     );
 };
 
-export default AddLibraryFormDialog;
+export default AddLibraryDialog;

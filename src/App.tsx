@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Logout from "./pages/Logout";
 import Library from "./pages/Library";
+import AlbumList from "./pages/Album";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
@@ -46,6 +47,9 @@ function AppBody() {
                     </Route>
                     <Route path="/library" exact>
                         <Library />
+                    </Route>
+                    <Route path="/album/list" exact>
+                        <AlbumList />
                     </Route>
                     <Route path="*">
                         <NotFound />

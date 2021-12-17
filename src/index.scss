@@ -17,6 +17,10 @@ code {
 .main-container {
     height: calc(100vh - 128px);
     padding: 0;
+    margin: 0 !important;
     overflow-y: auto;
     overflow-x: hidden;
+    @media (min-width: 1200px) {
+        max-width: 100vw !important;
+    }
 }

@@ -40,50 +40,51 @@ const LoginForm: React.FC = () => {
         }
     };
     return (
-        <Grid
-            container
-            component="form"
-            direction="column"
-            alignItems="center"
-            sx={{
-                width: "40%",
-            }}
-            onSubmit={onSubmit}
-        >
-            <TextField
-                variant="outlined"
-                label="Email"
-                name="email"
-                required
-                fullWidth
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                }}
-            ></TextField>
-            <br />
-            <TextField
-                variant="outlined"
-                label="密码"
-                name="password"
-                type="password"
-                fullWidth
-                required
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
-            ></TextField>
-            <br />
-            <LoadingButton
-                color="primary"
-                variant="contained"
-                sx={{
-                    width: "128px",
-                }}
-                type="submit"
-                loading={isLoading}
-            >
-                登录
-            </LoadingButton>
+        <Grid container justifyContent="center">
+            <Grid item xs={12} lg={3}>
+                <Grid
+                    container
+                    component="form"
+                    direction="column"
+                    alignItems="center"
+                    onSubmit={onSubmit}
+                >
+                    <TextField
+                        variant="outlined"
+                        label="Email"
+                        name="email"
+                        required
+                        fullWidth
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                        }}
+                    ></TextField>
+                    <br />
+                    <TextField
+                        variant="outlined"
+                        label="密码"
+                        name="password"
+                        type="password"
+                        fullWidth
+                        required
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                    ></TextField>
+                    <br />
+                    <LoadingButton
+                        color="primary"
+                        variant="contained"
+                        sx={{
+                            width: "128px",
+                        }}
+                        type="submit"
+                        loading={isLoading}
+                    >
+                        登录
+                    </LoadingButton>
+                </Grid>
+            </Grid>
         </Grid>
     );
 };

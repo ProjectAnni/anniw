@@ -9,6 +9,7 @@ interface LibraryInfo {
     url: string;
     lastSync?: Date;
     serverLastUpdate?: Date;
+    albums: string[];
 }
 
 interface LibraryDB extends DBSchema {

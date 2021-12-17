@@ -14,6 +14,8 @@ export class AnniwBusinessError extends Error {
 export interface RequestOptions {
     /** 是否从 Anniv 返回格式中直接取出 data 字段 */
     unwrapResponse?: boolean;
+    /** 是否自动 snake-case 转 camel-case */
+    formatResponse?: boolean;
 }
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
@@ -53,7 +55,7 @@ class Request {
             params: {},
             data: {},
         };
-        const { unwrapResponse = true } = requestOptions || {};
+        const { unwrapResponse = true, formatResponse: isFormatResponse = true } = requestOptions || {};
         if (method === "GET") {
             options.params = formatRequest(payload);
         } else {
@@ -66,10 +68,10 @@ class Request {
                 if (data.status !== 0) {
                     throw new AnniwBusinessError(data.status, data.message);
                 } else {
-                    return formatResponse(data.data);
+                    return isFormatResponse ? formatResponse(data.data) : data.data;
                 }
             } else {
-                return formatResponse(data);
+                return isFormatResponse ? formatResponse(data) : data;
             }
         } catch (e) {
             if (e instanceof AnniwBusinessError) {

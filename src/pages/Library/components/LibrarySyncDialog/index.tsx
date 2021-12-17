@@ -1,17 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
+import { AnnilToken } from "@/types/common";
+import useMessage from "@/hooks/useMessage";
+import { default as LibraryDB } from "@/db/library";
+import { default as AlbumDB } from "@/db/album";
+import { getLibraryAlbums, getLibraryInfo } from "../../services";
 
 interface Props {
     open: boolean;
-    loading: boolean;
+    currentLibrary: AnnilToken | null;
     onCancel: () => void;
-    onConfirm: () => void;
+    onSyncEnded: () => void;
 }
 
-const LibrarySyncDialog: React.FC<Props> = (props) => {
-    const { open, loading, onCancel, onConfirm } = props;
-
+const SyncLibraryDialog: React.FC<Props> = (props) => {
+    const { open, currentLibrary, onCancel, onSyncEnded } = props;
+    const [loading, setLoading] = useState(false);
+    const [_, { addMessage }] = useMessage();
+    const onConfirm = async () => {
+        if (!currentLibrary) {
+            return;
+        }
+        setLoading(true);
+        try {
+            const libraryInfo = await getLibraryInfo(currentLibrary);
+            const { lastUpdate } = libraryInfo;
+            const albums = await getLibraryAlbums(currentLibrary);
+            if (albums?.length > 0) {
+                for (const albumId of albums) {
+                    await AlbumDB.addAvailableLibrary(albumId, currentLibrary.url);
+                }
+            }
+            await LibraryDB.set({
+                url: currentLibrary.url,
+                serverLastUpdate: new Date(lastUpdate * 1000),
+                lastSync: new Date(),
+                albums: albums?.length ? albums : [],
+            });
+            onSyncEnded();
+        } catch (e) {
+            if (e instanceof Error) {
+                addMessage("error", e.message);
+            }
+        } finally {
+            addMessage("success", "音频仓库同步成功");
+            setLoading(false);
+        }
+    };
     return (
         <Dialog open={open} fullWidth maxWidth="sm" onBackdropClick={onCancel}>
             <DialogTitle>同步音频仓库信息</DialogTitle>
@@ -34,4 +70,4 @@ const LibrarySyncDialog: React.FC<Props> = (props) => {
     );
 };
 
-export default LibrarySyncDialog;
+export default SyncLibraryDialog;
