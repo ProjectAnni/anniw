@@ -1,6 +1,7 @@
 import { default as LibraryDB } from "@/db/library";
 import { default as AlbumDB } from "@/db/album";
 import request from "@/api/request";
+import { formatResponse } from "@/utils/format";
 import { AlbumInfo } from "./types";
 
 export async function getLibraryAlbums(url: string) {
@@ -23,7 +24,7 @@ export async function getAlbumInfo(albumId: string) {
             formatResponse: false,
         }
     );
-    const albumInfo = albumInfoResponse?.[albumId];
+    const albumInfo = formatResponse(albumInfoResponse?.[albumId]);
     if (albumInfo) {
         await AlbumDB.addAlbumInfo(albumInfo);
         return albumInfo;

@@ -8,7 +8,7 @@ export default [
                 status: 0,
                 data: {
                     [id]: {
-                        albumId: id,
+                        album_id: id,
                         title: id,
                         artist: "artist",
                     },
