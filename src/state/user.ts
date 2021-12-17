@@ -9,15 +9,7 @@ export const CurrentUserInfo = atom<UserInfo | null>({
 
 export const IsLoadingUserInfo = atom<boolean>({
     key: "IsLoadingUserInfo",
-    default: false,
-});
-
-export const IsLogin = selector({
-    key: "IsLogin",
-    get: ({ get }) => {
-        const userInfo = get(CurrentUserInfo);
-        return userInfo !== null;
-    },
+    default: true,
 });
 
 export const CurrentLoginStatus = selector({

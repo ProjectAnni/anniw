@@ -9,6 +9,7 @@ import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalMessage from "./components/GlobalMessage";
 import LoginStatus from "./components/LoginStatus";
+import NeedLoginPage from "./components/NeedLoginPage";
 import NotFound from "./pages/NotFound";
 import Loading from "./components/Loading";
 import Login from "./pages/Login";
@@ -19,7 +20,6 @@ import AlbumList from "./pages/AlbumList";
 import AlbumDetail from "./pages/AlbumDetail";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
-import NeedLoginPage from "./components/NeedLoginPage";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
