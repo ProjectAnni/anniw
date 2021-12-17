@@ -1,6 +1,6 @@
 import { openDB, deleteDB } from "idb";
 import type { DBSchema, IDBPDatabase } from "idb";
-import { AlbumInfo } from "@/pages/Album/types";
+import { AlbumInfo } from "@/pages/AlbumList/types";
 
 const DB_VERSION = 2;
 const DB_NAME = "anniw_album";

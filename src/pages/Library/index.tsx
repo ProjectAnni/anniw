@@ -1,14 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useHistory } from "react-router-dom";
 import { Button, Grid, Typography } from "@material-ui/core";
 import { CredentialState } from "@/state/credentials";
-import useRequest from "@/hooks/useRequest";
 import useMessage from "@/hooks/useMessage";
-import Loading from "@/components/Loading";
 import { AnnilToken } from "@/types/common";
 import { default as LibraryDB } from "@/db/library";
-import { getAvailableAnnilTokens } from "./services";
 import LibraryList from "./components/LibraryList";
 import AddLibraryDialog from "./components/AddLibraryFormDialog";
 import SyncLibraryDialog from "./components/LibrarySyncDialog";
@@ -21,7 +18,6 @@ const Library: React.FC = () => {
     const [isShowSyncLibraryDialog, setIsShowSyncLibraryDialog] = useState(false);
     const [isShowDeleteLibraryDialog, setIsShowDeleteLibraryDialog] = useState(false);
     const [localInfoRefreshIndicator, setLocalInfoRefreshIndicator] = useState(0);
-    const [availableTokens, loading] = useRequest(getAvailableAnnilTokens);
     const [credentials, setCredentials] = useRecoilState(CredentialState);
     const [_, { addMessage }] = useMessage();
     const history = useHistory();
@@ -63,17 +59,11 @@ const Library: React.FC = () => {
                 addMessage("error", "请先同步一次该音频仓库");
                 return;
             }
-            history.push(`/album/list/?url=${encodeURI(url)}`);
+            history.push(`/album/list?url=${encodeURI(url)}`);
         },
         [history, addMessage]
     );
-    useEffect(() => {
-        if (availableTokens?.length) {
-            setCredentials({
-                credentials: availableTokens,
-            });
-        }
-    }, [availableTokens, setCredentials]);
+
     return (
         <Grid container justifyContent="center" className="library-page-container">
             <Grid item xs={12} lg={8}>
@@ -82,23 +72,19 @@ const Library: React.FC = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12} lg={8}>
-                {loading ? (
-                    <Loading />
-                ) : (
-                    <LibraryList
-                        libraries={credentials.credentials}
-                        localInfoRefreshIndicator={localInfoRefreshIndicator}
-                        onClick={onLibraryClicked}
-                        onSync={(library) => {
-                            setIsShowSyncLibraryDialog(true);
-                            setCurrentClickedLibrary(library);
-                        }}
-                        onDelete={(library) => {
-                            setIsShowDeleteLibraryDialog(true);
-                            setCurrentClickedLibrary(library);
-                        }}
-                    />
-                )}
+                <LibraryList
+                    libraries={credentials.credentials}
+                    localInfoRefreshIndicator={localInfoRefreshIndicator}
+                    onClick={onLibraryClicked}
+                    onSync={(library) => {
+                        setIsShowSyncLibraryDialog(true);
+                        setCurrentClickedLibrary(library);
+                    }}
+                    onDelete={(library) => {
+                        setIsShowDeleteLibraryDialog(true);
+                        setCurrentClickedLibrary(library);
+                    }}
+                />
             </Grid>
             <Grid item xs={12} lg={8} textAlign="right">
                 <Button

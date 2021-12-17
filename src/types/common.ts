@@ -1,3 +1,9 @@
+export enum LoginStatus {
+    UNKNOWN,
+    LOGGED_IN,
+    LOGGED_OUT,
+}
+
 export interface Indexable {
     id: string;
 }

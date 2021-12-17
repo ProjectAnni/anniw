@@ -2,10 +2,6 @@ import request from "@/api/request";
 import { AnnilToken } from "@/types/common";
 import { LibraryInfoResponse } from "./types";
 
-export function getAvailableAnnilTokens() {
-    return request.get<AnnilToken[]>("/api/credential");
-}
-
 export function deleteAnnilToken(id: string) {
     return request.delete(`/api/credential`, {
         id,

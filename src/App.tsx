@@ -8,15 +8,18 @@ import { PlayerController } from "./components/PlayerController";
 import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalMessage from "./components/GlobalMessage";
+import LoginStatus from "./components/LoginStatus";
 import NotFound from "./pages/NotFound";
 import Loading from "./components/Loading";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Logout from "./pages/Logout";
 import Library from "./pages/Library";
-import AlbumList from "./pages/Album";
+import AlbumList from "./pages/AlbumList";
+import AlbumDetail from "./pages/AlbumDetail";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
+import NeedLoginPage from "./components/NeedLoginPage";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
@@ -46,10 +49,19 @@ function AppBody() {
                         <Logout />
                     </Route>
                     <Route path="/library" exact>
-                        <Library />
+                        <NeedLoginPage>
+                            <Library />
+                        </NeedLoginPage>
                     </Route>
                     <Route path="/album/list" exact>
-                        <AlbumList />
+                        <NeedLoginPage>
+                            <AlbumList />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/album/detail" exact>
+                        <NeedLoginPage>
+                            <AlbumDetail />
+                        </NeedLoginPage>
                     </Route>
                     <Route path="*">
                         <NotFound />
@@ -96,6 +108,7 @@ function App() {
                     </React.Suspense>
                 </Router>
                 <GlobalMessage />
+                <LoginStatus />
             </>
         </RecoilRoot>
     );

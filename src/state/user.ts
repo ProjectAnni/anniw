@@ -1,9 +1,15 @@
 import { atom, selector } from "recoil";
-import { UserInfo } from "@/types/common";
+import { LoginStatus, UserInfo } from "@/types/common";
+
 
 export const CurrentUserInfo = atom<UserInfo | null>({
     key: "CurrentUserInfo",
     default: null,
+});
+
+export const IsLoadingUserInfo = atom<boolean>({
+    key: "IsLoadingUserInfo",
+    default: false,
 });
 
 export const IsLogin = selector({
@@ -11,5 +17,17 @@ export const IsLogin = selector({
     get: ({ get }) => {
         const userInfo = get(CurrentUserInfo);
         return userInfo !== null;
+    },
+});
+
+export const CurrentLoginStatus = selector({
+    key: "CurrentLoginStatus",
+    get: ({ get }) => {
+        const userInfo = get(CurrentUserInfo);
+        const isLoadingUserInfo = get(IsLoadingUserInfo);
+        if (isLoadingUserInfo) {
+            return LoginStatus.UNKNOWN;
+        }
+        return userInfo !== null ? LoginStatus.LOGGED_IN : LoginStatus.LOGGED_OUT;
     },
 });

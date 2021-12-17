@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 import { TextField, Grid } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
+import useQuery from "@/hooks/useQuery";
 import { CurrentUserInfo } from "@/state/user";
 import storage from "@/utils/storage";
 import { login } from "./services";
@@ -15,6 +16,7 @@ const LoginForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
     const history = useHistory();
+    const query = useQuery();
     const [_, { addMessage }] = useMessage();
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -30,7 +32,12 @@ const LoginForm: React.FC = () => {
             });
             setCurrentUserInfo(userInfo);
             storage.set("userInfo", userInfo);
-            history.push("/");
+            const returnTo = query.get('return');
+            if (returnTo) {
+                history.push(returnTo);
+            } else {
+                history.push("/");
+            }
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);
