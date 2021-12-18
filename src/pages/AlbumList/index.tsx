@@ -16,14 +16,15 @@ interface LibraryInfo {
 
 const AlbumList: React.FC = () => {
     const albumListRef = useRef<HTMLDivElement>(null);
+    const query = useQuery();
+    const history = useHistory();
     const [libraryInfo, setLibraryInfo] = useState<LibraryInfo | null>(null);
     const [albums, setAlbums] = useState<string[]>([]);
-    const [pageNum, setPageNum] = useState<number>(1);
-    const [itemPerPage, setItemPerPage] = useState<number>(30);
+    const [pageNum, setPageNum] = useState<number>(parseInt(query.get("page") || "1"));
+    const [itemPerPage, setItemPerPage] = useState<number>(parseInt(query.get("count") || "30"));
     const { credentials } = useRecoilValue(CredentialState);
-    const query = useQuery();
     const [_, { addMessage }] = useMessage();
-    const history = useHistory();
+
     useEffect(() => {
         const libraryUrl = query.get("url");
         if (!libraryUrl) {
@@ -53,6 +54,23 @@ const AlbumList: React.FC = () => {
         const end = start + itemPerPage;
         return albums.slice(start, end);
     }, [albums, pageNum, itemPerPage]);
+    const onPageCountChange = (count: number) => {
+        setItemPerPage(count);
+        query.set("page", pageNum.toString());
+        query.set("count", count.toString());
+        history.replace({
+            search: query.toString(),
+        });
+    }
+    const onPageChange = (page: number) => {
+        setPageNum(page);
+        albumListRef.current && albumListRef.current.scrollIntoView();
+        query.set("page", page.toString());
+        query.set("count", itemPerPage.toString());
+        history.replace({
+            search: query.toString(),
+        });
+    };
 
     return (
         <Grid
@@ -84,7 +102,7 @@ const AlbumList: React.FC = () => {
                         label="每页数量"
                         value={itemPerPage}
                         onChange={(e) => {
-                            setItemPerPage(+e.target.value);
+                            onPageCountChange(+e.target.value);
                         }}
                         size="small"
                     >
@@ -98,8 +116,7 @@ const AlbumList: React.FC = () => {
                         count={pageCount}
                         color="primary"
                         onChange={(e, page) => {
-                            setPageNum(page);
-                            albumListRef.current && albumListRef.current.scrollIntoView();
+                            onPageChange(page);
                         }}
                     />
                 </Grid>
