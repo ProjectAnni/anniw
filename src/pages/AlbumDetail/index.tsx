@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { groupBy } from "lodash";
-import { Grid } from "@material-ui/core";
+import { Divider, Grid } from "@material-ui/core";
 import useQuery from "@/hooks/useQuery";
 import useMessage from "@/hooks/useMessage";
 import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
-import { AnnilToken, AlbumInfo } from "@/types/common";
-import { getAlbumInfo, getAlbumAvailableLibraries } from "./services";
-import "./index.scss";
+import { AnnilToken } from "@/types/common";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
+import { getAlbumInfo, getAlbumAvailableLibraries } from "./services";
+import styles from "./index.module.scss";
+import TrackList from "./components/TrackList";
 
 const AlbumDetail: React.FC = () => {
     const query = useQuery();
@@ -20,7 +21,7 @@ const AlbumDetail: React.FC = () => {
     const [availableLibraries, loadingAvailableLibraries] = useRequest(() =>
         getAlbumAvailableLibraries(query.get("id"))
     );
-    const [albumInfo, loadingAlbumInfo] = useRequest(() => getAlbumInfo(query.get("id")));
+    const [albumInfo] = useRequest(() => getAlbumInfo(query.get("id")));
 
     useEffect(() => {
         const albumId = query.get("id");
@@ -43,7 +44,7 @@ const AlbumDetail: React.FC = () => {
         setCredential(credentialUrlMap[librariesByPriority[0]][0]);
     }, [query, allAvailableCredentials, availableLibraries, loadingAvailableLibraries, addMessage]);
     return (
-        <Grid container justifyContent="center" className="album-detail-page-container">
+        <Grid container justifyContent="center" className={styles.pageContainer}>
             <Grid item xs={12} lg={8}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} lg={4}>
@@ -52,6 +53,15 @@ const AlbumDetail: React.FC = () => {
                     <Grid item xs={12} lg={8}>
                         <AlbumBasicInfo albumInfo={albumInfo} credential={credential} />
                     </Grid>
+                </Grid>
+                <Grid item xs={12} className={styles.divider}>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    {!!albumInfo?.discs?.length &&
+                        albumInfo.discs.map((disc, index) => (
+                            <TrackList disc={disc} itemIndex={index} key={disc.catalog} />
+                        ))}
                 </Grid>
             </Grid>
         </Grid>

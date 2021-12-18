@@ -11,11 +11,11 @@ export default [
                     [id]: {
                         album_id: id,
                         title: "THE IDOLM@STER LIVE THE@TER HARMONY 04",
-                        edition: '通常',
+                        edition: "通常",
                         catalog: "LACA-15434",
                         artist: "エターナルハーモニー（如月千早（今井麻美）、エミリー スチュアート（郁原ゆう）、ジュリア（愛美）、徳川まつり（諏訪彩花）、豊川風花（末柄里恵））",
                         date: "2014-09-24",
-                        tags: ["THE IDOLM@STER LIVE THE@TER HARMONY", "THE IDOLM@STER LIVE THE@TER HARMONY EX", "THE IDOLM@STER LIVE THE@TER HARMONY PRO", "THE IDOLM@STER LIVE THE@TER HARMONY MAX"],
+                        tags: ["THE IDOLM@STER LIVE THE@TER HARMONY"],
                         type: "normal",
                         discs: [
                             {

@@ -100,6 +100,10 @@ class Album {
         return this.set(AlbumStoreNames.AlbumInfo, albumInfo);
     }
 
+    async deleteAlbumInfo(albumId: string) {
+        return (await this.db).delete(AlbumStoreNames.AlbumInfo, albumId);
+    }
+
     async dropAllStores() {
         return await deleteDB(DB_NAME);
     }

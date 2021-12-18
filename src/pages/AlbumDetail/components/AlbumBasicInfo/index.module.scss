@@ -1,3 +1,7 @@
+.basicInfoContainer {
+    position: relative;
+    height: 100%;
+}
 .titleContainer,
 .artist {
     width: 100%;
@@ -12,6 +16,7 @@
     color: #aaa;
 }
 .releaseDate {
+    margin-top: 8px;
     font-size: 16px;
     color: #aaa;
 }
@@ -19,9 +24,11 @@
     display: flex;
     margin-top: 8px;
     flex-wrap: wrap;
+    flex-grow: 1;
 }
 .tag {
     display: inline-block;
+    height: fit-content;
     padding: 2px 4px;
     border-radius: 2px;
     color: #fff;
@@ -30,4 +37,8 @@
     margin-right: 8px;
     margin-bottom: 4px;
     cursor: pointer;
+    word-break: break-all;
+}
+.actions {
+   text-align: right;
 }

@@ -27,6 +27,13 @@ export async function getAlbumInfo(albumId: string | null) {
     }
 }
 
+export async function deleteAlbumInfoCache(albumId?: string) {
+    if (!albumId) {
+        return;
+    }
+    return AlbumDB.deleteAlbumInfo(albumId);
+}
+
 export async function getAlbumAvailableLibraries(albumId: string | null) {
     if (!albumId) {
         return;
