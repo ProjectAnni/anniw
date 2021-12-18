@@ -1,0 +1,33 @@
+.titleContainer,
+.artist {
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    word-break: break-all;
+}
+.artist {
+    font-size: 16px;
+    color: #aaa;
+}
+.releaseDate {
+    font-size: 16px;
+    color: #aaa;
+}
+.tagsContainer {
+    display: flex;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.tag {
+    display: inline-block;
+    padding: 2px 4px;
+    border-radius: 2px;
+    color: #fff;
+    background-color: rgba(25, 118, 210, $alpha: 0.8);
+    user-select: none;
+    margin-right: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+}

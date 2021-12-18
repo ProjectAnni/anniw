@@ -3,11 +3,10 @@ import useMessage from "./useMessage";
 
 const useRequest = <T>(queryFunction: () => Promise<T>): [T | undefined, boolean] => {
     const [response, setResponse] = useState<T>();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [_, { addMessage }] = useMessage();
     const queryFunctionRef = useRef(queryFunction);
     useEffect(() => {
-        setIsLoading(true);
         queryFunctionRef
             .current()
             .then((data) => {
@@ -19,7 +18,7 @@ const useRequest = <T>(queryFunction: () => Promise<T>): [T | undefined, boolean
             .finally(() => {
                 setIsLoading(false);
             });
-    }, []);
+    }, [addMessage]);
     return [response, isLoading];
 };
 

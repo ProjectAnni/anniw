@@ -1,10 +1,20 @@
-import React from "react";
-import {  Grid } from "@material-ui/core";
+import React, { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { useHistory } from "react-router-dom";
+import { Grid } from "@material-ui/core";
+import { CurrentLoginStatus } from "@/state/user";
+import { LoginStatus } from "@/types/common";
 import LoginForm from "./LoginForm";
 import "./index.scss";
 
-
 function Login() {
+    const history = useHistory();
+    const currentLoginStatus = useRecoilValue(CurrentLoginStatus);
+    useEffect(() => {
+        if (currentLoginStatus === LoginStatus.LOGGED_IN) {
+            history.push("/");
+        }
+    }, [currentLoginStatus, history]);
     return (
         <Grid
             container

@@ -1,16 +1,12 @@
-import { default as LibraryDB } from "@/db/library";
-import { default as AlbumDB } from "@/db/album";
 import request from "@/api/request";
+import { default as AlbumDB } from "@/db/album";
 import { formatResponse } from "@/utils/format";
 import { AlbumInfo } from "@/types/common";
 
-export async function getLibraryAlbums(url: string) {
-    const libraryInfo = await LibraryDB.get(url);
-    const { albums = [] } = libraryInfo || {};
-    return albums;
-}
-
-export async function getAlbumInfo(albumId: string) {
+export async function getAlbumInfo(albumId: string | null) {
+    if (!albumId) {
+        return;
+    }
     const cachedAlbumInfo = await AlbumDB.getAlbumInfo(albumId);
     if (cachedAlbumInfo) {
         return cachedAlbumInfo;
@@ -24,9 +20,16 @@ export async function getAlbumInfo(albumId: string) {
             formatResponse: false,
         }
     );
-    const albumInfo = formatResponse(albumInfoResponse?.[albumId]);
+    const albumInfo = formatResponse(albumInfoResponse?.[albumId]) as AlbumInfo;
     if (albumInfo) {
         await AlbumDB.addAlbumInfo(albumInfo);
         return albumInfo;
     }
+}
+
+export async function getAlbumAvailableLibraries(albumId: string | null) {
+    if (!albumId) {
+        return;
+    }
+    return AlbumDB.getAvailableLibraries(albumId);
 }

@@ -1,6 +1,6 @@
 import { openDB, deleteDB } from "idb";
 import type { DBSchema, IDBPDatabase } from "idb";
-import { AlbumInfo } from "@/pages/AlbumList/types";
+import { AlbumInfo } from "@/types/common";
 
 const DB_VERSION = 2;
 const DB_NAME = "anniw_album";
@@ -52,6 +52,14 @@ class Album {
 
     async set(storeName: AlbumStoreNames, payload: AlbumLibraryMapItem | AlbumInfo) {
         return (await this.db).put(storeName, payload);
+    }
+
+    async getAvailableLibraries(albumId: string) {
+        const mapItem = (await this.get(
+            AlbumStoreNames.AlbumLibraryMap,
+            albumId
+        )) as AlbumLibraryMapItem;
+        return mapItem?.availableLibraries || [];
     }
 
     async addAvailableLibrary(albumId: string, libraryUrl: string) {

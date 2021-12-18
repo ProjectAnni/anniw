@@ -15,4 +15,9 @@ export default defineConfig({
             supportTs: true,
         }),
     ],
+    css: {
+        modules: {
+            localsConvention: 'camelCaseOnly',
+        }
+    }
 });
