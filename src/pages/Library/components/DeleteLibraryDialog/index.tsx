@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogActions, Button } from "@material-ui/core";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
+import { default as LibraryDB } from "@/db/library";
+import { default as AlbumDB } from "@/db/album";
 import { AnnilToken } from "@/types/common";
 import { deleteAnnilToken } from "../../services";
 
@@ -24,6 +26,14 @@ const DeleteLibraryDialog: React.FC<Props> = (props) => {
         const { id } = currentLibrary;
         try {
             await deleteAnnilToken(id);
+            // 删除本地数据
+            const currentLocalInfo = await LibraryDB.get(currentLibrary.url);
+            await LibraryDB.delete(currentLibrary.url);
+            if (currentLocalInfo?.albums?.length) {
+                for (const albumId of currentLocalInfo.albums) {
+                    await AlbumDB.deleteAvailableLibrary(albumId, currentLibrary.url);
+                }
+            }
             onDeleted(currentLibrary);
         } catch (e) {
             if (e instanceof Error) {

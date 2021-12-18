@@ -43,6 +43,10 @@ class Library {
         return (await this.db).put(TABLE_NAME, info);
     }
 
+    async delete(url: string) {
+        return (await this.db).delete(TABLE_NAME, url);
+    }
+
     async dropAllStores() {
         return await deleteDB(DB_NAME);
     }

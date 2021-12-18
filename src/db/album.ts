@@ -69,6 +69,21 @@ class Album {
         }
     }
 
+    async deleteAvailableLibrary(albumId: string, libraryUrl: string) {
+        const mapItem = (await this.get(
+            AlbumStoreNames.AlbumLibraryMap,
+            albumId
+        )) as AlbumLibraryMapItem;
+        const currentAvailableLibraryUrls = mapItem?.availableLibraries || [];
+        const newAvailableLibraryUrls = currentAvailableLibraryUrls.filter(
+            (url) => url !== libraryUrl
+        );
+        return this.set(AlbumStoreNames.AlbumLibraryMap, {
+            albumId,
+            availableLibraries: newAvailableLibraryUrls,
+        });
+    }
+
     async getAlbumInfo(albumId: string) {
         return (await this.get(AlbumStoreNames.AlbumInfo, albumId)) as AlbumInfo | undefined;
     }
