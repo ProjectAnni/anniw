@@ -4,12 +4,12 @@ import { RecoilRoot, useRecoilValue } from "recoil";
 import { Container, AppBar, Toolbar, CssBaseline } from "@material-ui/core";
 import { AnniwAppBar } from "./components/AppBar";
 import { AnniwDrawer } from "./components/Drawer";
-import { PlayerController } from "./components/PlayerController";
 import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalMessage from "./components/GlobalMessage";
 import LoginStatus from "./components/LoginStatus";
 import NeedLoginPage from "./components/NeedLoginPage";
+import Player from './components/Player';
 import NotFound from "./pages/NotFound";
 import Loading from "./components/Loading";
 import Login from "./pages/Login";
@@ -79,8 +79,7 @@ function AppBody() {
                             marginLeft: open ? "241px" : 0,
                         }}
                     >
-                        <div className="grow" />
-                        <PlayerController />
+                        <Player />
                         <ActivePlaylistPopup />
                     </Toolbar>
                 </AppBar>

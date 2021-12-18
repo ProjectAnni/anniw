@@ -60,7 +60,13 @@ const AlbumDetail: React.FC = () => {
                 <Grid item xs={12}>
                     {!!albumInfo?.discs?.length &&
                         albumInfo.discs.map((disc, index) => (
-                            <TrackList disc={disc} itemIndex={index} key={disc.catalog} />
+                            <TrackList
+                                disc={disc}
+                                itemIndex={index}
+                                key={disc.catalog}
+                                credential={credential}
+                                albumInfo={albumInfo}
+                            />
                         ))}
                 </Grid>
             </Grid>

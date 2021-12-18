@@ -4,6 +4,11 @@ export enum LoginStatus {
     LOGGED_OUT,
 }
 
+export enum PlayerStatus {
+    PAUSED,
+    PLAYING,
+}
+
 export interface Indexable {
     id: string;
 }
