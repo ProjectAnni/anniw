@@ -34,7 +34,7 @@ export default [
                                     {
                                         title: "カーニヴァル・ジャパネスク",
                                         artist: "徳川まつり（諏訪彩花）",
-                                        type: "normal",
+                                        type: "radio",
                                         tags: [],
                                     },
                                     {

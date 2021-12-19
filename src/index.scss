@@ -17,6 +17,7 @@ code {
 .main-container {
     height: calc(100vh - 128px);
     padding: 0;
+    padding-bottom: 64px;
     margin: 0 !important;
     overflow-y: auto;
     overflow-x: hidden;

@@ -1,17 +1,18 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { groupBy } from "lodash";
-import { Divider, Grid } from "@material-ui/core";
+import { Divider, Grid, Typography } from "@material-ui/core";
 import useQuery from "@/hooks/useQuery";
 import useMessage from "@/hooks/useMessage";
 import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
 import { AnnilToken } from "@/types/common";
+import TrackList from "@/components/TrackList";
+import { TrackItem } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
 import { getAlbumInfo, getAlbumAvailableLibraries } from "./services";
 import styles from "./index.module.scss";
-import TrackList from "./components/TrackList";
 
 const AlbumDetail: React.FC = () => {
     const query = useQuery();
@@ -59,15 +60,27 @@ const AlbumDetail: React.FC = () => {
                 </Grid>
                 <Grid item xs={12}>
                     {!!albumInfo?.discs?.length &&
-                        albumInfo.discs.map((disc, index) => (
-                            <TrackList
-                                disc={disc}
-                                itemIndex={index}
-                                key={disc.catalog}
-                                credential={credential}
-                                albumInfo={albumInfo}
-                            />
-                        ))}
+                        albumInfo.discs.map((disc, discIndex) => {
+                            const { tracks } = disc;
+                            const { albumId, title: albumTitle } = albumInfo;
+                            const trackList: TrackItem[] = tracks.map((track, trackIndex) => ({
+                                ...track,
+                                discIndex,
+                                trackIndex,
+                                albumId,
+                                albumTitle,
+                            }));
+                            return (
+                                <Grid container flexDirection="column" key={disc.catalog}>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h5">{`Disc ${discIndex + 1}`}</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TrackList credential={credential} tracks={trackList} />
+                                    </Grid>
+                                </Grid>
+                            );
+                        })}
                 </Grid>
             </Grid>
         </Grid>

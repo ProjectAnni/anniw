@@ -4,7 +4,6 @@ import { RecoilRoot, useRecoilValue } from "recoil";
 import { Container, AppBar, Toolbar, CssBaseline } from "@material-ui/core";
 import { AnniwAppBar } from "./components/AppBar";
 import { AnniwDrawer } from "./components/Drawer";
-import { ActivePlaylistPopup } from "./components/ActivePlaylistPopup";
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalMessage from "./components/GlobalMessage";
 import LoginStatus from "./components/LoginStatus";
@@ -80,7 +79,7 @@ function AppBody() {
                         }}
                     >
                         <Player />
-                        <ActivePlaylistPopup />
+                        {/* <ActivePlaylistPopup /> */}
                     </Toolbar>
                 </AppBar>
             </Container>

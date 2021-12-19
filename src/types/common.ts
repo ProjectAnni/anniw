@@ -7,6 +7,7 @@ export enum LoginStatus {
 export enum PlayerStatus {
     PAUSED,
     PLAYING,
+    ENDED,
 }
 
 export interface Indexable {
