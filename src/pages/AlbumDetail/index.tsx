@@ -48,10 +48,10 @@ const AlbumDetail: React.FC = () => {
         <Grid container justifyContent="center" className={styles.pageContainer}>
             <Grid item xs={12} lg={8}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} lg={4}>
+                    <Grid item xs={12} lg={3}>
                         <AlbumCover albumInfo={albumInfo} credential={credential} />
                     </Grid>
-                    <Grid item xs={12} lg={8}>
+                    <Grid item xs={12} lg={9}>
                         <AlbumBasicInfo albumInfo={albumInfo} credential={credential} />
                     </Grid>
                 </Grid>

@@ -19,7 +19,7 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
     };
     return (
         <Grid container flexDirection="column" className={styles.basicInfoContainer}>
-            <Typography variant="h3" className={styles.titleContainer}>
+            <Typography variant="h4" className={styles.titleContainer}>
                 <span title={title}>{title}</span>
             </Typography>
             <div className={styles.releaseDate}>

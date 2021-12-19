@@ -31,7 +31,7 @@ const PlayerController: React.FC = () => {
                     }
                 }}
             >
-                {playerStatus === PlayerStatus.PAUSED ? (
+                {playerStatus === PlayerStatus.PAUSED || playerStatus === PlayerStatus.ENDED ? (
                     <PlayIcon fontSize="large" />
                 ) : (
                     <PauseIcon fontSize="large" />
