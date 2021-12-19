@@ -4,6 +4,7 @@ import { AnnilToken } from "@/types/common";
 import usePlayer from "@/hooks/usePlayer";
 import { TrackItem } from "./types";
 import Item from "./Item";
+import { getAudioUrl, getCoverUrl } from "@/api/annil";
 
 interface Props {
     tracks: TrackItem[];
@@ -14,20 +15,18 @@ const TrackList: React.FC<Props> = (props) => {
     const { tracks, credential } = props;
     const [player, { play }] = usePlayer();
     const onClick = (track: TrackItem) => {
-        const { albumId, albumTitle, discIndex, trackIndex } = track;
-        const { title, artist } = track;
-        const audioUrl = `${credential?.url}/${albumId}/${discIndex + 1}/${trackIndex + 1}?auth=${
-            credential?.token
-        }&prefer_bitrate=lossless`;
-        const coverUrl = `${credential?.url}/${albumId}/cover?auth=${credential?.token}`;
-        play({
-            url: audioUrl,
-            title,
-            artist,
-            album: albumTitle,
-            albumId,
-            cover: coverUrl,
-        });
+        const { title, artist, albumId, albumTitle } = track;
+
+        if (credential) {
+            play({
+                url: getAudioUrl(credential, track),
+                title,
+                artist,
+                album: albumTitle,
+                albumId,
+                cover: getCoverUrl(credential, track),
+            });
+        }
     };
     return (
         <List dense>
