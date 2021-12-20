@@ -19,13 +19,14 @@ const Logout: React.FC = () => {
                 addMessage("success", "登出成功");
                 await sleep(2000);
                 storage.delete("userInfo");
+                storage.delete("playlist");
                 setCurrentUserInfo(null);
                 history.push("/");
             })
             .catch((e) => {
                 addMessage("error", e.message);
             });
-    }, []);
+    }, [addMessage, history, setCurrentUserInfo]);
     return (
         <div className="logout-container">
             <Alert severity="info" sx={{ width: "50%" }}>

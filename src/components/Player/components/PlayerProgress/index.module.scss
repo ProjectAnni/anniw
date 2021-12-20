@@ -7,17 +7,28 @@
 }
 
 .progress {
+    position: relative;
     width: 100%;
     height: 4px;
     background-color: #fff;
     cursor: pointer;
 }
 
-.filled {
+.played,
+.buffered {
+    position: absolute;
+    left: 0;
     width: 0;
     height: 100%;
-    background-color: #b982cf;
     transition: width 0.3s ease-in-out;
+}
+
+.played {
+    background-color: #b982cf;
+}
+
+.buffered {
+    background-color: rgba(#cdcdcd, 0.6);
 }
 
 .topTexts {

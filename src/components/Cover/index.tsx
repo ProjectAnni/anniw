@@ -11,6 +11,7 @@ const Cover: React.FC<Props> = (props) => {
     const [isCoverLoaded, setIsCoverLoaded] = useState(false);
     useEffect(() => {
         if (coverUrl) {
+            setIsCoverLoaded(false);
             const imgEl = new Image();
             imgEl.src = coverUrl;
             const onLoad = () => {

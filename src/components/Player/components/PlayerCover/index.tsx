@@ -6,9 +6,9 @@ import styles from './index.module.scss';
 
 const PlayerCover: React.FC = () => {
     const nowPlayingInfo = useRecoilValue(NowPlayingInfoState);
-    const { cover } = nowPlayingInfo;
+    const { coverUrl } = nowPlayingInfo;
     return (
-        <div className={styles.coverContainer}><Cover coverUrl={cover} /></div> 
+        <div className={styles.coverContainer}><Cover coverUrl={coverUrl} /></div> 
     )
 }
 

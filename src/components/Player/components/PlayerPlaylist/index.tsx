@@ -1,16 +1,21 @@
 import React from "react";
-import { Grid, IconButton, Tooltip } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
+import { Grid, IconButton } from "@material-ui/core";
 import { QueueMusic } from "@material-ui/icons";
 import styles from "./index.module.scss";
 
 const PlayerPlaylist: React.FC = () => {
+    const history = useHistory();
     return (
         <Grid container alignItems="center" className={styles.container}>
-            <Tooltip title="暂未实现">
-                <IconButton color="inherit">
-                    <QueueMusic />
-                </IconButton>
-            </Tooltip>
+            <IconButton
+                color="inherit"
+                onClick={() => {
+                    history.push("/playlist");
+                }}
+            >
+                <QueueMusic />
+            </IconButton>
         </Grid>
     );
 };

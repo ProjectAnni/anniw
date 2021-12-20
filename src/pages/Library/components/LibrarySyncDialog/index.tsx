@@ -37,6 +37,7 @@ const SyncLibraryDialog: React.FC<Props> = (props) => {
                 serverLastUpdate: new Date(lastUpdate * 1000),
                 lastSync: new Date(),
                 albums: albums?.length ? albums : [],
+                albumCount: +albums?.length,
             });
             onSyncEnded();
         } catch (e) {

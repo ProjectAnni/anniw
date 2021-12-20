@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import useMessage from "./useMessage";
 
-const useRequest = <T>(queryFunction: () => Promise<T>): [T | undefined, boolean] => {
+const useRequest = <T>(queryFunction: () => Promise<T>) => {
     const [response, setResponse] = useState<T>();
     const [isLoading, setIsLoading] = useState(true);
     const [_, { addMessage }] = useMessage();
@@ -19,7 +19,7 @@ const useRequest = <T>(queryFunction: () => Promise<T>): [T | undefined, boolean
                 setIsLoading(false);
             });
     }, [addMessage]);
-    return [response, isLoading];
+    return [response, isLoading] as const;
 };
 
 export default useRequest;

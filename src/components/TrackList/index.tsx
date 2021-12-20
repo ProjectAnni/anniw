@@ -2,36 +2,56 @@ import React from "react";
 import { List } from "@material-ui/core";
 import { AnnilToken } from "@/types/common";
 import usePlayer from "@/hooks/usePlayer";
+import useMessage from "@/hooks/useMessage";
+import usePlayerController from "@/hooks/usePlayerController";
 import { TrackItem } from "./types";
+import { getCoverUrlForTrack, getPlayUrlForTrack } from "./services";
 import Item from "./Item";
-import { getAudioUrl, getCoverUrl } from "@/api/annil";
 
 interface Props {
     tracks: TrackItem[];
-    credential?: AnnilToken;
 }
 
 const TrackList: React.FC<Props> = (props) => {
-    const { tracks, credential } = props;
-    const [player, { play }] = usePlayer();
-    const onClick = (track: TrackItem) => {
-        const { title, artist, albumId, albumTitle } = track;
-
+    const { tracks } = props;
+    const [player, { resume, restart, pause }] = usePlayer();
+    const { playNow, addToPlaylist } = usePlayerController();
+    const [_, { addMessage }] = useMessage();
+    const onPlay = (track: TrackItem, credential?: AnnilToken) => {
         if (credential) {
-            play({
-                url: getAudioUrl(credential, track),
-                title,
-                artist,
-                album: albumTitle,
-                albumId,
-                cover: getCoverUrl(credential, track),
+            playNow({
+                ...track,
+                playUrl: getPlayUrlForTrack(track, credential),
+                coverUrl: getCoverUrlForTrack(track, credential),
             });
         }
     };
+    const onPlaylistAdd = (track: TrackItem, credential?: AnnilToken) => {
+        if (credential) {
+            addToPlaylist({
+                ...track,
+                playUrl: getPlayUrlForTrack(track, credential),
+                coverUrl: getCoverUrlForTrack(track, credential),
+            });
+            addMessage("success", "添加播放列表成功");
+        }
+    };
+
     return (
         <List dense>
             {tracks.map((track, index) => {
-                return <Item key={track.title} track={track} itemIndex={index} onClick={onClick} />;
+                return (
+                    <Item
+                        key={track.title}
+                        track={track}
+                        itemIndex={index}
+                        onPlay={onPlay}
+                        onPlaylistAdd={onPlaylistAdd}
+                        onPause={pause}
+                        onResume={resume}
+                        onRestart={restart}
+                    />
+                );
             })}
         </List>
     );

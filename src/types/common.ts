@@ -1,3 +1,5 @@
+import { TrackItem } from "@/components/TrackList/types";
+
 export enum LoginStatus {
     UNKNOWN,
     LOGGED_IN,
@@ -8,6 +10,8 @@ export enum PlayerStatus {
     PAUSED,
     PLAYING,
     ENDED,
+    BUFFERING,
+    EMPTY,
 }
 
 export interface Indexable {
@@ -81,3 +85,8 @@ export interface AlbumInfo {
     type: string;
     discs: DiscInfo[];
 }
+
+export interface PlaylistItem extends TrackItem {
+    playUrl: string;
+    coverUrl: string;
+ }

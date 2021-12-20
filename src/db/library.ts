@@ -10,6 +10,7 @@ interface LibraryInfo {
     lastSync?: Date;
     serverLastUpdate?: Date;
     albums: string[];
+    albumCount: number;
 }
 
 interface LibraryDB extends DBSchema {

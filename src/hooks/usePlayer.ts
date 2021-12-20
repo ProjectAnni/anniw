@@ -1,36 +1,113 @@
 import { useCallback, useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
-import { PlayerStatus } from "@/types/common";
+import { PlaylistState } from "@/state/playlist";
+import { PlayerStatus, PlaylistItem } from "@/types/common";
 
-interface PlayParams {
-    url: string;
-    title?: string;
-    artist?: string;
-    album?: string;
-    albumId?: string;
-    cover?: string;
+function getAudioUrl(url: string) {
+    if (window.MediaSource) {
+        const mediaSource = new MediaSource();
+        mediaSource.addEventListener("sourceopen", () => {
+            fetch(url, { cache: "force-cache" }).then((resp) => {
+                // set source buffer mime type
+                const mime = resp.headers.get("Content-Type") || "audio/aac";
+                const duration = resp.headers.get("X-Duration-Seconds") || "300";
+                const sourceBuffer = mediaSource.addSourceBuffer(mime);
+                let isSourceRemoved = false;
+
+                // set media source duration
+                mediaSource.duration = Number(duration);
+
+                // get body as reader
+                const reader = resp.body?.getReader();
+                const appendBuffer = ({
+                    done,
+                    value,
+                }: ReadableStreamDefaultReadResult<Uint8Array>) => {
+                    if (!isSourceRemoved) {
+                        if (!done && value) {
+                            // body not finished, append buffer
+                            sourceBuffer.appendBuffer(value);
+                        } else {
+                            // update duration after stream ends
+                            mediaSource.endOfStream();
+                        }
+                    }
+                };
+                mediaSource.sourceBuffers.addEventListener("removesourcebuffer", () => {
+                    isSourceRemoved = true;
+                });
+                // read body on source buffer update ends
+                sourceBuffer.addEventListener("updateend", () => reader?.read().then(appendBuffer));
+                // read body once
+                reader?.read().then(appendBuffer);
+            });
+        });
+        return URL.createObjectURL(mediaSource);
+    } else {
+        return url;
+    }
 }
+
+const setMediaSessionMetadata = ({
+    title,
+    artist,
+    album,
+    cover,
+}: Partial<Record<string, string>>) => {
+    if (window.navigator.mediaSession)
+        window.navigator.mediaSession.metadata = new MediaMetadata({
+            title,
+            artist,
+            album,
+            ...(cover
+                ? {
+                      artwork: [{ src: cover, sizes: "512x512", type: "image/jpeg" }],
+                  }
+                : {}),
+        });
+};
 
 export default function usePlayer() {
     const player = useRecoilValue(PlayerState);
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const setNowPlayingInfo = useSetRecoilState(NowPlayingInfoState);
     const play = useCallback(
-        ({ url, title, artist, album, albumId, cover }: PlayParams) => {
-            player.src = url;
-            player.play();
-            setPlayerStatus(PlayerStatus.PLAYING);
-            setNowPlayingInfo({ url, title, artist, album, albumId, cover });
-            if (window.navigator.mediaSession)
-                window.navigator.mediaSession.metadata = new MediaMetadata({
-                    title,
-                    artist,
-                    album,
-                    ...(cover
-                        ? { artwork: [{ src: cover, sizes: "512x512", type: "image/png" }] }
-                        : {}),
-                });
+        ({
+            playUrl,
+            title,
+            artist,
+            albumTitle,
+            albumId,
+            coverUrl,
+            discIndex,
+            trackIndex,
+        }: PlaylistItem) => {
+            player.src = getAudioUrl(playUrl);
+            setPlayerStatus(PlayerStatus.BUFFERING);
+            player.addEventListener(
+                "canplay",
+                () => {
+                    player.play();
+                    setPlayerStatus(PlayerStatus.PLAYING);
+                    setNowPlayingInfo({
+                        title,
+                        artist,
+                        albumTitle,
+                        albumId,
+                        coverUrl,
+                        discIndex,
+                        trackIndex,
+                    });
+                    setMediaSessionMetadata({
+                        title,
+                        artist,
+                        album: albumTitle,
+                        cover: coverUrl,
+                    });
+                },
+                { once: true }
+            );
         },
         [player, setPlayerStatus, setNowPlayingInfo]
     );
@@ -58,27 +135,7 @@ export default function usePlayer() {
         },
         [player]
     );
-    useEffect(() => {
-        const onEnded = () => {
-            setPlayerStatus(PlayerStatus.ENDED);
-        };
-        player.addEventListener("ended", onEnded);
-        return () => {
-            player.removeEventListener("ended", onEnded);
-        };
-    }, [player, setPlayerStatus]);
-    useEffect(() => {
-        if (window.navigator.mediaSession) {
-            navigator.mediaSession.setActionHandler("play", () => {
-                if (playerStatus === PlayerStatus.ENDED) {
-                    restart();
-                } else {
-                    resume();
-                }
-            });
-            navigator.mediaSession.setActionHandler("pause", pause);
-        }
-    }, [pause, playerStatus, restart, resume]);
+
     return [
         player,
         {

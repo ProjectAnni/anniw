@@ -17,6 +17,7 @@ import Logout from "./pages/Logout";
 import Library from "./pages/Library";
 import AlbumList from "./pages/AlbumList";
 import AlbumDetail from "./pages/AlbumDetail";
+import Playlist from './pages/Playlist';
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
@@ -57,9 +58,14 @@ function AppBody() {
                             <AlbumList />
                         </NeedLoginPage>
                     </Route>
-                    <Route path="/album/detail" exact>
+                    <Route path="/album/:id">
                         <NeedLoginPage>
                             <AlbumDetail />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/playlist" exact>
+                        <NeedLoginPage>
+                            <Playlist />
                         </NeedLoginPage>
                     </Route>
                     <Route path="*">

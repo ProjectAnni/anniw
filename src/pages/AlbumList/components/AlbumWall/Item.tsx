@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { useHistory } from "react-router-dom";
 import useRequest from "@/hooks/useRequest";
 import Cover from "@/components/Cover";
@@ -26,7 +26,7 @@ const AlbumWallItem: React.FC<Props> = (props) => {
         <div
             className="album-item"
             onClick={() => {
-                history.push(`/album/detail?id=${albumId}`);
+                history.push(`/album/${albumId}`);
             }}
         >
             <Cover coverUrl={coverUrl} />
@@ -40,4 +40,4 @@ const AlbumWallItem: React.FC<Props> = (props) => {
     );
 };
 
-export default AlbumWallItem;
+export default memo(AlbumWallItem);

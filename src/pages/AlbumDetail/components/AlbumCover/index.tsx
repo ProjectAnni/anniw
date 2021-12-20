@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import { AlbumInfo, AnnilToken } from "@/types/common";
 import Cover from "@/components/Cover";
 import "./index.scss";
@@ -23,4 +23,4 @@ const AlbumCover: React.FC<Props> = (props) => {
     );
 };
 
-export default AlbumCover;
+export default memo(AlbumCover);

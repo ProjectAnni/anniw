@@ -1,13 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import { Grid, IconButton, Tooltip, Typography } from "@material-ui/core";
 import { Sync } from "@material-ui/icons";
-import { AlbumInfo, AnnilToken } from "@/types/common";
+import { AlbumInfo } from "@/types/common";
 import { deleteAlbumInfoCache } from "../../services";
 import styles from "./index.module.scss";
 
 interface Props {
     albumInfo?: AlbumInfo;
-    credential?: AnnilToken;
 }
 
 const AlbumBasicInfo: React.FC<Props> = (props) => {
@@ -44,4 +43,4 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
     );
 };
 
-export default AlbumBasicInfo;
+export default memo(AlbumBasicInfo);
