@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { AppBar, Toolbar, Typography, Button, IconButton } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { AppBar, Toolbar, Typography, Button, IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import useRequest from "@/hooks/useRequest";
 import { DrawerIsOpen } from "@/state/ui";
 import { SiteInfoState, SiteCanRegister } from "@/state/site";

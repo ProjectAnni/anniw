@@ -1,7 +1,6 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
-import { PlaylistState } from "@/state/playlist";
 import { PlayerStatus, PlaylistItem } from "@/types/common";
 
 function getAudioUrl(url: string) {
@@ -83,6 +82,9 @@ export default function usePlayer() {
             discIndex,
             trackIndex,
         }: PlaylistItem) => {
+            if (!playUrl) {
+                return;
+            }
             player.src = getAudioUrl(playUrl);
             setPlayerStatus(PlayerStatus.BUFFERING);
             player.addEventListener(

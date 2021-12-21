@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import { viteMockServe } from "vite-plugin-mock";
-import path from 'path';
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
     ],
     css: {
         modules: {
-            localsConvention: 'camelCaseOnly',
-        }
-    }
+            localsConvention: "camelCaseOnly",
+        },
+    },
 });

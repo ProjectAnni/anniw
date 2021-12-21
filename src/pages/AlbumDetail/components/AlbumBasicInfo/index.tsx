@@ -1,12 +1,13 @@
 import React, { memo } from "react";
-import { Grid, IconButton, Tooltip, Typography } from "@material-ui/core";
-import { Sync } from "@material-ui/icons";
+import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { Sync, PlayArrow } from "@mui/icons-material";
 import { AlbumInfo } from "@/types/common";
 import { deleteAlbumInfoCache } from "../../services";
 import styles from "./index.module.scss";
 
 interface Props {
     albumInfo?: AlbumInfo;
+    onPlayAlbum: () => void;
 }
 
 const AlbumBasicInfo: React.FC<Props> = (props) => {
@@ -33,6 +34,11 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
                 ))}
             </div>
             <div className={styles.actions}>
+                <Tooltip title="播放全部">
+                    <IconButton onClick={props.onPlayAlbum}>
+                        <PlayArrow />
+                    </IconButton>
+                </Tooltip>
                 <Tooltip title="刷新元信息">
                     <IconButton onClick={onRefresh}>
                         <Sync />

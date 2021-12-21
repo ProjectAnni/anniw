@@ -1,10 +1,10 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import { Grid, CircularProgress } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import PlayIcon from "@material-ui/icons/PlayArrow";
-import PauseIcon from "@material-ui/icons/Pause";
-import NextIcon from "@material-ui/icons/SkipNext";
+import { Grid, CircularProgress } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import PlayIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import NextIcon from "@mui/icons-material/SkipNext";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerController from "@/hooks/usePlayerController";
 import { PlayerStatusState } from "@/state/player";

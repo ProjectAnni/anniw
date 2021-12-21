@@ -87,6 +87,6 @@ export interface AlbumInfo {
 }
 
 export interface PlaylistItem extends TrackItem {
-    playUrl: string;
-    coverUrl: string;
+    playUrl?: string;
+    coverUrl?: string;
  }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Grid, MenuItem, Pagination, Select, Typography } from "@material-ui/core";
+import { Grid, MenuItem, Pagination, Select, Typography } from "@mui/material";
 import useQuery from "@/hooks/useQuery";
 import useMessage from "@/hooks/useMessage";
 import { CredentialState } from "@/state/credentials";

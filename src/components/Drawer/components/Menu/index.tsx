@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { List, ListItem, ListItemIcon, ListItemText, Collapse } from "@material-ui/core";
-import { LocalLibrary, Home } from "@material-ui/icons";
+import { List, ListItem, ListItemIcon, ListItemText, Collapse } from "@mui/material";
+import { LocalLibrary, Home } from "@mui/icons-material";
 
 const Menu = () => {
     return (

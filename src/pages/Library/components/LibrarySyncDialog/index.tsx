@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { AnnilToken } from "@/types/common";
 import useMessage from "@/hooks/useMessage";

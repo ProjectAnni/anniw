@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { useHistory } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { CurrentLoginStatus } from "@/state/user";
 import { LoginStatus } from "@/types/common";
 import LoginForm from "./LoginForm";

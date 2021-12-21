@@ -1,4 +1,4 @@
-import Typography from "@material-ui/core/Typography/Typography";
+import Typography from "@mui/material/Typography/Typography";
 import React from "react";
 import './index.scss';
 

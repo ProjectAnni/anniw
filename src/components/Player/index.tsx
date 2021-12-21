@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import storage from "@/utils/storage";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerController from "@/hooks/usePlayerController";

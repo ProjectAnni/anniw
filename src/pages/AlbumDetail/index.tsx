@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { groupBy } from "lodash";
-import { Divider, Grid, Typography } from "@material-ui/core";
+import { Divider, Grid, Typography } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
 import { AlbumInfo, AnnilToken } from "@/types/common";
-import TrackList from "@/components/TrackList";
+import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
 import { TrackItem } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
@@ -15,6 +15,7 @@ import { getAlbumInfo, getAlbumAvailableLibraries } from "./services";
 import styles from "./index.module.scss";
 
 const AlbumDetail: React.FC = () => {
+    const trackListRefs = useRef<TrackListImperativeHandles[]>([]);
     const [_, { addMessage }] = useMessage();
     const { credentials: allAvailableCredentials } = useRecoilValue(CredentialState);
     const [credential, setCredential] = useState<AnnilToken | undefined>(undefined);
@@ -62,7 +63,14 @@ const AlbumDetail: React.FC = () => {
         loadingAvailableLibraries,
         addMessage,
     ]);
-
+    const playAll = useCallback(() => {
+        if (!trackListRefs.current.length) {
+            return;
+        }
+        trackListRefs.current.forEach((ref, index) => {
+            index === 0 ? ref.playAll() : ref.addAllToPlaylist();
+        });
+    }, []);
     return (
         <Grid container justifyContent="center" className={styles.pageContainer}>
             <Grid item xs={12} lg={8}>
@@ -71,7 +79,7 @@ const AlbumDetail: React.FC = () => {
                         <AlbumCover albumInfo={albumInfo} credential={credential} />
                     </Grid>
                     <Grid item xs={12} lg={9}>
-                        <AlbumBasicInfo albumInfo={albumInfo} />
+                        <AlbumBasicInfo albumInfo={albumInfo} onPlayAlbum={playAll} />
                     </Grid>
                 </Grid>
                 <Grid item xs={12} className={styles.divider}>
@@ -97,7 +105,13 @@ const AlbumDetail: React.FC = () => {
                                         }`}</Typography>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <TrackList tracks={trackList} />
+                                        <TrackList
+                                            tracks={trackList}
+                                            ref={(ref) => {
+                                                ref?.parsedTracks?.length &&
+                                                    trackListRefs.current.push(ref);
+                                            }}
+                                        />
                                     </Grid>
                                 </Grid>
                             );

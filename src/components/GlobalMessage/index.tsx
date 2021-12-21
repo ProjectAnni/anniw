@@ -1,5 +1,5 @@
 import React from "react";
-import { Snackbar, Alert } from "@material-ui/core";
+import { Snackbar, Alert } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 
 const MESSAGE_DISPLAY_DURATION = 5000;

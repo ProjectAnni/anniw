@@ -1,7 +1,7 @@
 import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
-import { Container, AppBar, Toolbar, CssBaseline } from "@material-ui/core";
+import { Container, AppBar, Toolbar, CssBaseline } from "@mui/material";
 import { AnniwAppBar } from "./components/AppBar";
 import { AnniwDrawer } from "./components/Drawer";
 import ErrorBoundary from "./components/ErrorBoundary";

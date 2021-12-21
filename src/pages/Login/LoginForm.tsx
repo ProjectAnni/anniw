@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useHistory } from "react-router";
-import { TextField, Grid } from "@material-ui/core";
+import { TextField, Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import useQuery from "@/hooks/useQuery";

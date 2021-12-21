@@ -6,7 +6,7 @@ import {
     DialogActions,
     Button,
     TextField,
-} from "@material-ui/core";
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { AnnilToken } from "@/types/common";

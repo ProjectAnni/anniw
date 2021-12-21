@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogActions, Button } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogActions, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { default as LibraryDB } from "@/db/library";

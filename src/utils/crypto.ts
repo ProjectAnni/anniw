@@ -1,6 +1,7 @@
 class TextDigestError extends Error {}
 
 export async function sha256(text: string) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - Support in Safari before version 11 was using the crypto.webkitSubtle prefix.
     if (!window.crypto.subtle && !window.crypto.webkitSubtle) {
         // TODO: use crypto-js to digest

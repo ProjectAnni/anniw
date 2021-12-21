@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { List, ListItemText, ListItem, Box, IconButton } from "@material-ui/core";
-import { Delete as DeleteIcon, Sync as SyncIcon } from "@material-ui/icons";
+import { List, ListItemText, ListItem, Box, IconButton } from "@mui/material";
+import { Delete as DeleteIcon, Sync as SyncIcon } from "@mui/icons-material";
 import { default as LibraryDB } from "@/db/library";
 import { AnnilToken } from "@/types/common";
 interface Props {

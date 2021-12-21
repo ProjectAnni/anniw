@@ -1,22 +1,20 @@
 import React from "react";
 import classNames from "classnames";
 import { useRecoilValue } from "recoil";
-import { ListItem, ListItemText, ListItemIcon, IconButton } from "@material-ui/core";
-import { PlayArrow, Pause, PlaylistAdd } from "@material-ui/icons";
+import { ListItem, ListItemText, ListItemIcon, IconButton, Tooltip } from "@mui/material";
+import { PlayArrow, Pause, PlaylistAdd } from "@mui/icons-material";
 import useRequest from "@/hooks/useRequest";
-import useMessage from "@/hooks/useMessage";
 import { CredentialState } from "@/state/credentials";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
-import { AnnilToken, PlayerStatus } from "@/types/common";
+import { PlayerStatus, PlaylistItem } from "@/types/common";
 import { getAvailableLibraryForTrack } from "./services";
-import { TrackItem } from "./types";
 import styles from "./index.module.scss";
 
 interface Props {
-    track: TrackItem;
+    track: PlaylistItem;
     itemIndex: number;
-    onPlay: (track: TrackItem, credential?: AnnilToken) => void;
-    onPlaylistAdd: (track: TrackItem, credential?: AnnilToken) => void;
+    onPlay: () => void;
+    onPlaylistAdd: () => void;
     onPause: () => void;
     onResume: () => void;
     onRestart: () => void;
@@ -44,15 +42,10 @@ const TrackListItem: React.FC<Props> = (props) => {
         albumId === nowPlayingAlbumId &&
         discIndex === nowPlayingDiscIndex &&
         trackIndex === nowPlayingTrackIndex;
-    const [_, { addMessage }] = useMessage();
     const [credential, loading] = useRequest(() =>
         getAvailableLibraryForTrack(track, allCredentials)
     );
     const onClickPlayButton = () => {
-        if (!loading && !credential) {
-            addMessage("error", "无可用音频仓库提供本音频资源");
-            return;
-        }
         if (!credential) {
             return;
         }
@@ -65,7 +58,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                 onRestart();
             }
         } else {
-            onPlay(track, credential);
+            onPlay();
         }
     };
     return (
@@ -76,18 +69,21 @@ const TrackListItem: React.FC<Props> = (props) => {
             })}
             secondaryAction={
                 <>
-                    <IconButton
-                        onClick={() => {
-                            onPlaylistAdd(track, credential);
-                        }}
-                    >
-                        <PlaylistAdd />
-                    </IconButton>
+                    <Tooltip title="添加到当前播放队列">
+                        <IconButton
+                            onClick={() => {
+                                onPlaylistAdd();
+                            }}
+                            disabled={!loading && !credential}
+                        >
+                            <PlaylistAdd />
+                        </IconButton>
+                    </Tooltip>
                 </>
             }
         >
             <ListItemIcon className={styles.playButton}>
-                <IconButton onClick={onClickPlayButton}>
+                <IconButton onClick={onClickPlayButton} disabled={!loading && !credential}>
                     {isPlaying ? (
                         playerStatus === PlayerStatus.PAUSED ||
                         playerStatus === PlayerStatus.ENDED ? (

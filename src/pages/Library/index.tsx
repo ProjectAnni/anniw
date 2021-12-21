@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useHistory } from "react-router-dom";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@mui/material";
 import { CredentialState } from "@/state/credentials";
 import useMessage from "@/hooks/useMessage";
 import { AnnilToken } from "@/types/common";

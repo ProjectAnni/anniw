@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { Alert, AlertTitle } from "@material-ui/core";
+import { Alert, AlertTitle } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 import { sleep } from "@/utils/helper";
 import { CurrentUserInfo } from "@/state/user";

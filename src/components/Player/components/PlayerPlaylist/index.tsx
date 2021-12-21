@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, IconButton } from "@material-ui/core";
-import { QueueMusic } from "@material-ui/icons";
+import { Grid, IconButton } from "@mui/material";
+import { QueueMusic } from "@mui/icons-material";
 import styles from "./index.module.scss";
 
 const PlayerPlaylist: React.FC = () => {

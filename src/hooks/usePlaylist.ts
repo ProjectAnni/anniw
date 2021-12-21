@@ -7,8 +7,8 @@ export default function usePlaylist() {
     const [playlist, setPlaylist] = useRecoilState(PlaylistState);
 
     const append = useCallback(
-        (track: PlaylistItem) => {
-            setPlaylist((playlist) => [...playlist, track]);
+        ([...tracks]: PlaylistItem[]) => {
+            setPlaylist((playlist) => [...playlist, ...tracks]);
         },
         [setPlaylist]
     );
@@ -20,9 +20,12 @@ export default function usePlaylist() {
         [setPlaylist]
     );
 
-    const replaceFirst = useCallback((item: PlaylistItem) => {
-        setPlaylist(playlist => [item, ...playlist.slice(1)])
-    }, [setPlaylist])
+    const replaceFirst = useCallback(
+        (item: PlaylistItem) => {
+            setPlaylist((playlist) => [item, ...playlist.slice(1)]);
+        },
+        [setPlaylist]
+    );
 
     const insertToSecond = useCallback(
         (track: PlaylistItem) => {
@@ -46,5 +49,8 @@ export default function usePlaylist() {
         [setPlaylist]
     );
 
-    return [playlist, { append, unshift, replaceFirst, insertToSecond, shift, clear, set }] as const;
+    return [
+        playlist,
+        { append, unshift, replaceFirst, insertToSecond, shift, clear, set },
+    ] as const;
 }

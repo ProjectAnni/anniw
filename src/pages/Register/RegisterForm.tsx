@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useRecoilValue } from "recoil";
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { SiteNeedInvitation } from "@/state/site";
