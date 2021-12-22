@@ -6,7 +6,7 @@ import PlayIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import NextIcon from "@mui/icons-material/SkipNext";
 import usePlayer from "@/hooks/usePlayer";
-import usePlayerController from "@/hooks/usePlayerController";
+import usePlayerController from "@/hooks/usePlaylistController";
 import { PlayerStatusState } from "@/state/player";
 import { PlayerStatus } from "@/types/common";
 

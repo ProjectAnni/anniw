@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { List } from "@mui/material";
 import { PlaylistItem } from "@/types/common";
 import usePlayer from "@/hooks/usePlayer";
-import usePlayerController from "@/hooks/usePlayerController";
+import usePlayerController from "@/hooks/usePlaylistController";
 import { CredentialState } from "@/state/credentials";
 import { TrackItem } from "./types";
 import { getAvailableLibraryForTrack, getCoverUrlForTrack, getPlayUrlForTrack } from "./services";
@@ -11,19 +11,16 @@ import Item from "./Item";
 
 interface Props {
     tracks: TrackItem[];
+    itemIndex: number;
 }
 
 export interface TrackListImperativeHandles {
     playAll: () => void;
     addAllToPlaylist: () => void;
+    readonly index: number;
     readonly parsedTracks: PlaylistItem[];
 }
-/**
- * 对外暴露了一些方法 强依赖了渲染次数
- * 增加 re-render 次数后请修改上层 onRef 方法
- * 我劝你还是别 re-render 了 这组件也挺重的
- * English ver: MAGIC, NO NOT CHANGE UNLESS YOU KNOW WHAT YOU ARE DOING
- */
+
 /**
  * 通用播放列表
  * @param props
@@ -34,7 +31,7 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     props,
     ref
 ) => {
-    const { tracks } = props;
+    const { tracks, itemIndex } = props;
     const [player, { resume, restart, pause }] = usePlayer();
     const { addToPlaylist, replacePlaylistAndPlay } = usePlayerController();
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
@@ -77,17 +74,17 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     const addAllToPlaylist = useCallback(() => {
         addToPlaylist(parsedTracks);
     }, [parsedTracks, addToPlaylist]);
-    useImperativeHandle(ref, () => ({ playAll, addAllToPlaylist, parsedTracks }), [
-        addAllToPlaylist,
-        playAll,
-        parsedTracks,
-    ]);
+    useImperativeHandle(
+        ref,
+        () => ({ playAll, addAllToPlaylist, parsedTracks, index: itemIndex }),
+        [addAllToPlaylist, playAll, itemIndex, parsedTracks]
+    );
     return (
         <List dense>
             {parsedTracks.map((track, index) => {
                 return (
                     <Item
-                        key={track.title}
+                        key={`${track.albumId}-${track.discIndex}-${track.trackIndex}-${track.title}`}
                         track={track}
                         itemIndex={index}
                         onPlay={() => {

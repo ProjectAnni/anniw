@@ -1,10 +1,11 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import usePlayer from "./usePlayer";
 import usePlaylist from "./usePlaylist";
 import useMessage from "./useMessage";
 import { PlaylistItem } from "@/types/common";
 
 export default function usePlayerController() {
+    const currentPlayIndex = useRef(0);
     const [player, { play }] = usePlayer();
     const [playlist, { shift, replaceFirst, append, insertToSecond, set, clear }] = usePlaylist();
     const [_, { addMessage }] = useMessage();
@@ -70,6 +71,6 @@ export default function usePlayerController() {
         playNow,
         replacePlaylist,
         replacePlaylistAndPlay,
-        clear,
+        clearPlaylist,
     };
 }

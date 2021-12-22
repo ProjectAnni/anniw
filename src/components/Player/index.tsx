@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import { Grid } from "@mui/material";
 import storage from "@/utils/storage";
 import usePlayer from "@/hooks/usePlayer";
-import usePlayerController from "@/hooks/usePlayerController";
+import usePlayerController from "@/hooks/usePlaylistController";
 import usePlaylist from "@/hooks/usePlaylist";
 import { PlayerStatusState } from "@/state/player";
 import { PlayerStatus } from "@/types/common";

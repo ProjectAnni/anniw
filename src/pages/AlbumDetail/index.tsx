@@ -67,9 +67,11 @@ const AlbumDetail: React.FC = () => {
         if (!trackListRefs.current.length) {
             return;
         }
-        trackListRefs.current.forEach((ref, index) => {
-            index === 0 ? ref.playAll() : ref.addAllToPlaylist();
-        });
+        trackListRefs.current
+            .sort((a, b) => a.index - b.index)
+            .forEach((ref, index) => {
+                index === 0 ? ref.playAll() : ref.addAllToPlaylist();
+            });
     }, []);
     return (
         <Grid container justifyContent="center" className={styles.pageContainer}>
@@ -107,8 +109,12 @@ const AlbumDetail: React.FC = () => {
                                     <Grid item xs={12}>
                                         <TrackList
                                             tracks={trackList}
+                                            itemIndex={discIndex}
                                             ref={(ref) => {
                                                 ref?.parsedTracks?.length &&
+                                                    !trackListRefs.current.some(
+                                                        (r) => r.index === ref.index
+                                                    ) &&
                                                     trackListRefs.current.push(ref);
                                             }}
                                         />
