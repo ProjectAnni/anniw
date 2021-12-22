@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Grid } from "@mui/material";
 import Item from "./Item";
-import "./index.scss";
+import styles from "./index.module.scss";
 
 interface Props {
     albums: string[];
@@ -14,7 +14,7 @@ interface Props {
 const AlbumWall: React.FC<Props> = (props) => {
     const { albums = [], libraryInfo } = props;
     return (
-        <Grid container className="album-wall-container" wrap="wrap">
+        <Grid container className={styles.wallContainer} wrap="wrap">
             {albums.map((albumId) => (
                 <Item albumId={albumId} libraryInfo={libraryInfo} key={albumId} />
             ))}

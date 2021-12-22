@@ -2,8 +2,9 @@ import React, { useMemo, memo } from "react";
 import { useHistory } from "react-router-dom";
 import useRequest from "@/hooks/useRequest";
 import Cover from "@/components/Cover";
-import { getAlbumInfo } from "../../services";
-import "./index.scss";
+import { getAlbumInfo } from "../../pages/AlbumList/services";
+import styles from "./index.module.scss";
+import { CircularProgress } from "@mui/material";
 interface Props {
     albumId: string;
     libraryInfo: {
@@ -24,18 +25,19 @@ const AlbumWallItem: React.FC<Props> = (props) => {
 
     return (
         <div
-            className="album-item"
+            className={styles.item}
             onClick={() => {
                 history.push(`/album/${albumId}`);
             }}
         >
             <Cover coverUrl={coverUrl} />
-            <div className="album-item-mask">
-                <div className="album-item-info">
-                    <div className="album-title">{title}</div>
-                    <div className="album-artist">{artist}</div>
+            <div className={styles.itemMask}>
+                <div className={styles.itemInfo}>
+                    <div className={styles.title}>{title}</div>
+                    <div className={styles.artist}>{artist}</div>
                 </div>
             </div>
+            {loading && <CircularProgress size="12px" color="inherit" className={styles.loading} />}
         </div>
     );
 };

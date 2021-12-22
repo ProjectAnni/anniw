@@ -6,7 +6,7 @@ import useQuery from "@/hooks/useQuery";
 import useMessage from "@/hooks/useMessage";
 import { CredentialState } from "@/state/credentials";
 import { getLibraryAlbums } from "./services";
-import AlbumWall from "./components/AlbumWall";
+import AlbumWall from "../../components/AlbumWall";
 import "./index.scss";
 
 interface LibraryInfo {
