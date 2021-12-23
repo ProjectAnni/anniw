@@ -6,6 +6,7 @@ import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
 import { getAvailableLibraryForAlbum } from "@/utils/library";
 import Cover from "@/components/Cover";
+import { AnnilToken } from "@/types/common";
 import { getAlbumInfo } from "./services";
 import styles from "./index.module.scss";
 
@@ -20,7 +21,7 @@ interface Props {
 const AlbumWallItem: React.FC<Props> = (props) => {
     const { albumId, libraryInfo } = props;
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
-    const [credential] = useRequest(() =>
+    const [credential] = useRequest<{ url: string, token: string } | undefined>(() =>
         libraryInfo
             ? Promise.resolve(libraryInfo)
             : getAvailableLibraryForAlbum(albumId, allCredentials)
