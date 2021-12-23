@@ -58,7 +58,7 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     }, [allCredentials, tracks]);
     const onPlay = useCallback(
         (index: number) => {
-            replacePlaylistAndPlay(parsedTracks.slice(index), 0);
+            replacePlaylistAndPlay(parsedTracks, index);
         },
         [parsedTracks, replacePlaylistAndPlay]
     );

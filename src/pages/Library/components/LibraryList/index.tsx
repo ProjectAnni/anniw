@@ -90,7 +90,7 @@ const LibraryList: React.FC<Props> = (props) => {
                                     library.serverLastUpdate
                                         ? ` / 服务器更新时间：${library.serverLastUpdate.toISOString()}`
                                         : ""
-                                }${library.albumCount ? ` / ${library.albumCount} Discs` : ""}`}
+                                }${library.albumCount ? ` / ${library.albumCount} Albums` : ""}`}
                             />
                         </ListItem>
                     );

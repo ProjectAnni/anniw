@@ -18,6 +18,7 @@ import Library from "./pages/Library";
 import AlbumList from "./pages/AlbumList";
 import AlbumDetail from "./pages/AlbumDetail";
 import Playlist from './pages/Playlist';
+import Search from "./pages/Search";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
@@ -37,7 +38,7 @@ function AppBody() {
             <Container component="main" className="main-container">
                 <Switch>
                     <Route path="/" exact>
-                        Home
+                        <div style={{ padding: '20px' }}>空无一物的主页</div>
                     </Route>
                     <Route path="/user/login" exact>
                         <Login />
@@ -66,6 +67,11 @@ function AppBody() {
                     <Route path="/playlist" exact>
                         <NeedLoginPage>
                             <Playlist />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/search" exact>
+                        <NeedLoginPage>
+                            <Search />
                         </NeedLoginPage>
                     </Route>
                     <Route path="*">

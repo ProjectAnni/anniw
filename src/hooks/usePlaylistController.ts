@@ -7,17 +7,30 @@ import { PlaylistItem } from "@/types/common";
 export default function usePlayerController() {
     const currentPlayIndex = useRef(0);
     const [player, { play }] = usePlayer();
-    const [playlist, { shift, replaceFirst, append, insertToSecond, set, clear }] = usePlaylist();
+    const [playlist, { append, insertToSecond, set, clear }] = usePlaylist();
     const [_, { addMessage }] = useMessage();
 
     const playNext = useCallback(() => {
-        if (playlist.length > 1) {
-            play(playlist[1]);
-            shift();
+        if (playlist[currentPlayIndex.current + 1]) {
+            currentPlayIndex.current++;
+            play(playlist[currentPlayIndex.current]);
+        } else if (currentPlayIndex.current === playlist.length - 1) {
+            currentPlayIndex.current = 0;
+            play(playlist[currentPlayIndex.current]);
         } else {
-            addMessage("info", "没有下一首了");
+            addMessage("info", "播放列表播完啦");
         }
-    }, [playlist, play, shift, addMessage]);
+    }, [playlist, play, addMessage]);
+
+    const playIndex = useCallback(
+        (index: number) => {
+            if (playlist[index]) {
+                currentPlayIndex.current = index;
+                play(playlist[index]);
+            }
+        },
+        [playlist, play]
+    );
 
     const addToLater = useCallback(
         (item: PlaylistItem) => {
@@ -32,17 +45,8 @@ export default function usePlayerController() {
                 play(Array.isArray(item) ? item[0] : item);
             }
             append(Array.isArray(item) ? item : [item]);
-            addMessage("success", "添加播放列表成功");
         },
-        [append, play, playlist, addMessage]
-    );
-
-    const playNow = useCallback(
-        (item: PlaylistItem) => {
-            play(item);
-            replaceFirst(item);
-        },
-        [play, replaceFirst]
+        [append, play, playlist]
     );
 
     const replacePlaylist = useCallback(
@@ -66,9 +70,9 @@ export default function usePlayerController() {
 
     return {
         playNext,
+        playIndex,
         addToLater,
         addToPlaylist,
-        playNow,
         replacePlaylist,
         replacePlaylistAndPlay,
         clearPlaylist,

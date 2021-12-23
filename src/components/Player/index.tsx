@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { Grid } from "@mui/material";
 import storage from "@/utils/storage";
@@ -10,23 +10,30 @@ import { PlayerStatus } from "@/types/common";
 import PlayerCover from "./components/PlayerCover";
 import PlayerController from "./components/PlayerController";
 import PlayerProgress from "./components/PlayerProgress";
-import PlayerPlaylist from "./components/PlayerPlaylist";
+import PlayerActions from "./components/PlayerActions";
+import { LoopMode } from "./types";
 
 const Player: React.FC = () => {
+    const [loopMode, setLoopMode] = useState<LoopMode>(LoopMode.LIST_LOOP);
     const [player, { restart, resume, pause }] = usePlayer();
     const [playlist] = usePlaylist();
     const { playNext, replacePlaylist } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     useEffect(() => {
         const onEnded = () => {
-            setPlayerStatus(PlayerStatus.ENDED);
-            playNext();
+            if (loopMode === LoopMode.LIST_LOOP) {
+                setPlayerStatus(PlayerStatus.ENDED);
+                playNext();
+            }
+            if (loopMode === LoopMode.TRACK_LOOP) {
+                restart();
+            }
         };
         player.addEventListener("ended", onEnded);
         return () => {
             player.removeEventListener("ended", onEnded);
         };
-    }, [player, playNext, setPlayerStatus]);
+    }, [player, playNext, setPlayerStatus, loopMode, restart]);
     useEffect(() => {
         if (window.navigator.mediaSession) {
             navigator.mediaSession.setActionHandler("play", () => {
@@ -50,6 +57,9 @@ const Player: React.FC = () => {
             replacePlaylist(localPlaylist);
         }
     }, [replacePlaylist]);
+    const onChangeLoopMode = (mode: LoopMode) => {
+        setLoopMode(mode);
+    }
     return (
         <Grid container>
             <Grid item flexShrink={0}>
@@ -62,7 +72,7 @@ const Player: React.FC = () => {
                 <PlayerProgress />
             </Grid>
             <Grid item flexShrink={0}>
-                <PlayerPlaylist />
+                <PlayerActions loopMode={loopMode} onChangeLoopMode={onChangeLoopMode} />
             </Grid>
         </Grid>
     );

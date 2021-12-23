@@ -1,13 +1,17 @@
 import React, { useMemo, memo } from "react";
 import { useHistory } from "react-router-dom";
-import useRequest from "@/hooks/useRequest";
-import Cover from "@/components/Cover";
-import { getAlbumInfo } from "../../pages/AlbumList/services";
-import styles from "./index.module.scss";
+import { useRecoilValue } from "recoil";
 import { CircularProgress } from "@mui/material";
+import useRequest from "@/hooks/useRequest";
+import { CredentialState } from "@/state/credentials";
+import { getAvailableLibraryForAlbum } from "@/utils/library";
+import Cover from "@/components/Cover";
+import { getAlbumInfo } from "./services";
+import styles from "./index.module.scss";
+
 interface Props {
     albumId: string;
-    libraryInfo: {
+    libraryInfo?: {
         url: string;
         token: string;
     } | null;
@@ -15,7 +19,13 @@ interface Props {
 
 const AlbumWallItem: React.FC<Props> = (props) => {
     const { albumId, libraryInfo } = props;
-    const { url, token } = libraryInfo || {};
+    const { credentials: allCredentials } = useRecoilValue(CredentialState);
+    const [credential] = useRequest(() =>
+        libraryInfo
+            ? Promise.resolve(libraryInfo)
+            : getAvailableLibraryForAlbum(albumId, allCredentials)
+    );
+    const { url, token } = credential || {};
     const [albumInfo, loading] = useRequest(() => getAlbumInfo(albumId));
     const history = useHistory();
     const { title, artist } = albumInfo || {};

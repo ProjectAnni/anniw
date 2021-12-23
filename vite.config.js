@@ -10,14 +10,23 @@ export default defineConfig({
     },
     plugins: [
         reactRefresh(),
-        viteMockServe({
-            mockPath: "mock",
-            supportTs: true,
-        }),
+        // viteMockServe({
+        //     mockPath: "mock",
+        //     supportTs: true,
+        // }),
     ],
     css: {
         modules: {
             localsConvention: "camelCaseOnly",
+        },
+    },
+    server: {
+        proxy: {
+            "/api": {
+                target: "https://anni.s8k.top/api",
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ""),
+            },
         },
     },
 });
