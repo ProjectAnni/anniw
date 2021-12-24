@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ListItem, ListItemText, ListItemIcon, IconButton, Tooltip } from "@mui/material";
 import {
     PlayArrow,
@@ -8,16 +8,17 @@ import {
     PlaylistAdd,
     PlaylistRemove,
     Favorite,
-    FavoriteOutlined,
+    FavoriteBorder,
 } from "@mui/icons-material";
 import useRequest from "@/hooks/useRequest";
+import useMessage from "@/hooks/useMessage";
 import { CredentialState } from "@/state/credentials";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
+import { FavoriteTrackAlbumMap, FavoriteTracksState } from "@/state/favorite";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
-import { getAvailableLibraryForTrack } from "./services";
+import { addFavorite, getAvailableLibraryForTrack, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
-import { FavoriteTrackAlbumMap } from "@/state/favorite";
 
 interface Props {
     track: PlayQueueItem;
@@ -59,6 +60,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         trackIndex: nowPlayingTrackIndex,
     } = useRecoilValue(NowPlayingInfoState);
     const playerStatus = useRecoilValue(PlayerStatusState);
+    const setFavoriteTracks = useSetRecoilState(FavoriteTracksState);
     const favoriteTrackAlbumMap = useRecoilValue(FavoriteTrackAlbumMap);
     const isFavored =
         favoriteTrackAlbumMap[albumId] &&
@@ -75,6 +77,7 @@ const TrackListItem: React.FC<Props> = (props) => {
     const [credential, loading] = useRequest(() =>
         getAvailableLibraryForTrack(track, allCredentials)
     );
+    const [_, { addMessage }] = useMessage();
     const onClickPlayButton = () => {
         if (!credential) {
             return;
@@ -92,6 +95,41 @@ const TrackListItem: React.FC<Props> = (props) => {
         }
     };
 
+    const onClickFavoriteButton = async () => {
+        try {
+            await (isFavored ? removeFavorite(track) : addFavorite(track));
+            addMessage("success", `${isFavored ? "取消" : "添加"}喜欢成功`);
+            if (isFavored) {
+                setFavoriteTracks((prevTracks) => {
+                    return prevTracks.filter(
+                        (t) =>
+                            t.albumId !== albumId &&
+                            t.discId !== discIndex + 1 &&
+                            t.trackId !== trackIndex + 1
+                    );
+                });
+            } else {
+                setFavoriteTracks((prevTracks) => [
+                    {
+                        albumId,
+                        discId: discIndex + 1,
+                        trackId: trackIndex + 1,
+                        info: {
+                            title: title,
+                            artist: artist,
+                            type: type,
+                            tags: track.tags,
+                        },
+                    },
+                    ...prevTracks,
+                ]);
+            }
+        } catch (e) {
+            if (e instanceof Error) {
+                addMessage("error", e.message);
+            }
+        }
+    };
     return (
         <ListItem
             key={title}
@@ -126,8 +164,15 @@ const TrackListItem: React.FC<Props> = (props) => {
                     )}
                     {features.includes(TrackListFeatures.SHOW_FAVORITE_ICON) && !isFavored && (
                         <Tooltip title="添加喜欢">
-                            <IconButton onClick={() => {}}>
-                                <FavoriteOutlined />
+                            <IconButton onClick={onClickFavoriteButton}>
+                                <FavoriteBorder />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                    {features.includes(TrackListFeatures.SHOW_FAVORITE_ICON) && isFavored && (
+                        <Tooltip title="添加喜欢">
+                            <IconButton onClick={onClickFavoriteButton}>
+                                <Favorite />
                             </IconButton>
                         </Tooltip>
                     )}

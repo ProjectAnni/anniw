@@ -6,6 +6,7 @@ export interface TrackItem {
     trackIndex: number;
     albumId: string;
     albumTitle: string;
+    tags: string[];
 }
 
 export enum TrackListFeatures {

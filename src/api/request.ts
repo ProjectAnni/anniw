@@ -55,7 +55,8 @@ class Request {
             params: {},
             data: {},
         };
-        const { unwrapResponse = true, formatResponse: isFormatResponse = true } = requestOptions || {};
+        const { unwrapResponse = true, formatResponse: isFormatResponse = true } =
+            requestOptions || {};
         if (method === "GET") {
             options.params = formatRequest(payload);
         } else {
@@ -98,6 +99,15 @@ class Request {
      */
     post<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
         return this.request<T>("POST", path, payload, requestOptions);
+    }
+
+    /**
+     * HTTP POST
+     * @param path
+     * @param payload
+     */
+    put<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
+        return this.request<T>("PUT", path, payload, requestOptions);
     }
 
     /**

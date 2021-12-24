@@ -125,7 +125,10 @@ const AlbumDetail: React.FC = () => {
                                                     ) &&
                                                     trackListRefs.current.push(ref);
                                             }}
-                                            features={[TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON]}
+                                            features={[
+                                                TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON,
+                                                TrackListFeatures.SHOW_FAVORITE_ICON,
+                                            ]}
                                             onPlayQueueAdd={onPlayQueueAdd}
                                         />
                                     </Grid>

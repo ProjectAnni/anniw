@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { List, ListItem, ListItemIcon, ListItemText, Collapse } from "@mui/material";
-import { LocalLibrary, Home, QueueMusic, Search } from "@mui/icons-material";
+import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { LocalLibrary, Home, Search, Favorite } from "@mui/icons-material";
 
 const Menu = () => {
     return (
@@ -28,6 +28,12 @@ const Menu = () => {
                     <Search />
                 </ListItemIcon>
                 <ListItemText primary="搜索"></ListItemText>
+            </ListItem>
+            <ListItem button component={Link} to="/fav">
+                <ListItemIcon>
+                    <Favorite />
+                </ListItemIcon>
+                <ListItemText primary="喜欢"></ListItemText>
             </ListItem>
             {/* <Collapse in={true} timeout="auto">
                 <List

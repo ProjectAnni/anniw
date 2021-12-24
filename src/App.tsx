@@ -19,6 +19,7 @@ import AlbumList from "./pages/AlbumList";
 import AlbumDetail from "./pages/AlbumDetail";
 import PlayQueue from "./pages/PlayQueue";
 import Search from "./pages/Search";
+import Favorite from "./pages/Favorite";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
@@ -72,6 +73,11 @@ function AppBody() {
                     <Route path="/search" exact>
                         <NeedLoginPage>
                             <Search />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/fav" exact>
+                        <NeedLoginPage>
+                            <Favorite />
                         </NeedLoginPage>
                     </Route>
                     <Route path="*">

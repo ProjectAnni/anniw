@@ -54,6 +54,7 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
                     discIndex: track.discIndex,
                     trackIndex: track.trackIndex,
                     albumTitle: track.albumTitle,
+                    tags: track.tags,
                 });
             }
             setParsedTracks(result);
