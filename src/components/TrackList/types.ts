@@ -7,3 +7,12 @@ export interface TrackItem {
     albumId: string;
     albumTitle: string;
 }
+
+export enum TrackListFeatures {
+    /** 显示添加到播放队列按钮 */
+    SHOW_PLAY_QUEUE_ADD_ICON,
+    /** 显示删除按钮 */
+    SHOW_PLAY_QUEUE_REMOVE_ICON,
+    /** 显示加入喜欢按钮 */
+    SHOW_FAVORITE_ICON,
+}

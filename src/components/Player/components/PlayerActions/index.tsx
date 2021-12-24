@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, IconButton, Tooltip } from "@mui/material";
-import { QueueMusic, Repeat, RepeatOne } from "@mui/icons-material";
+import { QueueMusic, Repeat, RepeatOne, Shuffle } from "@mui/icons-material";
 import styles from "./index.module.scss";
 import { LoopMode, LoopModeNextMap } from "../../types";
 
@@ -19,7 +19,7 @@ const PlayerActions: React.FC<Props> = (props) => {
     return (
         <Grid container alignItems="center" className={styles.container}>
             {loopMode === LoopMode.LIST_LOOP && (
-                <Tooltip title="列表循环">
+                <Tooltip title="队列循环">
                     <IconButton color="inherit" onClick={onClickLoopMode}>
                         <Repeat />
                     </IconButton>
@@ -32,11 +32,18 @@ const PlayerActions: React.FC<Props> = (props) => {
                     </IconButton>
                 </Tooltip>
             )}
-            <Tooltip title="播放列表">
+             {loopMode === LoopMode.SHUFFLE && (
+                <Tooltip title="队列随机">
+                    <IconButton color="inherit" onClick={onClickLoopMode}>
+                        <Shuffle />
+                    </IconButton>
+                </Tooltip>
+            )}
+            <Tooltip title="播放队列">
                 <IconButton
                     color="inherit"
                     onClick={() => {
-                        history.push("/playlist");
+                        history.push("/queue");
                     }}
                 >
                     <QueueMusic />

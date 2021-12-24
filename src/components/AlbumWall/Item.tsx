@@ -21,7 +21,7 @@ interface Props {
 const AlbumWallItem: React.FC<Props> = (props) => {
     const { albumId, libraryInfo } = props;
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
-    const [credential] = useRequest<{ url: string, token: string } | undefined>(() =>
+    const [credential, loadingToken] = useRequest<{ url: string; token: string } | undefined>(() =>
         libraryInfo
             ? Promise.resolve(libraryInfo)
             : getAvailableLibraryForAlbum(albumId, allCredentials)
@@ -31,8 +31,11 @@ const AlbumWallItem: React.FC<Props> = (props) => {
     const history = useHistory();
     const { title, artist } = albumInfo || {};
     const coverUrl = useMemo(() => {
+        if (!loadingToken && !token) {
+            return;
+        }
         return `${url}/${albumId}/cover?auth=${token}`;
-    }, [albumId, token, url]);
+    }, [albumId, token, url, loadingToken]);
 
     return (
         <div
@@ -41,7 +44,14 @@ const AlbumWallItem: React.FC<Props> = (props) => {
                 history.push(`/album/${albumId}`);
             }}
         >
-            <Cover coverUrl={coverUrl} />
+            {token && <Cover coverUrl={coverUrl} />}
+            {!token && !loadingToken && (
+                <div className={styles.unavailable}>
+                    资源不可用
+                    <br />
+                    请尝试同步音频仓库
+                </div>
+            )}
             <div className={styles.itemMask}>
                 <div className={styles.itemInfo}>
                     <div className={styles.title}>{title}</div>

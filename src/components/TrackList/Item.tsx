@@ -2,19 +2,30 @@ import React from "react";
 import classNames from "classnames";
 import { useRecoilValue } from "recoil";
 import { ListItem, ListItemText, ListItemIcon, IconButton, Tooltip } from "@mui/material";
-import { PlayArrow, Pause, PlaylistAdd } from "@mui/icons-material";
+import {
+    PlayArrow,
+    Pause,
+    PlaylistAdd,
+    PlaylistRemove,
+    Favorite,
+    FavoriteOutlined,
+} from "@mui/icons-material";
 import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
-import { PlayerStatus, PlaylistItem } from "@/types/common";
+import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { getAvailableLibraryForTrack } from "./services";
+import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
+import { FavoriteTrackAlbumMap } from "@/state/favorite";
 
 interface Props {
-    track: PlaylistItem;
+    track: PlayQueueItem;
     itemIndex: number;
+    features?: TrackListFeatures[];
     onPlay: () => void;
-    onPlaylistAdd: () => void;
+    onPlayQueueAdd: () => void;
+    onPlayQueueRemove: () => void;
     onPause: () => void;
     onResume: () => void;
     onRestart: () => void;
@@ -29,7 +40,17 @@ const TypeTextMap: Record<string, string> = {
 };
 
 const TrackListItem: React.FC<Props> = (props) => {
-    const { track, itemIndex, onPlay, onPlaylistAdd, onRestart, onResume, onPause } = props;
+    const {
+        track,
+        itemIndex,
+        features = [],
+        onPlay,
+        onPlayQueueAdd,
+        onPlayQueueRemove,
+        onRestart,
+        onResume,
+        onPause,
+    } = props;
     const { title, artist, type, albumId, discIndex, trackIndex } = track;
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
@@ -38,6 +59,15 @@ const TrackListItem: React.FC<Props> = (props) => {
         trackIndex: nowPlayingTrackIndex,
     } = useRecoilValue(NowPlayingInfoState);
     const playerStatus = useRecoilValue(PlayerStatusState);
+    const favoriteTrackAlbumMap = useRecoilValue(FavoriteTrackAlbumMap);
+    const isFavored =
+        favoriteTrackAlbumMap[albumId] &&
+        favoriteTrackAlbumMap[albumId].some(
+            (item) =>
+                item.albumId === albumId &&
+                item.discId === discIndex + 1 &&
+                item.trackId === trackIndex + 1
+        );
     const isPlaying =
         albumId === nowPlayingAlbumId &&
         discIndex === nowPlayingDiscIndex &&
@@ -61,6 +91,7 @@ const TrackListItem: React.FC<Props> = (props) => {
             onPlay();
         }
     };
+
     return (
         <ListItem
             key={title}
@@ -69,16 +100,37 @@ const TrackListItem: React.FC<Props> = (props) => {
             })}
             secondaryAction={
                 <>
-                    <Tooltip title="添加到当前播放队列">
-                        <IconButton
-                            onClick={() => {
-                                onPlaylistAdd();
-                            }}
-                            disabled={!loading && !credential}
-                        >
-                            <PlaylistAdd />
-                        </IconButton>
-                    </Tooltip>
+                    {features.includes(TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON) && (
+                        <Tooltip title="添加到当前播放队列">
+                            <IconButton
+                                onClick={() => {
+                                    onPlayQueueAdd();
+                                }}
+                                disabled={!loading && !credential}
+                            >
+                                <PlaylistAdd />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                    {features.includes(TrackListFeatures.SHOW_PLAY_QUEUE_REMOVE_ICON) && (
+                        <Tooltip title="从播放队列移除">
+                            <IconButton
+                                onClick={() => {
+                                    onPlayQueueRemove();
+                                }}
+                                disabled={!loading && !credential}
+                            >
+                                <PlaylistRemove />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                    {features.includes(TrackListFeatures.SHOW_FAVORITE_ICON) && !isFavored && (
+                        <Tooltip title="添加喜欢">
+                            <IconButton onClick={() => {}}>
+                                <FavoriteOutlined />
+                            </IconButton>
+                        </Tooltip>
+                    )}
                 </>
             }
         >
@@ -106,6 +158,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                     </div>
                 }
                 secondary={artist}
+                className={styles.textContainer}
             >
                 {" "}
             </ListItemText>

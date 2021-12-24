@@ -5,10 +5,11 @@ import { groupBy } from "lodash";
 import { Divider, Grid, Typography } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 import useRequest from "@/hooks/useRequest";
+import usePlayQueueController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
-import { AlbumInfo, AnnilToken } from "@/types/common";
+import { AlbumInfo, AnnilToken, PlayQueueItem } from "@/types/common";
 import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
-import { TrackItem } from "@/components/TrackList/types";
+import { TrackItem, TrackListFeatures } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
 import { getAlbumInfo, getAlbumAvailableLibraries } from "./services";
@@ -24,6 +25,7 @@ const AlbumDetail: React.FC = () => {
         getAlbumAvailableLibraries(albumId)
     );
     const [albumInfo, setAlbumInfo] = useState<AlbumInfo | undefined>();
+    const { addToPlayQueue } = usePlayQueueController();
     useEffect(() => {
         (async () => {
             if (albumId) {
@@ -70,9 +72,15 @@ const AlbumDetail: React.FC = () => {
         trackListRefs.current
             .sort((a, b) => a.index - b.index)
             .forEach((ref, index) => {
-                index === 0 ? ref.playAll() : ref.addAllToPlaylist();
+                index === 0 ? ref.playAll() : ref.addAllToPlayQueue();
             });
     }, []);
+    const onPlayQueueAdd = useCallback(
+        (track: PlayQueueItem) => {
+            addToPlayQueue(track);
+        },
+        [addToPlayQueue]
+    );
     return (
         <Grid container justifyContent="center" className={styles.pageContainer}>
             <Grid item xs={12} lg={8}>
@@ -117,6 +125,8 @@ const AlbumDetail: React.FC = () => {
                                                     ) &&
                                                     trackListRefs.current.push(ref);
                                             }}
+                                            features={[TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON]}
+                                            onPlayQueueAdd={onPlayQueueAdd}
                                         />
                                     </Grid>
                                 </Grid>

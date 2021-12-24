@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { PlayerStatus, PlaylistItem } from "@/types/common";
+import { PlayerStatus, PlayQueueItem } from "@/types/common";
 
 export const PlayerState = atom({
     key: "PlayerState",
@@ -15,7 +15,7 @@ export const PlayerStatusState = atom({
     default: PlayerStatus.EMPTY,
 });
 
-export const NowPlayingInfoState = atom<Partial<PlaylistItem>>({
+export const NowPlayingInfoState = atom<Partial<PlayQueueItem>>({
     key: "NowPlayingInfoState",
     default: {},
 });

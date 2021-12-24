@@ -13,7 +13,7 @@ const PlayerCover: React.FC = () => {
         <div
             className={styles.coverContainer}
             onClick={() => {
-                history.push("/playlist");
+                history.push("/queue");
             }}
         >
             <Cover coverUrl={coverUrl} />

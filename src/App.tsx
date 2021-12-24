@@ -8,7 +8,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalMessage from "./components/GlobalMessage";
 import LoginStatus from "./components/LoginStatus";
 import NeedLoginPage from "./components/NeedLoginPage";
-import Player from './components/Player';
+import Player from "./components/Player";
 import NotFound from "./pages/NotFound";
 import Loading from "./components/Loading";
 import Login from "./pages/Login";
@@ -17,7 +17,7 @@ import Logout from "./pages/Logout";
 import Library from "./pages/Library";
 import AlbumList from "./pages/AlbumList";
 import AlbumDetail from "./pages/AlbumDetail";
-import Playlist from './pages/Playlist';
+import PlayQueue from "./pages/PlayQueue";
 import Search from "./pages/Search";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
@@ -38,7 +38,7 @@ function AppBody() {
             <Container component="main" className="main-container">
                 <Switch>
                     <Route path="/" exact>
-                        <div style={{ padding: '20px' }}>空无一物的主页</div>
+                        <div style={{ padding: "20px" }}>空无一物的主页</div>
                     </Route>
                     <Route path="/user/login" exact>
                         <Login />
@@ -64,9 +64,9 @@ function AppBody() {
                             <AlbumDetail />
                         </NeedLoginPage>
                     </Route>
-                    <Route path="/playlist" exact>
+                    <Route path="/queue" exact>
                         <NeedLoginPage>
-                            <Playlist />
+                            <PlayQueue />
                         </NeedLoginPage>
                     </Route>
                     <Route path="/search" exact>
@@ -91,7 +91,6 @@ function AppBody() {
                         }}
                     >
                         <Player />
-                        {/* <ActivePlaylistPopup /> */}
                     </Toolbar>
                 </AppBar>
             </Container>

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
-import { PlayerStatus, PlaylistItem } from "@/types/common";
+import { PlayerStatus, PlayQueueItem } from "@/types/common";
 
 function getAudioUrl(url: string) {
     if (window.MediaSource) {
@@ -81,7 +81,7 @@ export default function usePlayer() {
             coverUrl,
             discIndex,
             trackIndex,
-        }: PlaylistItem) => {
+        }: PlayQueueItem) => {
             if (!playUrl) {
                 return;
             }

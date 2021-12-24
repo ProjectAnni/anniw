@@ -14,15 +14,6 @@ export enum PlayerStatus {
     EMPTY,
 }
 
-export interface Indexable {
-    id: string;
-}
-
-export interface MusicIndex {
-    albumId: string;
-    track: number;
-}
-
 export interface SiteInfo {
     siteName: string;
     description: string;
@@ -50,6 +41,13 @@ export interface UserInfo {
     avatar: string;
 }
 
+export interface TrackIndex {
+    // track_id 与 disc_id 均为从 1 开始
+    trackId: number;
+    discId: number;
+    albumId: string;
+}
+
 export interface TrackInfo {
     title: string;
     artist: string;
@@ -57,12 +55,7 @@ export interface TrackInfo {
     tags: string[];
 }
 
-export interface TrackInfoWithAlbum extends TrackInfo {
-    // track_id 与 disc_id 均为从 1 开始
-    trackId: number;
-    discId: number;
-    albumId: string;
-}
+export interface TrackInfoWithAlbum extends TrackInfo, TrackIndex {}
 
 export interface DiscInfo {
     // meta 仓库中为空时返回所属 Album 的 title
@@ -86,7 +79,11 @@ export interface AlbumInfo {
     discs: DiscInfo[];
 }
 
-export interface PlaylistItem extends TrackItem {
+export interface PlayQueueItem extends TrackItem {
     playUrl?: string;
     coverUrl?: string;
- }
+}
+
+export interface FavoriteTrackItem extends TrackIndex {
+    info?: TrackInfo;
+}

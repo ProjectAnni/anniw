@@ -3,8 +3,8 @@ import { useRecoilState } from "recoil";
 import { Grid } from "@mui/material";
 import storage from "@/utils/storage";
 import usePlayer from "@/hooks/usePlayer";
-import usePlayerController from "@/hooks/usePlaylistController";
-import usePlaylist from "@/hooks/usePlaylist";
+import usePlayerController from "@/hooks/usePlayQueueController";
+import usePlayQueue from "@/hooks/usePlayQueue";
 import { PlayerStatusState } from "@/state/player";
 import { PlayerStatus } from "@/types/common";
 import PlayerCover from "./components/PlayerCover";
@@ -16,8 +16,8 @@ import { LoopMode } from "./types";
 const Player: React.FC = () => {
     const [loopMode, setLoopMode] = useState<LoopMode>(LoopMode.LIST_LOOP);
     const [player, { restart, resume, pause }] = usePlayer();
-    const [playlist] = usePlaylist();
-    const { playNext, replacePlaylist } = usePlayerController();
+    const [playQueue] = usePlayQueue();
+    const { playNext, playRandom, replacePlayQueue } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     useEffect(() => {
         const onEnded = () => {
@@ -28,12 +28,15 @@ const Player: React.FC = () => {
             if (loopMode === LoopMode.TRACK_LOOP) {
                 restart();
             }
+            if (loopMode === LoopMode.SHUFFLE) {
+                playRandom();
+            }
         };
         player.addEventListener("ended", onEnded);
         return () => {
             player.removeEventListener("ended", onEnded);
         };
-    }, [player, playNext, setPlayerStatus, loopMode, restart]);
+    }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom]);
     useEffect(() => {
         if (window.navigator.mediaSession) {
             navigator.mediaSession.setActionHandler("play", () => {
@@ -47,16 +50,16 @@ const Player: React.FC = () => {
         }
     }, [pause, playerStatus, restart, resume]);
     useEffect(() => {
-        if (playlist.length > 0) {
-            storage.set("playlist", playlist);
+        if (playQueue.length > 0) {
+            storage.set("playlist", playQueue);
         }
-    }, [playlist]);
+    }, [playQueue]);
     useEffect(() => {
-        const localPlaylist = storage.get("playlist");
-        if (localPlaylist?.length) {
-            replacePlaylist(localPlaylist);
+        const localPlayQueue = storage.get("playlist");
+        if (localPlayQueue?.length) {
+            replacePlayQueue(localPlayQueue);
         }
-    }, [replacePlaylist]);
+    }, [replacePlayQueue]);
     const onChangeLoopMode = (mode: LoopMode) => {
         setLoopMode(mode);
     }

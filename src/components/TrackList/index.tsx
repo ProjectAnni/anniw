@@ -1,24 +1,27 @@
 import React, { useEffect, useState, useImperativeHandle, useCallback, forwardRef } from "react";
 import { useRecoilValue } from "recoil";
 import { List } from "@mui/material";
-import { PlaylistItem } from "@/types/common";
+import { PlayQueueItem } from "@/types/common";
 import usePlayer from "@/hooks/usePlayer";
-import usePlayerController from "@/hooks/usePlaylistController";
+import usePlayerController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
-import { TrackItem } from "./types";
+import { TrackItem, TrackListFeatures } from "./types";
 import { getAvailableLibraryForTrack, getCoverUrlForTrack, getPlayUrlForTrack } from "./services";
 import Item from "./Item";
 
 interface Props {
     tracks: TrackItem[];
     itemIndex: number;
+    features?: TrackListFeatures[];
+    onPlayQueueAdd?: (track: PlayQueueItem) => void;
+    onPlayQueueRemove?: (track: PlayQueueItem) => void;
 }
 
 export interface TrackListImperativeHandles {
     playAll: () => void;
-    addAllToPlaylist: () => void;
+    addAllToPlayQueue: () => void;
     readonly index: number;
-    readonly parsedTracks: PlaylistItem[];
+    readonly parsedTracks: PlayQueueItem[];
 }
 
 /**
@@ -31,14 +34,14 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     props,
     ref
 ) => {
-    const { tracks, itemIndex } = props;
+    const { tracks, itemIndex, features = [], onPlayQueueAdd, onPlayQueueRemove } = props;
     const [player, { resume, restart, pause }] = usePlayer();
-    const { addToPlaylist, replacePlaylistAndPlay } = usePlayerController();
+    const { addToPlayQueue, replacePlayQueueAndPlay } = usePlayerController();
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
-    const [parsedTracks, setParsedTracks] = useState<PlaylistItem[]>([]);
+    const [parsedTracks, setParsedTracks] = useState<PlayQueueItem[]>([]);
     useEffect(() => {
         (async () => {
-            const result: PlaylistItem[] = [];
+            const result: PlayQueueItem[] = [];
             for (const track of tracks) {
                 const credential = await getAvailableLibraryForTrack(track, allCredentials);
                 result.push({
@@ -58,26 +61,26 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     }, [allCredentials, tracks]);
     const onPlay = useCallback(
         (index: number) => {
-            replacePlaylistAndPlay(parsedTracks, index);
+            const track = parsedTracks[index];
+            const filteredTrack = parsedTracks.filter((t) => !!t.playUrl);
+            const indexAfterFiltering = filteredTrack.findIndex((t) => t.playUrl === track.playUrl);
+            replacePlayQueueAndPlay(filteredTrack, indexAfterFiltering);
         },
-        [parsedTracks, replacePlaylistAndPlay]
-    );
-    const onPlaylistAdd = useCallback(
-        (index: number) => {
-            addToPlaylist(parsedTracks[index]);
-        },
-        [parsedTracks, addToPlaylist]
+        [parsedTracks, replacePlayQueueAndPlay]
     );
     const playAll = useCallback(() => {
-        replacePlaylistAndPlay(parsedTracks, 0);
-    }, [parsedTracks, replacePlaylistAndPlay]);
-    const addAllToPlaylist = useCallback(() => {
-        addToPlaylist(parsedTracks);
-    }, [parsedTracks, addToPlaylist]);
+        replacePlayQueueAndPlay(
+            parsedTracks.filter((t) => !!t.playUrl),
+            0
+        );
+    }, [parsedTracks, replacePlayQueueAndPlay]);
+    const addAllToPlayQueue = useCallback(() => {
+        addToPlayQueue(parsedTracks.filter((t) => !!t.playUrl));
+    }, [parsedTracks, addToPlayQueue]);
     useImperativeHandle(
         ref,
-        () => ({ playAll, addAllToPlaylist, parsedTracks, index: itemIndex }),
-        [addAllToPlaylist, playAll, itemIndex, parsedTracks]
+        () => ({ playAll, addAllToPlayQueue, parsedTracks, index: itemIndex }),
+        [addAllToPlayQueue, playAll, itemIndex, parsedTracks]
     );
     return (
         <List dense>
@@ -87,11 +90,15 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
                         key={`${track.albumId}-${track.discIndex}-${track.trackIndex}-${track.title}`}
                         track={track}
                         itemIndex={index}
+                        features={features}
                         onPlay={() => {
                             onPlay(index);
                         }}
-                        onPlaylistAdd={() => {
-                            onPlaylistAdd(index);
+                        onPlayQueueAdd={() => {
+                            onPlayQueueAdd && onPlayQueueAdd(parsedTracks[index]);
+                        }}
+                        onPlayQueueRemove={() => {
+                            onPlayQueueRemove && onPlayQueueRemove(parsedTracks[index]);
                         }}
                         onPause={pause}
                         onResume={resume}
