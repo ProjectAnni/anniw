@@ -103,8 +103,8 @@ const TrackListItem: React.FC<Props> = (props) => {
                 setFavoriteTracks((prevTracks) => {
                     return prevTracks.filter(
                         (t) =>
-                            t.albumId !== albumId &&
-                            t.discId !== discIndex + 1 &&
+                            t.albumId !== albumId ||
+                            t.discId !== discIndex + 1 ||
                             t.trackId !== trackIndex + 1
                     );
                 });
