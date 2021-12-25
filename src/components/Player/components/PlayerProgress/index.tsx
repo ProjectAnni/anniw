@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerTime from "@/hooks/usePlayerTime";
 import usePlayerBufferedRanges from "@/hooks/usePlayerBufferedRanges";
-import { NowPlayingInfoState } from "@/state/player";
+import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
+import { PlayerStatus } from "@/types/common";
 import styles from "./index.module.scss";
 
 const formatSeconds = (seconds: number) => {
@@ -23,6 +24,7 @@ const PlayerProgress: React.FC = () => {
     const [currentTime, duration] = usePlayerTime();
     const [[bufferedRange]] = usePlayerBufferedRanges();
     const nowPlayerInfo = useRecoilValue(NowPlayingInfoState);
+    const playerStatus = useRecoilValue(PlayerStatusState);
     const [isShowTimeTip, setIsShowTimeTip] = useState(false);
     const [timeTipLeft, setTimeTipLeft] = useState(0);
     const { title, artist, albumTitle, albumId } = nowPlayerInfo;
@@ -50,6 +52,9 @@ const PlayerProgress: React.FC = () => {
     }, [duration, timeTipLeft]);
     const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!progressRef.current) {
+            return;
+        }
+        if (playerStatus === PlayerStatus.EMPTY) {
             return;
         }
         const { clientX } = e;
