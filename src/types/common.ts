@@ -86,4 +86,5 @@ export interface PlayQueueItem extends TrackItem {
 
 export interface FavoriteTrackItem extends TrackIndex {
     info?: TrackInfo;
+    albumTitle: string;
 }

@@ -14,7 +14,6 @@ const Favorite = () => {
             favoriteTracks
                 .filter((t) => !!t.info)
                 .map((t) => ({
-                    albumTitle: "",
                     ...t,
                     ...t.info!,
                     trackIndex: t.trackId - 1,
