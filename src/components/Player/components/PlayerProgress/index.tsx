@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 import usePlayer from "@/hooks/usePlayer";
@@ -23,6 +23,8 @@ const PlayerProgress: React.FC = () => {
     const [currentTime, duration] = usePlayerTime();
     const [[bufferedRange]] = usePlayerBufferedRanges();
     const nowPlayerInfo = useRecoilValue(NowPlayingInfoState);
+    const [isShowTimeTip, setIsShowTimeTip] = useState(false);
+    const [timeTipLeft, setTimeTipLeft] = useState(0);
     const { title, artist, albumTitle, albumId } = nowPlayerInfo;
     const playedStyle = useMemo(() => {
         return {
@@ -38,6 +40,14 @@ const PlayerProgress: React.FC = () => {
             width: `${((end - start) / duration) * 100}%`,
         };
     }, [bufferedRange, duration]);
+    const timeTipTime = useMemo(() => {
+        if (!progressRef.current) {
+            return;
+        }
+        const { width } = progressRef.current.getBoundingClientRect();
+        const percent = timeTipLeft / width;
+        return formatSeconds(percent * duration);
+    }, [duration, timeTipLeft]);
     const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!progressRef.current) {
             return;
@@ -57,7 +67,23 @@ const PlayerProgress: React.FC = () => {
 
     return (
         <div className={styles.progressContainer}>
-            <div className={styles.progress} ref={progressRef} onClick={onClick}>
+            <div
+                className={styles.progress}
+                ref={progressRef}
+                onClick={onClick}
+                onMouseEnter={() => {
+                    setIsShowTimeTip(true);
+                }}
+                onMouseLeave={() => {
+                    setIsShowTimeTip(false);
+                }}
+                onMouseMove={(e) => {
+                    progressRef.current &&
+                        setTimeTipLeft(
+                            e.clientX - progressRef.current.getBoundingClientRect().left
+                        );
+                }}
+            >
                 <div className={styles.buffered} style={bufferedStyle}></div>
                 <div className={styles.played} style={playedStyle}></div>
             </div>
@@ -72,6 +98,11 @@ const PlayerProgress: React.FC = () => {
             {!!albumTitle && (
                 <div className={styles.bottomTexts}>
                     <Link to={`/album/${albumId}`}>{albumTitle}</Link>
+                </div>
+            )}
+            {isShowTimeTip && !!duration && (
+                <div className={styles.timeTip} style={{ left: `${timeTipLeft}px` }}>
+                    {timeTipTime}
                 </div>
             )}
         </div>
