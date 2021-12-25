@@ -36,6 +36,7 @@ const UserIntroForm = () => {
                     alignItems="center"
                     onSubmit={onSubmit}
                 >
+                    <br />
                     <TextField
                         variant="outlined"
                         label="昵称"
@@ -45,6 +46,7 @@ const UserIntroForm = () => {
                         required
                         onChange={(e) => setNickname(e.target.value)}
                     ></TextField>
+                    <br />
                     <TextField
                         variant="outlined"
                         label="头像"
@@ -54,6 +56,7 @@ const UserIntroForm = () => {
                         required
                         onChange={(e) => setAvatar(e.target.value)}
                     ></TextField>
+                    <br />
                     <LoadingButton
                         color="primary"
                         variant="contained"

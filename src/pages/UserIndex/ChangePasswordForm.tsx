@@ -45,6 +45,7 @@ const ChangePasswordForm = () => {
                     alignItems="center"
                     onSubmit={onSubmit}
                 >
+                    <br />
                     <TextField
                         variant="outlined"
                         label="旧密码"
@@ -55,6 +56,7 @@ const ChangePasswordForm = () => {
                         required
                         onChange={(e) => setOldPassword(e.target.value)}
                     ></TextField>
+                    <br />
                     <TextField
                         variant="outlined"
                         label="新密码"
@@ -65,6 +67,7 @@ const ChangePasswordForm = () => {
                         required
                         onChange={(e) => setNewPassword(e.target.value)}
                     ></TextField>
+                    <br />
                     <TextField
                         variant="outlined"
                         label="确认新密码"
@@ -75,6 +78,7 @@ const ChangePasswordForm = () => {
                         required
                         onChange={(e) => setRepeatPassword(e.target.value)}
                     ></TextField>
+                    <br />
                     <LoadingButton
                         color="primary"
                         variant="contained"
