@@ -16,13 +16,13 @@ export async function patchIntro({ nickname, avatar }: PatchIntroParams) {
 }
 
 interface ChangePasswordParams {
-    old_password: string;
-    new_password: string;
+    oldPassword: string;
+    newPassword: string;
 }
 
-export async function changePassword({ old_password, new_password }: ChangePasswordParams) {
+export async function changePassword({ oldPassword, newPassword }: ChangePasswordParams) {
     return await request.patch("/api/user/password", {
-        old_password: await sha256(old_password),
-        new_password: await sha256(new_password),
+        oldPassword: await sha256(oldPassword),
+        newPassword: await sha256(newPassword),
     });
 }

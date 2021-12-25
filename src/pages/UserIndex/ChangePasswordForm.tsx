@@ -24,7 +24,7 @@ const ChangePasswordForm = () => {
         }
         setLoading(true);
         try {
-            await changePassword({ old_password: oldPassword, new_password: newPassword });
+            await changePassword({ oldPassword, newPassword });
             setUserInfo(null);
             history.push("/user/login");
         } catch (e) {
