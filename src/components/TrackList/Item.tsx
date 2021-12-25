@@ -197,7 +197,10 @@ const TrackListItem: React.FC<Props> = (props) => {
             <ListItemText
                 primary={
                     <div className={styles.titleContainer}>
-                        <span>{`${(itemIndex + 1).toString().padStart(2, "0")}. ${title}`}</span>
+                        {features.includes(TrackListFeatures.SHOW_TRACK_NO) && (
+                            <span>{`${(itemIndex + 1).toString().padStart(2, "0")}.`}&nbsp;</span>
+                        )}
+                        {title}
                         {!!type && type !== "normal" && (
                             <span className={styles.tag}>{TypeTextMap[type]}</span>
                         )}

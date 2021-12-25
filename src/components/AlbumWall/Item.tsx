@@ -6,7 +6,6 @@ import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
 import { getAvailableLibraryForAlbum } from "@/utils/library";
 import Cover from "@/components/Cover";
-import { AnnilToken } from "@/types/common";
 import { getAlbumInfo } from "./services";
 import styles from "./index.module.scss";
 

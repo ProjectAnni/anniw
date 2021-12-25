@@ -128,6 +128,7 @@ const AlbumDetail: React.FC = () => {
                                             features={[
                                                 TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON,
                                                 TrackListFeatures.SHOW_FAVORITE_ICON,
+                                                TrackListFeatures.SHOW_TRACK_NO,
                                             ]}
                                             onPlayQueueAdd={onPlayQueueAdd}
                                         />
