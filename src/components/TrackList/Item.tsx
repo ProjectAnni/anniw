@@ -171,7 +171,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                         </Tooltip>
                     )}
                     {features.includes(TrackListFeatures.SHOW_FAVORITE_ICON) && isFavored && (
-                        <Tooltip title="添加喜欢">
+                        <Tooltip title="删除喜欢">
                             <IconButton onClick={onClickFavoriteButton}>
                                 <Favorite />
                             </IconButton>
