@@ -52,7 +52,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         onResume,
         onPause,
     } = props;
-    const { title, artist, type, albumId, discIndex, trackIndex } = track;
+    const { title, artist, type, albumId, albumTitle, discIndex, trackIndex } = track;
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
         albumId: nowPlayingAlbumId,
@@ -112,6 +112,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                 setFavoriteTracks((prevTracks) => [
                     {
                         albumId,
+                        albumTitle,
                         discId: discIndex + 1,
                         trackId: trackIndex + 1,
                         info: {
