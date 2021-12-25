@@ -20,6 +20,7 @@ import AlbumDetail from "./pages/AlbumDetail";
 import PlayQueue from "./pages/PlayQueue";
 import Search from "./pages/Search";
 import Favorite from "./pages/Favorite";
+import UserIndex from "./pages/UserIndex";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
 
@@ -49,6 +50,11 @@ function AppBody() {
                     </Route>
                     <Route path="/user/logout" exact>
                         <Logout />
+                    </Route>
+                    <Route path={"/user/index"} exact>
+                        <NeedLoginPage>
+                            <UserIndex />
+                        </NeedLoginPage>
                     </Route>
                     <Route path="/library" exact>
                         <NeedLoginPage>
