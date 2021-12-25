@@ -23,6 +23,8 @@ import Favorite from "./pages/Favorite";
 import UserIndex from "./pages/UserIndex";
 import { DrawerIsOpen } from "./state/ui";
 import "./index.scss";
+import TagDetail from "./pages/TagDetail";
+import Tags from "./pages/Tags";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
@@ -69,6 +71,16 @@ function AppBody() {
                     <Route path="/album/:id">
                         <NeedLoginPage>
                             <AlbumDetail />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/tag/:tag">
+                        <NeedLoginPage>
+                            <TagDetail />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/tags">
+                        <NeedLoginPage>
+                            <Tags />
                         </NeedLoginPage>
                     </Route>
                     <Route path="/queue" exact>

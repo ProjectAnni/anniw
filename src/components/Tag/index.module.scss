@@ -1,0 +1,13 @@
+.tag {
+    display: inline-block;
+    height: fit-content;
+    padding: 2px 4px;
+    border-radius: 2px;
+    color: #fff;
+    background-color: rgba(25, 118, 210, $alpha: 0.8);
+    user-select: none;
+    margin-right: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    word-break: break-all;
+}

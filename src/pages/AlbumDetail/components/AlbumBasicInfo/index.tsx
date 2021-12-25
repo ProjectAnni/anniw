@@ -4,6 +4,7 @@ import { Sync, PlayArrow } from "@mui/icons-material";
 import { AlbumInfo } from "@/types/common";
 import { deleteAlbumInfoCache } from "../../services";
 import styles from "./index.module.scss";
+import Tag from "@/components/Tag";
 
 interface Props {
     albumInfo?: AlbumInfo;
@@ -28,9 +29,7 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
             <div className={styles.artist}>{artist}</div>
             <div className={styles.tagsContainer}>
                 {tags.map((tag) => (
-                    <div key={tag} className={styles.tag}>
-                        {tag}
-                    </div>
+                    <Tag key={tag} tag={tag} />
                 ))}
             </div>
             <div className={styles.actions}>
