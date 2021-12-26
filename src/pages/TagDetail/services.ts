@@ -1,4 +1,5 @@
 import request from "@/api/request";
+import { AlbumInfo } from "@/types/common";
 
 export async function getTags() {
     return await request.get<string[]>("/api/meta/tags");
@@ -8,10 +9,6 @@ export async function getTagGraph() {
     return await request.get<Record<string, string[]>>("/api/meta/tag-graph", undefined, {
         formatResponse: false,
     });
-}
-
-interface AlbumInfo {
-    albumId: string;
 }
 
 export async function getAlbumsByTag(tag: string) {

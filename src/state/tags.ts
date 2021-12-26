@@ -14,14 +14,11 @@ export const TagIncludedBy = selector({
     key: "TagIncludedBy",
     get: ({ get }) => {
         const tagGraph = get(TagGraph);
-        console.log(tagGraph);
-        let res: Record<string, string> = {};
-        for (let u in tagGraph) {
-            if (tagGraph.hasOwnProperty(u)) {
-                tagGraph[u].forEach((v) => {
-                    res[v] = u;
-                });
-            }
+        const res: Record<string, string> = {};
+        for (const u of Object.keys(tagGraph)) {
+            tagGraph[u].forEach((v) => {
+                res[v] = u;
+            })
         }
         return res;
     },
@@ -32,7 +29,7 @@ export const RootTags = selector({
     get: ({ get }) => {
         const tags = get(Tags);
         const tagIncludedBy = get(TagIncludedBy);
-        let res: string[] = [];
+        const res: string[] = [];
         tags.forEach((x) => {
             if (!tagIncludedBy[x]) {
                 res.push(x);

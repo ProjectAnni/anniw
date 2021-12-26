@@ -1,20 +1,25 @@
 import React, { useEffect } from "react";
-import { RootTags, Tags as StateTags } from "@/state/tags";
+import { RootTags, TagGraph, Tags as StateTags } from "@/state/tags";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Grid } from "@mui/material";
 import Tag from "@/components/Tag";
-import { getTags } from "../TagDetail/services";
+import { getTagGraph, getTags } from "../TagDetail/services";
 
 const Tags = () => {
     const rootTags = useRecoilValue(RootTags);
     const [tags, setTags] = useRecoilState(StateTags);
+    const [tagGraph, setTagGraph] = useRecoilState(TagGraph);
     useEffect(() => {
         (async () => {
-            if (tags === undefined || tags.length == 0) {
+            if (!tags?.length) {
                 setTags(await getTags());
             }
+            console.log(tagGraph);
+            if (!tagGraph || !Object.keys(tagGraph).length) {
+                setTagGraph(await getTagGraph());
+            }
         })();
-    }, [tags, setTags]);
+    }, [tags, setTags, tagGraph, setTagGraph]);
     return (
         <Grid container>
             <Grid item>

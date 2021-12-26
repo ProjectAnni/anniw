@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import TagIcon from "@mui/icons-material/Tag";
 import { TagGraph, TagIncludedBy, Tags } from "@/state/tags";
 import { Grid } from "@mui/material";
 import { useParams } from "react-router";
@@ -12,8 +11,8 @@ const TagDetail = () => {
     const { tag } = useParams<{ tag: string }>();
     const includes: string[] | undefined = useRecoilValue(TagGraph)[tag];
     const includedBy: string | undefined = useRecoilValue(TagIncludedBy)[tag];
-    let setTags = useSetRecoilState(Tags);
-    let setTagGraph = useSetRecoilState(TagGraph);
+    const setTags = useSetRecoilState(Tags);
+    const setTagGraph = useSetRecoilState(TagGraph);
     const [albums, setAlbums] = useState<string[]>();
     useEffect(() => {
         (async () => {
@@ -48,7 +47,7 @@ const TagDetail = () => {
                     })}
                 </Grid>
             )}
-            {albums !== undefined && albums.length != 0 && (
+            {!!albums?.length && (
                 <Grid item xs={12}>
                     <h2>专辑列表</h2>
                     <Grid>
