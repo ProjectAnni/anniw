@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography/Typography";
 import React from "react";
-import './index.scss';
+import "./index.scss";
 
 function NotFound() {
     return (

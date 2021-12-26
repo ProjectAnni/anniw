@@ -1,7 +1,6 @@
 import { atom, selector } from "recoil";
 import { LoginStatus, UserInfo } from "@/types/common";
 
-
 export const CurrentUserInfo = atom<UserInfo | null>({
     key: "CurrentUserInfo",
     default: null,

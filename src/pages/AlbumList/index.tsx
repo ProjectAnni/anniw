@@ -61,7 +61,7 @@ const AlbumList: React.FC = () => {
         history.replace({
             search: query.toString(),
         });
-    }
+    };
     const onPageChange = (page: number) => {
         setPageNum(page);
         albumListRef.current && albumListRef.current.scrollIntoView();

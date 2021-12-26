@@ -29,7 +29,8 @@ const UserIntroForm = () => {
     return (
         <Grid container justifyContent="center">
             <Grid item xs={12} lg={3}>
-                <Grid container
+                <Grid
+                    container
                     component="form"
                     direction="column"
                     justifyContent="center"

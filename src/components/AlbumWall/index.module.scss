@@ -1,6 +1,6 @@
 .wallContainer {
     margin-top: 16px;
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
 .item {
@@ -11,7 +11,7 @@
     background-color: rgba($color: #aaa, $alpha: 0.4);
     margin-right: 12px;
     margin-bottom: 12px;
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     box-shadow: 1px 1px 2px rgba($color: #000, $alpha: 0.1);
     cursor: pointer;
     &:hover {

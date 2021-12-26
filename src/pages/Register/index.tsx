@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import RegisterForm from "./RegisterForm";
-import './index.scss';
+import "./index.scss";
 
 const Register = () => {
     return (

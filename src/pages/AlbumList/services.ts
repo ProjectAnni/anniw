@@ -5,4 +5,3 @@ export async function getLibraryAlbums(url: string) {
     const { albums = [] } = libraryInfo || {};
     return albums;
 }
-

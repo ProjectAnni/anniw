@@ -16,7 +16,6 @@ export default function usePlayQueueController() {
         if (playQueue[currentPlayIndex + 1]) {
             play(playQueue[currentPlayIndex + 1]);
             setCurrentPlayIndex((prev) => prev + 1);
-           
         } else if (currentPlayIndex === playQueue.length - 1) {
             play(playQueue[0]);
             setCurrentPlayIndex(0);
@@ -28,7 +27,7 @@ export default function usePlayQueueController() {
     const playIndex = useCallback(
         (index: number) => {
             if (playQueue[index]) {
-                setCurrentPlayIndex(index)
+                setCurrentPlayIndex(index);
                 play(playQueue[index]);
             }
         },

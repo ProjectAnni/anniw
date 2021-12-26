@@ -62,7 +62,7 @@ const Player: React.FC = () => {
     }, [replacePlayQueue]);
     const onChangeLoopMode = (mode: LoopMode) => {
         setLoopMode(mode);
-    }
+    };
     return (
         <Grid container>
             <Grid item flexShrink={0}>

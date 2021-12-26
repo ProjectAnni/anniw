@@ -32,7 +32,7 @@ const PlayerActions: React.FC<Props> = (props) => {
                     </IconButton>
                 </Tooltip>
             )}
-             {loopMode === LoopMode.SHUFFLE && (
+            {loopMode === LoopMode.SHUFFLE && (
                 <Tooltip title="队列随机">
                     <IconButton color="inherit" onClick={onClickLoopMode}>
                         <Shuffle />
