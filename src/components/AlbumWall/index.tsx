@@ -5,7 +5,7 @@ import styles from "./index.module.scss";
 
 interface Props {
     albums: string[];
-    libraryInfo?: {
+    libraryInfo: {
         url: string;
         token: string;
     } | null;
