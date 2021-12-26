@@ -11,12 +11,11 @@ const Tags = () => {
     const [tagGraph, setTagGraph] = useRecoilState(TagGraph);
     useEffect(() => {
         (async () => {
-            if (!tags?.length) {
-                setTags(await getTags());
-            }
-            console.log(tagGraph);
             if (!tagGraph || !Object.keys(tagGraph).length) {
                 setTagGraph(await getTagGraph());
+            }
+            if (!tags?.length) {
+                setTags(await getTags());
             }
         })();
     }, [tags, setTags, tagGraph, setTagGraph]);
