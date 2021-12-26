@@ -32,7 +32,7 @@ const LoginForm: React.FC = () => {
             });
             setCurrentUserInfo(userInfo);
             storage.set("userInfo", userInfo);
-            const returnTo = query.get('return');
+            const returnTo = query.get("return");
             if (returnTo) {
                 history.push(returnTo);
             } else {

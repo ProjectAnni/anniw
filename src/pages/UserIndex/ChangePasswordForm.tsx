@@ -19,7 +19,7 @@ const ChangePasswordForm = () => {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (newPassword !== repeatPassword) {
-            addMessage('error', "两次密码不匹配");
+            addMessage("error", "两次密码不匹配");
             return;
         }
         setLoading(true);
@@ -34,11 +34,12 @@ const ChangePasswordForm = () => {
         } finally {
             setLoading(false);
         }
-    }
+    };
     return (
         <Grid container justifyContent="center">
             <Grid item xs={12} lg={3}>
-                <Grid container
+                <Grid
+                    container
                     component="form"
                     direction="column"
                     justifyContent="center"
@@ -94,6 +95,6 @@ const ChangePasswordForm = () => {
             </Grid>
         </Grid>
     );
-}
+};
 
 export default ChangePasswordForm;

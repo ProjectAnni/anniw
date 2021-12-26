@@ -58,10 +58,7 @@ export default function usePlayQueue() {
                     t.trackIndex === track.trackIndex
             );
             if (index !== -1) {
-                setPlayQueue((queue) => [
-                    ...queue.slice(0, index),
-                    ...queue.slice(index + 1),
-                ]);
+                setPlayQueue((queue) => [...queue.slice(0, index), ...queue.slice(index + 1)]);
             }
         },
         [playQueue, setPlayQueue]

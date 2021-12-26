@@ -14,31 +14,34 @@ const Search = () => {
     const [albumResult, setAlbumResult] = useState<AlbumInfo[]>([]);
     const [_, { addMessage }] = useMessage();
     const query = useQuery();
-    const onSearch = useCallback(async (keyword: string) => {
-        setIsSearching(true);
-        setAlbumResult([]);
-        try {
-            const { albums = [] } = await searchAlbums({ keyword });
-            if (albums.length === 0) {
-                setIsNoResult(true);
-            } else {
-                setIsNoResult(false);
-                setAlbumResult(albums);
+    const onSearch = useCallback(
+        async (keyword: string) => {
+            setIsSearching(true);
+            setAlbumResult([]);
+            try {
+                const { albums = [] } = await searchAlbums({ keyword });
+                if (albums.length === 0) {
+                    setIsNoResult(true);
+                } else {
+                    setIsNoResult(false);
+                    setAlbumResult(albums);
+                }
+            } catch (e) {
+                if (e instanceof Error) {
+                    addMessage("error", e.message);
+                }
+            } finally {
+                setIsSearching(false);
             }
-        } catch (e) {
-            if (e instanceof Error) {
-                addMessage("error", e.message);
-            }
-        } finally {
-            setIsSearching(false);
-        }
-    }, [addMessage]);
+        },
+        [addMessage]
+    );
     useEffect(() => {
         const keyword = query.get("keyword");
         if (keyword) {
             onSearch(keyword);
         }
-    }, [onSearch, query])
+    }, [onSearch, query]);
     return (
         <Grid container justifyContent="center">
             <Grid item xs={12} className={styles.searchBoxContainer}>

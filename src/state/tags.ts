@@ -18,7 +18,7 @@ export const TagIncludedBy = selector({
         for (const u of Object.keys(tagGraph)) {
             tagGraph[u].forEach((v) => {
                 res[v] = u;
-            })
+            });
         }
         return res;
     },
