@@ -7,7 +7,7 @@ interface TagProps {
 }
 
 const Tag = (props: TagProps) => {
-    let { tag } = props;
+    const { tag } = props;
     const history = useHistory();
     const onClick = () => {
         history.push("/tag/" + encodeURI(tag));
