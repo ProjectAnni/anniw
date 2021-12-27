@@ -55,7 +55,9 @@ export interface TrackInfo {
     tags: string[];
 }
 
-export interface TrackInfoWithAlbum extends TrackInfo, TrackIndex {}
+export interface TrackInfoWithAlbum extends TrackInfo, TrackIndex {
+    albumTitle: string;
+}
 
 export interface DiscInfo {
     // meta 仓库中为空时返回所属 Album 的 title
@@ -82,9 +84,4 @@ export interface AlbumInfo {
 export interface PlayQueueItem extends TrackItem {
     playUrl?: string;
     coverUrl?: string;
-}
-
-export interface FavoriteTrackItem extends TrackIndex {
-    info?: TrackInfo;
-    albumTitle: string;
 }

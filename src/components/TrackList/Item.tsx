@@ -115,12 +115,10 @@ const TrackListItem: React.FC<Props> = (props) => {
                         albumTitle,
                         discId: discIndex + 1,
                         trackId: trackIndex + 1,
-                        info: {
-                            title: title,
-                            artist: artist,
-                            type: type,
-                            tags: track.tags,
-                        },
+                        title: title,
+                        artist: artist,
+                        type: type,
+                        tags: track.tags,
                     },
                     ...prevTracks,
                 ]);
@@ -171,7 +169,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                         </Tooltip>
                     )}
                     {features.includes(TrackListFeatures.SHOW_FAVORITE_ICON) && isFavored && (
-                        <Tooltip title="删除喜欢">
+                        <Tooltip title="取消喜欢">
                             <IconButton onClick={onClickFavoriteButton}>
                                 <Favorite />
                             </IconButton>
