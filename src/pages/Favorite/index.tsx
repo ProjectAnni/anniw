@@ -12,10 +12,9 @@ const Favorite = () => {
         () =>
             // TODO: 无 info 项处理
             favoriteTracks
-                .filter((t) => !!t.info)
+                // .filter((t) => !!t.info)
                 .map((t) => ({
                     ...t,
-                    ...t.info!,
                     trackIndex: t.trackId - 1,
                     discIndex: t.discId - 1,
                 })),

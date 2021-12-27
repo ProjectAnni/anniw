@@ -1,8 +1,8 @@
 import { atom, selector } from "recoil";
 import { groupBy } from "lodash";
-import { FavoriteTrackItem } from "@/types/common";
+import { TrackInfoWithAlbum } from "@/types/common";
 
-export const FavoriteTracksState = atom<FavoriteTrackItem[]>({
+export const FavoriteTracksState = atom<TrackInfoWithAlbum[]>({
     key: "FavoriteTracksState",
     default: [],
 });
