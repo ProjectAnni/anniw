@@ -2,13 +2,23 @@
     background-color: rgba($color: #eee, $alpha: 0.2);
 }
 .textContainer {
-    padding-right: 12px;
+    max-width: 80%;
 }
 .titleContainer {
     display: flex;
     align-items: center;
 }
+.title {
+    flex-shrink: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.artist {
+    font-size: smaller;
+}
 .tag {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     margin-left: 4px;
@@ -18,4 +28,5 @@
     font-size: 12px;
     line-height: normal;
     color: #fff;
+    white-space: nowrap;
 }

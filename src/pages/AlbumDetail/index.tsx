@@ -25,7 +25,7 @@ const AlbumDetail: React.FC = () => {
         getAlbumAvailableLibraries(albumId)
     );
     const [albumInfo, setAlbumInfo] = useState<AlbumInfo | undefined>();
-    const { addToPlayQueue } = usePlayQueueController();
+    const { addToPlayQueue, addToLater } = usePlayQueueController();
     useEffect(() => {
         (async () => {
             if (albumId) {
@@ -81,9 +81,15 @@ const AlbumDetail: React.FC = () => {
         },
         [addToPlayQueue]
     );
+    const onPlayQueueAddToLater = useCallback(
+        (track: PlayQueueItem) => {
+            addToLater(track);
+        },
+        [addToLater]
+    );
     return (
         <Grid container justifyContent="center" className={styles.pageContainer}>
-            <Grid item xs={12} lg={8}>
+            <Grid item xs={12} lg={10}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} lg={3}>
                         <AlbumCover albumInfo={albumInfo} credential={credential} />
@@ -129,8 +135,10 @@ const AlbumDetail: React.FC = () => {
                                                 TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON,
                                                 TrackListFeatures.SHOW_FAVORITE_ICON,
                                                 TrackListFeatures.SHOW_TRACK_NO,
+                                                TrackListFeatures.SHOW_ADD_TO_LATER,
                                             ]}
                                             onPlayQueueAdd={onPlayQueueAdd}
+                                            onPlayQueueAddToLater={onPlayQueueAddToLater}
                                         />
                                     </Grid>
                                 </Grid>

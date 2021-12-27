@@ -15,7 +15,10 @@ import { LoopMode } from "./types";
 
 const Player: React.FC = () => {
     const [loopMode, setLoopMode] = useState<LoopMode>(LoopMode.LIST_LOOP);
-    const [player, { restart, resume, pause }] = usePlayer();
+    const [isMute, setIsMute] = useState(false);
+    const [volume, setVolume] = useState(100);
+    const [player, { restart, resume, pause, mute, unmute, setVolume: setPlayerVolume }] =
+        usePlayer();
     const [playQueue] = usePlayQueue();
     const { playNext, playRandom, replacePlayQueue } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
@@ -60,8 +63,15 @@ const Player: React.FC = () => {
             replacePlayQueue(localPlayQueue);
         }
     }, [replacePlayQueue]);
+    useEffect(() => {
+        setPlayerVolume(volume / 100);
+    }, [player, setPlayerVolume, volume]);
     const onChangeLoopMode = (mode: LoopMode) => {
         setLoopMode(mode);
+    };
+    const onVolumeButtonClick = () => {
+        isMute ? unmute() : mute();
+        setIsMute((prevIsMute) => !prevIsMute);
     };
     return (
         <Grid container>
@@ -75,7 +85,14 @@ const Player: React.FC = () => {
                 <PlayerProgress />
             </Grid>
             <Grid item flexShrink={0}>
-                <PlayerActions loopMode={loopMode} onChangeLoopMode={onChangeLoopMode} />
+                <PlayerActions
+                    loopMode={loopMode}
+                    isMute={isMute}
+                    currentVolume={volume}
+                    setVolume={setVolume}
+                    onChangeLoopMode={onChangeLoopMode}
+                    onVolumeButtonClick={onVolumeButtonClick}
+                />
             </Grid>
         </Grid>
     );

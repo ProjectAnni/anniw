@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { TagGraph, TagIncludedBy, Tags } from "@/state/tags";
-import { Grid } from "@mui/material";
 import { useParams } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Grid } from "@mui/material";
+import { TagGraph, TagIncludedBy, Tags } from "@/state/tags";
+import CommonPagination from "@/components/Pagination";
 import Tag from "@/components/Tag";
-import { getAlbumsByTag, getTagGraph, getTags } from "./services";
 import AlbumWall from "@/components/AlbumWall";
+import { getAlbumsByTag, getTagGraph, getTags } from "./services";
 
 const TagDetail = () => {
     const { tag } = useParams<{ tag: string }>();
@@ -51,7 +52,9 @@ const TagDetail = () => {
                 <Grid item xs={12}>
                     <h2>专辑列表</h2>
                     <Grid>
-                        <AlbumWall albums={albums} />
+                        <CommonPagination<string> items={albums}>
+                            {({ items: albumIds }) => <AlbumWall albums={albumIds} />}
+                        </CommonPagination>
                     </Grid>
                 </Grid>
             )}

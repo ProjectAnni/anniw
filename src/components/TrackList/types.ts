@@ -18,4 +18,6 @@ export enum TrackListFeatures {
     SHOW_FAVORITE_ICON,
     /** 显示 Track 序号 */
     SHOW_TRACK_NO,
+    /** 显示 添加到下一首 */
+    SHOW_ADD_TO_LATER,
 }

@@ -15,6 +15,7 @@ interface Props {
     features?: TrackListFeatures[];
     onPlayQueueAdd?: (track: PlayQueueItem) => void;
     onPlayQueueRemove?: (track: PlayQueueItem) => void;
+    onPlayQueueAddToLater?: (track: PlayQueueItem) => void;
 }
 
 export interface TrackListImperativeHandles {
@@ -34,7 +35,14 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     props,
     ref
 ) => {
-    const { tracks, itemIndex, features = [], onPlayQueueAdd, onPlayQueueRemove } = props;
+    const {
+        tracks,
+        itemIndex,
+        features = [],
+        onPlayQueueAdd,
+        onPlayQueueRemove,
+        onPlayQueueAddToLater,
+    } = props;
     const [player, { resume, restart, pause }] = usePlayer();
     const { addToPlayQueue, replacePlayQueueAndPlay } = usePlayerController();
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
@@ -100,6 +108,9 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
                         }}
                         onPlayQueueRemove={() => {
                             onPlayQueueRemove && onPlayQueueRemove(parsedTracks[index]);
+                        }}
+                        onPlayQueueAddToLater={() => {
+                            onPlayQueueAddToLater && onPlayQueueAddToLater(parsedTracks[index]);
                         }}
                         onPause={pause}
                         onResume={resume}

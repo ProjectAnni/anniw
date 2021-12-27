@@ -1,15 +1,8 @@
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import classNames from "classnames";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { ListItem, ListItemText, ListItemIcon, IconButton, Tooltip } from "@mui/material";
-import {
-    PlayArrow,
-    Pause,
-    PlaylistAdd,
-    PlaylistRemove,
-    Favorite,
-    FavoriteBorder,
-} from "@mui/icons-material";
+import { ListItem, ListItemText, ListItemIcon, IconButton } from "@mui/material";
+import { PlayArrow, Pause } from "@mui/icons-material";
 import useRequest from "@/hooks/useRequest";
 import useMessage from "@/hooks/useMessage";
 import { CredentialState } from "@/state/credentials";
@@ -19,6 +12,7 @@ import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { addFavorite, getAvailableLibraryForTrack, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
+import ItemActions from "./ItemActions";
 
 interface Props {
     track: PlayQueueItem;
@@ -27,6 +21,7 @@ interface Props {
     onPlay: () => void;
     onPlayQueueAdd: () => void;
     onPlayQueueRemove: () => void;
+    onPlayQueueAddToLater: () => void;
     onPause: () => void;
     onResume: () => void;
     onRestart: () => void;
@@ -48,11 +43,13 @@ const TrackListItem: React.FC<Props> = (props) => {
         onPlay,
         onPlayQueueAdd,
         onPlayQueueRemove,
+        onPlayQueueAddToLater,
         onRestart,
         onResume,
         onPause,
     } = props;
     const { title, artist, type, albumId, albumTitle, discIndex, trackIndex } = track;
+    const favoriteRequestLock = useRef(false);
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
         albumId: nowPlayingAlbumId,
@@ -78,7 +75,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         getAvailableLibraryForTrack(track, allCredentials)
     );
     const [_, { addMessage }] = useMessage();
-    const onClickPlayButton = () => {
+    const onClickPlayButton = useCallback(() => {
         if (!credential) {
             return;
         }
@@ -93,9 +90,13 @@ const TrackListItem: React.FC<Props> = (props) => {
         } else {
             onPlay();
         }
-    };
+    }, [credential, isPlaying, onPause, onPlay, onRestart, onResume, playerStatus]);
 
-    const onClickFavoriteButton = async () => {
+    const onClickFavoriteButton = useCallback(async () => {
+        if (favoriteRequestLock.current) {
+            return;
+        }
+        favoriteRequestLock.current = true;
         try {
             await (isFavored ? removeFavorite(track) : addFavorite(track));
             addMessage("success", `${isFavored ? "取消" : "添加"}喜欢成功`);
@@ -127,8 +128,22 @@ const TrackListItem: React.FC<Props> = (props) => {
             if (e instanceof Error) {
                 addMessage("error", e.message);
             }
+        } finally {
+            favoriteRequestLock.current = false;
         }
-    };
+    }, [
+        addMessage,
+        albumId,
+        albumTitle,
+        artist,
+        discIndex,
+        isFavored,
+        setFavoriteTracks,
+        title,
+        track,
+        trackIndex,
+        type,
+    ]);
     return (
         <ListItem
             key={title}
@@ -136,46 +151,15 @@ const TrackListItem: React.FC<Props> = (props) => {
                 [styles.oddItem]: itemIndex % 2 === 0,
             })}
             secondaryAction={
-                <>
-                    {features.includes(TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON) && (
-                        <Tooltip title="添加到当前播放队列">
-                            <IconButton
-                                onClick={() => {
-                                    onPlayQueueAdd();
-                                }}
-                                disabled={!loading && !credential}
-                            >
-                                <PlaylistAdd />
-                            </IconButton>
-                        </Tooltip>
-                    )}
-                    {features.includes(TrackListFeatures.SHOW_PLAY_QUEUE_REMOVE_ICON) && (
-                        <Tooltip title="从播放队列移除">
-                            <IconButton
-                                onClick={() => {
-                                    onPlayQueueRemove();
-                                }}
-                                disabled={!loading && !credential}
-                            >
-                                <PlaylistRemove />
-                            </IconButton>
-                        </Tooltip>
-                    )}
-                    {features.includes(TrackListFeatures.SHOW_FAVORITE_ICON) && !isFavored && (
-                        <Tooltip title="添加喜欢">
-                            <IconButton onClick={onClickFavoriteButton}>
-                                <FavoriteBorder />
-                            </IconButton>
-                        </Tooltip>
-                    )}
-                    {features.includes(TrackListFeatures.SHOW_FAVORITE_ICON) && isFavored && (
-                        <Tooltip title="取消喜欢">
-                            <IconButton onClick={onClickFavoriteButton}>
-                                <Favorite />
-                            </IconButton>
-                        </Tooltip>
-                    )}
-                </>
+                <ItemActions
+                    features={features}
+                    resourceUnavailable={!loading && !credential}
+                    isFavored={isFavored}
+                    onPlayQueueAdd={onPlayQueueAdd}
+                    onPlayQueueRemove={onPlayQueueRemove}
+                    onPlayQueueAddToLater={onPlayQueueAddToLater}
+                    onClickFavoriteButton={onClickFavoriteButton}
+                />
             }
         >
             <ListItemIcon className={styles.playButton}>
@@ -195,16 +179,20 @@ const TrackListItem: React.FC<Props> = (props) => {
             <ListItemText
                 primary={
                     <div className={styles.titleContainer}>
-                        {features.includes(TrackListFeatures.SHOW_TRACK_NO) && (
-                            <span>{`${(itemIndex + 1).toString().padStart(2, "0")}.`}&nbsp;</span>
-                        )}
-                        {title}
+                        <div className={styles.title}>
+                            {features.includes(TrackListFeatures.SHOW_TRACK_NO) && (
+                                <span>
+                                    {`${(itemIndex + 1).toString().padStart(2, "0")}.`}&nbsp;
+                                </span>
+                            )}
+                            <span title={title}>{title}</span>
+                        </div>
                         {!!type && type !== "normal" && (
-                            <span className={styles.tag}>{TypeTextMap[type]}</span>
+                            <div className={styles.tag}>{TypeTextMap[type]}</div>
                         )}
                     </div>
                 }
-                secondary={artist}
+                secondary={<span className={styles.artist}>{artist}</span>}
                 className={styles.textContainer}
             >
                 {" "}

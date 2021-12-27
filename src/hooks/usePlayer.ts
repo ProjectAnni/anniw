@@ -137,7 +137,12 @@ export default function usePlayer() {
         },
         [player]
     );
-
+    const mute = useCallback(() => {
+        player.muted = true;
+    }, [player]);
+    const unmute = useCallback(() => {
+        player.muted = false;
+    }, [player]);
     return [
         player,
         {
@@ -147,6 +152,8 @@ export default function usePlayer() {
             pause,
             setVolume,
             seek,
+            mute,
+            unmute,
         },
     ] as const;
 }

@@ -45,11 +45,7 @@ const AlbumList: React.FC = () => {
     }, [query, addMessage, credentials, history]);
 
     return (
-        <Grid
-            container
-            justifyContent="center"
-            className="album-list-page-container"
-        >
+        <Grid container justifyContent="center" className="album-list-page-container">
             <Grid item xs={12}>
                 <Typography variant="h4" className="title">
                     专辑列表
