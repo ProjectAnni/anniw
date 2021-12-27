@@ -85,8 +85,3 @@ export interface PlayQueueItem extends TrackItem {
     playUrl?: string;
     coverUrl?: string;
 }
-
-export interface FavoriteTrackItem extends TrackIndex {
-    info?: TrackInfo;
-    albumTitle: string;
-}
