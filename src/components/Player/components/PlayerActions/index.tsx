@@ -22,6 +22,9 @@ const PlayerActions: React.FC<Props> = (props) => {
         onChangeLoopMode(LoopModeNextMap[loopMode]);
     };
     const handleVolumeChange = (e: Event, value: number | number[]) => {
+        if (isMute) {
+            onVolumeButtonClick();
+        }
         setVolume(value as number);
     };
     return (
@@ -63,7 +66,7 @@ const PlayerActions: React.FC<Props> = (props) => {
                 </IconButton>
             </Tooltip>
             <div className={styles.volumeBarContainer}>
-                <Slider value={currentVolume} onChange={handleVolumeChange} valueLabelDisplay="auto" color="secondary" />
+                <Slider value={isMute ? 0 : currentVolume} onChange={handleVolumeChange} valueLabelDisplay="auto" color="secondary" />
             </div>
         </Grid>
     );
