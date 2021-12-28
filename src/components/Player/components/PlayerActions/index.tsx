@@ -1,6 +1,6 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, IconButton, Tooltip } from "@mui/material";
+import { Grid, IconButton, Slider, Tooltip } from "@mui/material";
 import { QueueMusic, Repeat, RepeatOne, Shuffle, VolumeOff, VolumeUp } from "@mui/icons-material";
 import { LoopMode, LoopModeNextMap } from "../../types";
 import styles from "./index.module.scss";
@@ -17,28 +17,12 @@ interface Props {
 const PlayerActions: React.FC<Props> = (props) => {
     const { loopMode, isMute, currentVolume, setVolume, onChangeLoopMode, onVolumeButtonClick } =
         props;
-    const volumeBarRef = useRef<HTMLDivElement>(null);
-    const [isShowVolumeTip, setIsShowVolumeTip] = useState(false);
-    const [volumeTipLeft, setVolumeTipLeft] = useState(0);
     const history = useHistory();
-    const volumeTipText = useMemo(() => {
-        if (!volumeBarRef.current) {
-            return;
-        }
-        const { width } = volumeBarRef.current.getBoundingClientRect();
-        const percent = volumeTipLeft / width;
-        return `${Math.round(percent * 100)}%`;
-    }, [volumeTipLeft]);
     const onClickLoopMode = () => {
         onChangeLoopMode(LoopModeNextMap[loopMode]);
     };
-    const onClickVolumeBar = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!volumeBarRef.current) {
-            return;
-        }
-        const { width, left } = volumeBarRef.current.getBoundingClientRect();
-        const percent = ((e.clientX - left) / width) * 100;
-        setVolume(percent);
+    const handleVolumeChange = (e: Event, value: number | number[]) => {
+        setVolume(value as number);
     };
     return (
         <Grid container alignItems="center" className={styles.container}>
@@ -79,40 +63,7 @@ const PlayerActions: React.FC<Props> = (props) => {
                 </IconButton>
             </Tooltip>
             <div className={styles.volumeBarContainer}>
-                <div
-                    ref={volumeBarRef}
-                    className={styles.volumeBar}
-                    onClick={onClickVolumeBar}
-                    onMouseEnter={() => {
-                        setIsShowVolumeTip(true);
-                    }}
-                    onMouseLeave={() => {
-                        setIsShowVolumeTip(false);
-                    }}
-                    onMouseMove={(e) => {
-                        volumeBarRef.current &&
-                            setVolumeTipLeft(
-                                e.clientX - volumeBarRef.current.getBoundingClientRect().left
-                            );
-                    }}
-                >
-                    <div
-                        className={styles.filled}
-                        style={{
-                            width: isMute ? "0%" : `${currentVolume}%`,
-                        }}
-                    />
-                    {isShowVolumeTip && (
-                        <div
-                            className={styles.volumeTip}
-                            style={{
-                                left: volumeTipLeft,
-                            }}
-                        >
-                            {volumeTipText}
-                        </div>
-                    )}
-                </div>
+                <Slider value={currentVolume} onChange={handleVolumeChange} valueLabelDisplay="auto" color="secondary" />
             </div>
         </Grid>
     );
