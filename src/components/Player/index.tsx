@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { Grid } from "@mui/material";
 import storage from "@/utils/storage";
@@ -22,24 +22,31 @@ const Player: React.FC = () => {
     const [playQueue] = usePlayQueue();
     const { playNext, playRandom, replacePlayQueue } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
+    const onChangeLoopMode = (mode: LoopMode) => {
+        setLoopMode(mode);
+    };
+    const onVolumeButtonClick = () => {
+        isMute ? unmute() : mute();
+        setIsMute((prevIsMute) => !prevIsMute);
+    };
+    const next = useCallback(() => {
+        if (loopMode === LoopMode.LIST_LOOP) {
+            setPlayerStatus(PlayerStatus.ENDED);
+            playNext();
+        }
+        if (loopMode === LoopMode.TRACK_LOOP) {
+            restart();
+        }
+        if (loopMode === LoopMode.SHUFFLE) {
+            playRandom();
+        }
+    }, [loopMode, playNext, playRandom, restart, setPlayerStatus]);
     useEffect(() => {
-        const onEnded = () => {
-            if (loopMode === LoopMode.LIST_LOOP) {
-                setPlayerStatus(PlayerStatus.ENDED);
-                playNext();
-            }
-            if (loopMode === LoopMode.TRACK_LOOP) {
-                restart();
-            }
-            if (loopMode === LoopMode.SHUFFLE) {
-                playRandom();
-            }
-        };
-        player.addEventListener("ended", onEnded);
+        player.addEventListener("ended", next);
         return () => {
-            player.removeEventListener("ended", onEnded);
+            player.removeEventListener("ended", next);
         };
-    }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom]);
+    }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom, next]);
     useEffect(() => {
         if (window.navigator.mediaSession) {
             navigator.mediaSession.setActionHandler("play", () => {
@@ -66,20 +73,13 @@ const Player: React.FC = () => {
     useEffect(() => {
         setPlayerVolume(volume / 100);
     }, [player, setPlayerVolume, volume]);
-    const onChangeLoopMode = (mode: LoopMode) => {
-        setLoopMode(mode);
-    };
-    const onVolumeButtonClick = () => {
-        isMute ? unmute() : mute();
-        setIsMute((prevIsMute) => !prevIsMute);
-    };
     return (
         <Grid container>
             <Grid item flexShrink={0}>
                 <PlayerCover />
             </Grid>
             <Grid item flexShrink={0}>
-                <PlayerController />
+                <PlayerController playNext={next} />
             </Grid>
             <Grid item flexGrow={1}>
                 <PlayerProgress />

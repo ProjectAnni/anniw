@@ -6,14 +6,17 @@ import PlayIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import NextIcon from "@mui/icons-material/SkipNext";
 import usePlayer from "@/hooks/usePlayer";
-import usePlayerController from "@/hooks/usePlayQueueController";
 import { PlayerStatusState } from "@/state/player";
 import { PlayerStatus } from "@/types/common";
 
-const PlayerController: React.FC = () => {
+interface Props {
+    playNext: () => void;
+}
+
+const PlayerController: React.FC<Props> = (props) => {
+    const { playNext } = props;
     const playerStatus = useRecoilValue(PlayerStatusState);
     const [player, { resume, pause, restart }] = usePlayer();
-    const { playNext } = usePlayerController();
     return (
         <Grid container alignContent="center" sx={{ height: "100%" }}>
             <IconButton
