@@ -30,8 +30,8 @@ export function getPlayUrlForTrack(track: TrackItem, credential: AnnilToken) {
 
 export function getCoverUrlForTrack(track: TrackItem, credential: AnnilToken) {
     const { albumId } = track;
-    const { url, token } = credential;
-    return `${url}/${albumId}/cover?auth=${token}`;
+    const { url } = credential;
+    return `${url}/${albumId}/cover`;
 }
 
 export function addFavorite(track: TrackItem) {

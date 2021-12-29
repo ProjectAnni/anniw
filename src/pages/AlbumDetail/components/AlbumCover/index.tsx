@@ -14,7 +14,7 @@ const AlbumCover: React.FC<Props> = (props) => {
         if (!credential || !albumInfo) {
             return;
         }
-        return `${credential.url}/${albumInfo?.albumId}/cover?auth=${credential.token}`;
+        return `${credential.url}/${albumInfo?.albumId}/cover`;
     }, [credential, albumInfo]);
     return (
         <div className="album-cover-container">
