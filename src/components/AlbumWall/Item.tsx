@@ -30,11 +30,8 @@ const AlbumWallItem: React.FC<Props> = (props) => {
     const history = useHistory();
     const { title, artist } = albumInfo || {};
     const coverUrl = useMemo(() => {
-        if (!loadingToken && !token) {
-            return;
-        }
-        return `${url}/${albumId}/cover?auth=${token}`;
-    }, [albumId, token, url, loadingToken]);
+        return `${url}/${albumId}/cover`;
+    }, [albumId, url]);
 
     return (
         <div
