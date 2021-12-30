@@ -14,6 +14,6 @@ export async function getTagGraph() {
 export async function getAlbumsByTag(tag: string, recursive = false) {
     return await request.get<AlbumInfo[]>("/api/meta/albums/by-tag", {
         tag,
-        ...(recursive ? { recursive: true } : {}),
+        ...(recursive ? { recursive } : {}),
     });
 }

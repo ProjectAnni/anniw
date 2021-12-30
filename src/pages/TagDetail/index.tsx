@@ -7,6 +7,7 @@ import CommonPagination from "@/components/Pagination";
 import Tag from "@/components/Tag";
 import AlbumWall from "@/components/AlbumWall";
 import { getAlbumsByTag, getTagGraph, getTags } from "./services";
+import Loading from "@/components/Loading";
 
 const TagDetail = () => {
     const { tag } = useParams<{ tag: string }>();
@@ -16,11 +17,14 @@ const TagDetail = () => {
     const setTagGraph = useSetRecoilState(TagGraph);
     const [albums, setAlbums] = useState<string[]>();
     const [recursive, setRecursive] = useState(false);
+    const [loadingAlbum, setLoadingAlbum] = useState(false);
     useEffect(() => {
+        setLoadingAlbum(true);
         (async () => {
             setAlbums((await getAlbumsByTag(tag, recursive)).map((a) => a.albumId));
+            setLoadingAlbum(false);
         })();
-    }, [setAlbums, tag, recursive]);
+    }, [setAlbums, tag, recursive, setLoadingAlbum]);
     useEffect(() => {
         (async () => {
             const tags = await getTags();
@@ -61,7 +65,7 @@ const TagDetail = () => {
                     />
                 </FormGroup>
                 <Grid>
-                    {!!albums?.length && (
+                    {loadingAlbum ? <Loading /> : !!albums?.length && (
                         <CommonPagination<string> items={albums}>
                             {({ items: albumIds }) => <AlbumWall albums={albumIds} />}
                         </CommonPagination>
