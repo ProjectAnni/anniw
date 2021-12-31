@@ -48,7 +48,7 @@ const Player: React.FC = () => {
         };
     }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom, next]);
     useEffect(() => {
-        if (window.navigator.mediaSession) {
+        if ("mediaSession" in window.navigator) {
             navigator.mediaSession.setActionHandler("play", () => {
                 if (playerStatus === PlayerStatus.ENDED) {
                     restart();
@@ -57,8 +57,9 @@ const Player: React.FC = () => {
                 }
             });
             navigator.mediaSession.setActionHandler("pause", pause);
+            navigator.mediaSession.setActionHandler("nexttrack", next);
         }
-    }, [pause, playerStatus, restart, resume]);
+    }, [pause, playerStatus, restart, resume, next]);
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);
