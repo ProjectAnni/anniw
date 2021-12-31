@@ -10,7 +10,7 @@
     position: relative;
     width: 100%;
     height: 4px;
-    background-color: #fff;
+    background-color: rgba(#000, 0.1);
     cursor: pointer;
 }
 
@@ -24,7 +24,7 @@
 }
 
 .played {
-    background-color: #b982cf;
+    background-color: #ffffff;
 }
 
 .buffered {

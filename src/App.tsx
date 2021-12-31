@@ -1,7 +1,7 @@
 import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
-import { Container, AppBar, Toolbar, CssBaseline } from "@mui/material";
+import { Container, AppBar, Toolbar, CssBaseline, createTheme, ThemeProvider } from "@mui/material";
 import { AnniwAppBar } from "./components/AppBar";
 import { AnniwDrawer } from "./components/Drawer";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -122,22 +122,32 @@ function AppBody() {
     );
 }
 
+const theme = createTheme({
+    palette: {
+        secondary: {
+            main: "#ffffff",
+        },
+    },
+});
+
 function App() {
     return (
         <RecoilRoot>
             <>
                 <Router>
                     <React.Suspense fallback={<Loading />}>
-                        <CssBaseline />
-                        <ErrorBoundary>
-                            <AnniwAppBar />
-                        </ErrorBoundary>
-                        <ErrorBoundary>
-                            <AnniwDrawer />
-                        </ErrorBoundary>
-                        <ErrorBoundary>
-                            <AppBody />
-                        </ErrorBoundary>
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline />
+                            <ErrorBoundary>
+                                <AnniwAppBar />
+                            </ErrorBoundary>
+                            <ErrorBoundary>
+                                <AnniwDrawer />
+                            </ErrorBoundary>
+                            <ErrorBoundary>
+                                <AppBody />
+                            </ErrorBoundary>
+                        </ThemeProvider>
                     </React.Suspense>
                 </Router>
                 <GlobalMessage />
