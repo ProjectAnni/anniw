@@ -3,49 +3,72 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 
-function getAudioUrl(url: string) {
-    if (window.MediaSource) {
-        const mediaSource = new MediaSource();
-        mediaSource.addEventListener("sourceopen", () => {
-            fetch(url, { cache: "force-cache" }).then((resp) => {
-                // set source buffer mime type
-                const mime = resp.headers.get("Content-Type") || "audio/aac";
-                const duration = resp.headers.get("X-Duration-Seconds") || "300";
-                const sourceBuffer = mediaSource.addSourceBuffer(mime);
-                let isSourceRemoved = false;
+async function getAudioUrl(url: string) {
+    return await fetch(url, { method: "HEAD" }).then(async (resp) => {
+        const mime = resp.headers.get("Content-Type") || "audio/aac";
+        const originalMime = resp.headers.get("X-Origin-Type") || "audio/flac";
+        const originalSize = Number(resp.headers.get("X-Origin-Size") || "0");
+        const duration = Number(resp.headers.get("X-Duration-Seconds") || "300");
 
-                // set media source duration
-                mediaSource.duration = Number(duration);
+        let useMSE = !!window.MediaSource;
+        if (mime === originalMime && originalSize > 10 * 1024 * 1024) {
+            // if audio is not transcoded, check whether file size exceeds the limit
+            useMSE = false;
+        } else if (mime !== originalMime && duration > 10 * 60) {
+            // if audio is transcoded and duration > 10 minutes, do not use MSE
+            useMSE = false;
+        }
 
-                // get body as reader
-                const reader = resp.body?.getReader();
-                const appendBuffer = ({
-                    done,
-                    value,
-                }: ReadableStreamDefaultReadResult<Uint8Array>) => {
-                    if (!isSourceRemoved) {
-                        if (!done && value) {
-                            // body not finished, append buffer
-                            sourceBuffer.appendBuffer(value);
-                        } else {
-                            // update duration after stream ends
-                            mediaSource.endOfStream();
+        const result = {
+            useMSE,
+            duration,
+            url,
+        };
+
+        if (useMSE) {
+            const mediaSource = new MediaSource();
+            mediaSource.addEventListener("sourceopen", () => {
+                fetch(url, { cache: "force-cache" }).then((resp) => {
+                    // set source buffer mime type
+                    const sourceBuffer = mediaSource.addSourceBuffer(mime);
+                    let isSourceRemoved = false;
+
+                    // set media source duration
+                    mediaSource.duration = duration;
+
+                    // get body as reader
+                    const reader = resp.body?.getReader();
+                    const appendBuffer = ({
+                        done,
+                        value,
+                    }: ReadableStreamDefaultReadResult<Uint8Array>) => {
+                        if (!isSourceRemoved) {
+                            if (!done && value) {
+                                // body not finished, append buffer
+                                sourceBuffer.appendBuffer(value);
+                            } else {
+                                // update duration after stream ends
+                                mediaSource.endOfStream();
+                            }
                         }
-                    }
-                };
-                mediaSource.sourceBuffers.addEventListener("removesourcebuffer", () => {
-                    isSourceRemoved = true;
+                    };
+                    mediaSource.sourceBuffers.addEventListener("removesourcebuffer", () => {
+                        isSourceRemoved = true;
+                    });
+
+                    // read body on source buffer update ends
+                    sourceBuffer.addEventListener("updateend", () =>
+                        reader?.read().then(appendBuffer)
+                    );
+
+                    // read body once
+                    reader?.read().then(appendBuffer);
                 });
-                // read body on source buffer update ends
-                sourceBuffer.addEventListener("updateend", () => reader?.read().then(appendBuffer));
-                // read body once
-                reader?.read().then(appendBuffer);
             });
-        });
-        return URL.createObjectURL(mediaSource);
-    } else {
-        return url;
-    }
+            result.url = URL.createObjectURL(mediaSource);
+        }
+        return result;
+    });
 }
 
 const setMediaSessionMetadata = ({
@@ -72,7 +95,7 @@ export default function usePlayer() {
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const setNowPlayingInfo = useSetRecoilState(NowPlayingInfoState);
     const play = useCallback(
-        ({
+        async ({
             playUrl,
             title,
             artist,
@@ -85,7 +108,9 @@ export default function usePlayer() {
             if (!playUrl) {
                 return;
             }
-            player.src = getAudioUrl(playUrl);
+            // TODO: make use of audioInfo.useMSE and audioInfo.duration
+            const audioInfo = await getAudioUrl(playUrl);
+            player.src = audioInfo.url;
             setPlayerStatus(PlayerStatus.BUFFERING);
             player.addEventListener(
                 "canplay",
