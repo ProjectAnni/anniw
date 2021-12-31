@@ -49,6 +49,11 @@ const Player: React.FC = () => {
     }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom, next]);
     useEffect(() => {
         if ("mediaSession" in window.navigator) {
+            if (playerStatus === PlayerStatus.PLAYING) {
+                navigator.mediaSession.playbackState = "playing";
+            } else if (playerStatus === PlayerStatus.PAUSED) {
+                navigator.mediaSession.playbackState = "paused";
+            }
             navigator.mediaSession.setActionHandler("play", () => {
                 if (playerStatus === PlayerStatus.ENDED) {
                     restart();
