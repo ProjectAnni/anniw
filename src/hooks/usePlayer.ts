@@ -108,31 +108,32 @@ export default function usePlayer() {
             if (!playUrl) {
                 return;
             }
-            // TODO: make use of audioInfo.useMSE and audioInfo.duration
+            setPlayerStatus(PlayerStatus.BUFFERING);
+
             const audioInfo = await getAudioUrl(playUrl);
             player.src = audioInfo.url;
-            setPlayerStatus(PlayerStatus.BUFFERING);
+            setNowPlayingInfo({
+                title,
+                artist,
+                albumTitle,
+                albumId,
+                coverUrl,
+                discIndex,
+                trackIndex,
+                duration: audioInfo.duration,
+            });
+            setMediaSessionMetadata({
+                title,
+                artist,
+                album: albumTitle,
+                cover: coverUrl,
+            });
+
             player.addEventListener(
                 "canplay",
                 () => {
                     player.play();
                     setPlayerStatus(PlayerStatus.PLAYING);
-                    setNowPlayingInfo({
-                        title,
-                        artist,
-                        albumTitle,
-                        albumId,
-                        coverUrl,
-                        discIndex,
-                        trackIndex,
-                        duration: audioInfo.duration,
-                    });
-                    setMediaSessionMetadata({
-                        title,
-                        artist,
-                        album: albumTitle,
-                        cover: coverUrl,
-                    });
                 },
                 { once: true }
             );
