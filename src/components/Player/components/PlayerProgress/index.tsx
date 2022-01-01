@@ -7,6 +7,7 @@ import usePlayerBufferedRanges from "@/hooks/usePlayerBufferedRanges";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus } from "@/types/common";
 import styles from "./index.module.scss";
+import useMessage from "@/hooks/useMessage";
 
 const formatSeconds = (seconds: number) => {
     return seconds < 60
@@ -28,6 +29,7 @@ const PlayerProgress: React.FC = () => {
     const [isShowTimeTip, setIsShowTimeTip] = useState(false);
     const [timeTipLeft, setTimeTipLeft] = useState(0);
     const { title, artist, albumTitle, albumId } = nowPlayerInfo;
+    const [_, { addMessage }] = useMessage();
     const playedStyle = useMemo(() => {
         return {
             width: `${(currentTime / duration) * 100}%`,
@@ -52,6 +54,10 @@ const PlayerProgress: React.FC = () => {
     }, [duration, timeTipLeft]);
     const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!progressRef.current) {
+            return;
+        }
+        if (player.duration === Infinity) {
+            addMessage("info", "目前不支持长音频进度跳转");
             return;
         }
         if (playerStatus === PlayerStatus.EMPTY) {

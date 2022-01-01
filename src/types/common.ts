@@ -83,5 +83,6 @@ export interface AlbumInfo {
 
 export interface PlayQueueItem extends TrackItem {
     playUrl?: string;
+    duration?: number;
     coverUrl?: string;
 }

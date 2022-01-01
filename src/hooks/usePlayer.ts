@@ -125,6 +125,7 @@ export default function usePlayer() {
                         coverUrl,
                         discIndex,
                         trackIndex,
+                        duration: audioInfo.duration,
                     });
                     setMediaSessionMetadata({
                         title,
