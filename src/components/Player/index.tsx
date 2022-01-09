@@ -64,7 +64,7 @@ const Player: React.FC = () => {
             navigator.mediaSession.setActionHandler("pause", pause);
             navigator.mediaSession.setActionHandler("nexttrack", next);
         }
-    }, [pause, playerStatus, restart, resume, next]);
+    }, [next, pause, playerStatus, restart, resume]);
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);

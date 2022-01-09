@@ -7,7 +7,7 @@ const useRequest = <T>(queryFunction: () => Promise<T>) => {
     const [_, { addMessage }] = useMessage();
     const queryFunctionRef = useRef(queryFunction);
     useEffect(() => {
-        queryFunctionRef
+        !response && queryFunctionRef
             .current()
             .then((data) => {
                 setResponse(data);
@@ -18,7 +18,7 @@ const useRequest = <T>(queryFunction: () => Promise<T>) => {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, [addMessage]);
+    }, [addMessage, response]);
     return [response, isLoading] as const;
 };
 

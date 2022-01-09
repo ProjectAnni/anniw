@@ -41,9 +41,14 @@ export interface UserInfo {
     avatar: string;
 }
 
-export interface TrackIndex {
+export interface TrackIdentifier {
     // track_id 与 disc_id 均为从 1 开始
     trackId: number;
+    discId: number;
+    albumId: string;
+}
+
+export interface AlbumDiscIdentifier {
     discId: number;
     albumId: string;
 }
@@ -55,7 +60,7 @@ export interface TrackInfo {
     tags: string[];
 }
 
-export interface TrackInfoWithAlbum extends TrackInfo, TrackIndex {
+export interface TrackInfoWithAlbum extends TrackInfo, TrackIdentifier {
     albumTitle: string;
 }
 
@@ -85,3 +90,32 @@ export interface PlayQueueItem extends TrackItem {
     playUrl?: string;
     coverUrl?: string;
 }
+
+export interface PlaylistInfo {
+    id: string;
+    name: string;
+    description?: string;
+    owner: string;
+    is_public: boolean;
+    cover: AlbumDiscIdentifier;
+}
+
+export interface Playlist extends PlaylistInfo {
+    songs: PlaylistSong[];
+}
+
+export interface BasePlaylistSong {
+    id: string;
+}
+
+export interface PlaylistSongDummy extends TrackInfo, BasePlaylistSong {
+    type: "dummy";
+    description?: string;
+}
+
+export interface PlaylistSongNormal extends TrackIdentifier, BasePlaylistSong {
+    type: "normal";
+    description?: string;
+}
+
+export type PlaylistSong = PlaylistSongDummy | PlaylistSongNormal;

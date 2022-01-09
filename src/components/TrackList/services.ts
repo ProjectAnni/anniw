@@ -1,8 +1,8 @@
 import { groupBy } from "lodash";
-import { AnnilToken } from "@/types/common";
+import { AnnilToken, PlaylistInfo, TrackIdentifier } from "@/types/common";
 import { default as AlbumDB } from "@/db/album";
-import { TrackItem } from "./types";
 import request from "@/api/request";
+import { TrackItem } from "./types";
 
 export async function getAvailableLibraryForTrack(
     track: TrackItem,
@@ -49,5 +49,34 @@ export function removeFavorite(track: TrackItem) {
         albumId,
         discId: discIndex + 1,
         trackId: trackIndex + 1,
+    });
+}
+
+export function createPlaylist({
+    name,
+    description,
+    isPublic,
+}: {
+    name: string;
+    description: string;
+    isPublic: boolean;
+}) {
+    return request.put<PlaylistInfo>("/api/playlist", { name, description, isPublic });
+}
+
+export function addTrackToPlaylist({
+    playlistId,
+    trackId,
+}: {
+    playlistId: string;
+    trackId: TrackIdentifier;
+}) {
+    return request.patch<PlaylistInfo>("/api/playlist", {
+        id: playlistId,
+        command: "append",
+        payload: [{
+            type: "normal",
+            ...trackId,
+        }],
     });
 }

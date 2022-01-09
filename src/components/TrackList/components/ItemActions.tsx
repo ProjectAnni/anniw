@@ -7,12 +7,15 @@ import {
     FavoriteBorder,
     MoreHoriz,
 } from "@mui/icons-material";
-import { TrackListFeatures } from "./types";
+import { TrackListFeatures, AdvancedFeatures } from "../types";
+import PlaylistAddDialog from "./PlaylistAddDialog";
+import { PlayQueueItem } from "@/types/common";
 
 interface Props {
     features: TrackListFeatures[];
     resourceUnavailable: boolean;
     isFavored: boolean;
+    track: PlayQueueItem;
     onPlayQueueAdd: () => void;
     onPlayQueueRemove: () => void;
     onPlayQueueAddToLater: () => void;
@@ -24,11 +27,13 @@ const ItemActions: React.FC<Props> = (props) => {
         features,
         resourceUnavailable,
         isFavored,
+        track,
         onPlayQueueAdd,
         onPlayQueueRemove,
         onPlayQueueAddToLater,
         onClickFavoriteButton,
     } = props;
+    const [isShowPlaylistAddDialog, setIsShowPlaylistAddDialog] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
     const [isShowMoreActionsMenu, setIsShowMoreActionsMenu] = useState(false);
     const onClickMoreActionsButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -75,7 +80,7 @@ const ItemActions: React.FC<Props> = (props) => {
                     </IconButton>
                 </Tooltip>
             )}
-            {features.includes(TrackListFeatures.SHOW_ADD_TO_LATER) && (
+            {features.some((feature) => AdvancedFeatures.includes(feature)) && (
                 <Tooltip title="更多">
                     <IconButton onClick={onClickMoreActionsButton}>
                         <MoreHoriz />
@@ -108,7 +113,28 @@ const ItemActions: React.FC<Props> = (props) => {
                         稍后播放
                     </MenuItem>
                 )}
+                {features.includes(TrackListFeatures.SHOW_ADD_TO_PLAYLIST) && (
+                    <MenuItem
+                        dense
+                        onClick={() => {
+                            setIsShowMoreActionsMenu(false);
+                            setIsShowPlaylistAddDialog(true);
+                        }}
+                    >
+                        添加到播放列表
+                    </MenuItem>
+                )}
             </Menu>
+            <PlaylistAddDialog
+                open={isShowPlaylistAddDialog}
+                track={track}
+                onCancel={() => {
+                    setIsShowPlaylistAddDialog(false);
+                }}
+                onAdded={() => {
+                    setIsShowPlaylistAddDialog(false);
+                }}
+            />
         </>
     );
 };

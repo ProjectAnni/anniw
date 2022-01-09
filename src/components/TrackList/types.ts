@@ -20,4 +20,11 @@ export enum TrackListFeatures {
     SHOW_TRACK_NO,
     /** 显示 添加到下一首 */
     SHOW_ADD_TO_LATER,
+    /** 显示 添加到播放列表 */
+    SHOW_ADD_TO_PLAYLIST,
 }
+
+export const AdvancedFeatures = [
+    TrackListFeatures.SHOW_ADD_TO_LATER,
+    TrackListFeatures.SHOW_ADD_TO_PLAYLIST,
+];

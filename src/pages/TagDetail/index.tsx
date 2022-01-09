@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { FormControlLabel, FormGroup, Grid, Switch } from "@mui/material";
-import { TagGraph, TagIncludedBy, Tags } from "@/state/tags";
+import useMessage from "@/hooks/useMessage";
 import CommonPagination from "@/components/Pagination";
+import Loading from "@/components/Loading";
 import Tag from "@/components/Tag";
 import AlbumWall from "@/components/AlbumWall";
+import { TagGraph, TagIncludedBy, Tags } from "@/state/tags";
 import { getAlbumsByTag, getTagGraph, getTags } from "./services";
-import Loading from "@/components/Loading";
 
 const TagDetail = () => {
     const { tag } = useParams<{ tag: string }>();
@@ -18,13 +19,22 @@ const TagDetail = () => {
     const [albums, setAlbums] = useState<string[]>();
     const [recursive, setRecursive] = useState(false);
     const [loadingAlbum, setLoadingAlbum] = useState(false);
+    const [_, { addMessage }] = useMessage();
     useEffect(() => {
-        setLoadingAlbum(true);
         (async () => {
-            setAlbums((await getAlbumsByTag(tag, recursive)).map((a) => a.albumId));
-            setLoadingAlbum(false);
+            setLoadingAlbum(true);
+            try {
+                const result = (await getAlbumsByTag(tag, recursive)).map((a) => a.albumId);
+                setAlbums(result);
+            } catch (e) {
+                if (e instanceof Error) {
+                    addMessage("error", e.message);
+                }
+            } finally {
+                setLoadingAlbum(false);
+            }
         })();
-    }, [setAlbums, tag, recursive, setLoadingAlbum]);
+    }, [setAlbums, tag, recursive, setLoadingAlbum, addMessage]);
     useEffect(() => {
         (async () => {
             const tags = await getTags();
@@ -65,10 +75,14 @@ const TagDetail = () => {
                     />
                 </FormGroup>
                 <Grid>
-                    {loadingAlbum ? <Loading /> : !!albums?.length && (
-                        <CommonPagination<string> items={albums}>
-                            {({ items: albumIds }) => <AlbumWall albums={albumIds} />}
-                        </CommonPagination>
+                    {loadingAlbum ? (
+                        <Loading />
+                    ) : (
+                        !!albums?.length && (
+                            <CommonPagination<string> items={albums}>
+                                {({ items: albumIds }) => <AlbumWall albums={albumIds} />}
+                            </CommonPagination>
+                        )
                     )}
                 </Grid>
             </Grid>

@@ -136,6 +136,7 @@ const AlbumDetail: React.FC = () => {
                                                 TrackListFeatures.SHOW_FAVORITE_ICON,
                                                 TrackListFeatures.SHOW_TRACK_NO,
                                                 TrackListFeatures.SHOW_ADD_TO_LATER,
+                                                TrackListFeatures.SHOW_ADD_TO_PLAYLIST,
                                             ]}
                                             onPlayQueueAdd={onPlayQueueAdd}
                                             onPlayQueueAddToLater={onPlayQueueAddToLater}

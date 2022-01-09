@@ -12,7 +12,7 @@ import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { addFavorite, getAvailableLibraryForTrack, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
-import ItemActions from "./ItemActions";
+import ItemActions from "./components/ItemActions";
 
 interface Props {
     track: PlayQueueItem;
@@ -155,6 +155,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                     features={features}
                     resourceUnavailable={!loading && !credential}
                     isFavored={isFavored}
+                    track={track}
                     onPlayQueueAdd={onPlayQueueAdd}
                     onPlayQueueRemove={onPlayQueueRemove}
                     onPlayQueueAddToLater={onPlayQueueAddToLater}

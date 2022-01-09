@@ -66,7 +66,12 @@ const PlayerActions: React.FC<Props> = (props) => {
                 </IconButton>
             </Tooltip>
             <div className={styles.volumeBarContainer}>
-                <Slider value={isMute ? 0 : currentVolume} onChange={handleVolumeChange} valueLabelDisplay="auto" color="secondary" />
+                <Slider
+                    value={isMute ? 0 : currentVolume}
+                    onChange={handleVolumeChange}
+                    valueLabelDisplay="auto"
+                    color="secondary"
+                />
             </div>
         </Grid>
     );
