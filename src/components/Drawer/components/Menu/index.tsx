@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { LocalLibrary, Home, Search, Favorite, LocalOffer } from "@mui/icons-material";
+import {
+    LocalLibrary,
+    Home,
+    Search,
+    Favorite,
+    LocalOffer,
+    PlaylistPlay,
+} from "@mui/icons-material";
 
 const Menu = () => {
     return (
@@ -35,25 +42,18 @@ const Menu = () => {
                 </ListItemIcon>
                 <ListItemText primary="喜欢"></ListItemText>
             </ListItem>
+            <ListItem button component={Link} to="/playlist">
+                <ListItemIcon>
+                    <PlaylistPlay />
+                </ListItemIcon>
+                <ListItemText primary="播放列表"></ListItemText>
+            </ListItem>
             <ListItem button component={Link} to="/tags">
                 <ListItemIcon>
                     <LocalOffer />
                 </ListItemIcon>
                 <ListItemText primary="标签"></ListItemText>
             </ListItem>
-            {/* <Collapse in={true} timeout="auto">
-                <List
-                    component="div"
-                    disablePadding
-                    sx={{
-                        paddingLeft: "10px",
-                    }}
-                >
-                    <ListItem button component={Link} to="/library">
-                        <ListItemText primary="Library"></ListItemText>
-                    </ListItem>
-                </List>
-            </Collapse> */}
         </List>
     );
 };

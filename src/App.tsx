@@ -21,10 +21,11 @@ import PlayQueue from "./pages/PlayQueue";
 import Search from "./pages/Search";
 import Favorite from "./pages/Favorite";
 import UserIndex from "./pages/UserIndex";
-import { DrawerIsOpen } from "./state/ui";
-import "./index.scss";
-import TagDetail from "./pages/TagDetail";
+import Playlist from "./pages/Playlist";
 import Tags from "./pages/Tags";
+import TagDetail from "./pages/TagDetail";
+import { DrawerIsOpen } from "./state/ui";
+import styles from "./index.module.scss";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
@@ -39,7 +40,7 @@ function AppBody() {
                     margin: 0,
                 }}
             />
-            <Container component="main" className="main-container">
+            <Container component="main" className={styles.mainContainer}>
                 <Switch>
                     <Route path="/" exact>
                         <div style={{ padding: "20px" }}>空无一物的主页</div>
@@ -86,6 +87,11 @@ function AppBody() {
                     <Route path="/queue" exact>
                         <NeedLoginPage>
                             <PlayQueue />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/playlist" exact>
+                        <NeedLoginPage>
+                            <Playlist />
                         </NeedLoginPage>
                     </Route>
                     <Route path="/search" exact>

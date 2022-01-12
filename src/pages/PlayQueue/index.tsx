@@ -6,7 +6,7 @@ import usePlayerController from "@/hooks/usePlayQueueController";
 import TrackList from "@/components/TrackList";
 import { TrackListFeatures } from "@/components/TrackList/types";
 
-const Playlist = () => {
+const PlayQueue = () => {
     const [playQueue] = usePlayQueue();
     const { clearPlayQueue, removeFromPlayQueue } = usePlayerController();
     return (
@@ -37,4 +37,4 @@ const Playlist = () => {
     );
 };
 
-export default Playlist;
+export default PlayQueue;
