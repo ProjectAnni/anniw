@@ -71,25 +71,6 @@ async function getAudioUrl(url: string) {
     });
 }
 
-const setMediaSessionMetadata = ({
-    title,
-    artist,
-    album,
-    cover,
-}: Partial<Record<string, string>>) => {
-    if (window.navigator.mediaSession)
-        window.navigator.mediaSession.metadata = new MediaMetadata({
-            title,
-            artist,
-            album,
-            ...(cover
-                ? {
-                      artwork: [{ src: cover, sizes: "512x512", type: "image/jpeg" }],
-                  }
-                : {}),
-        });
-};
-
 export default function usePlayer() {
     const player = useRecoilValue(PlayerState);
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
@@ -108,10 +89,10 @@ export default function usePlayer() {
             if (!playUrl) {
                 return;
             }
+            setPlayerStatus(PlayerStatus.BUFFERING);
             // TODO: make use of audioInfo.useMSE and audioInfo.duration
             const audioInfo = await getAudioUrl(playUrl);
             player.src = audioInfo.url;
-            setPlayerStatus(PlayerStatus.BUFFERING);
             player.addEventListener(
                 "canplay",
                 () => {
@@ -125,12 +106,6 @@ export default function usePlayer() {
                         coverUrl,
                         discIndex,
                         trackIndex,
-                    });
-                    setMediaSessionMetadata({
-                        title,
-                        artist,
-                        album: albumTitle,
-                        cover: coverUrl,
                     });
                 },
                 { once: true }

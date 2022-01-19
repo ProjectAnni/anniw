@@ -7,10 +7,6 @@ export async function getAlbumInfo(albumId: string | null) {
     if (!albumId) {
         return;
     }
-    const cachedAlbumInfo = await AlbumDB.getAlbumInfo(albumId);
-    if (cachedAlbumInfo) {
-        return cachedAlbumInfo;
-    }
     const albumInfoResponse = await request.get<Record<string, AlbumInfo | null>>(
         `/api/meta/album`,
         {
@@ -22,16 +18,8 @@ export async function getAlbumInfo(albumId: string | null) {
     );
     const albumInfo = formatResponse(albumInfoResponse?.[albumId]) as AlbumInfo;
     if (albumInfo) {
-        await AlbumDB.addAlbumInfo(albumInfo);
         return albumInfo;
     }
-}
-
-export async function deleteAlbumInfoCache(albumId?: string) {
-    if (!albumId) {
-        return;
-    }
-    return AlbumDB.deleteAlbumInfo(albumId);
 }
 
 export async function getAlbumAvailableLibraries(albumId: string | null) {

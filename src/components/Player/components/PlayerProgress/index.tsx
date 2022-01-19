@@ -13,7 +13,7 @@ const formatSeconds = (seconds: number) => {
         ? `00:${Math.round(seconds).toString().padStart(2, "0")}`
         : `${Math.floor(seconds / 60)
               .toString()
-              .padStart(2, "0")}:${Math.round(seconds % 60)
+              .padStart(2, "0")}:${Math.floor(seconds % 60)
               .toString()
               .padStart(2, "0")}`;
 };

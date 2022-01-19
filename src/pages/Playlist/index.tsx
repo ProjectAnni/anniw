@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { Grid, Typography } from "@mui/material";
-import { PlaylistInfo } from "@/types/common";
 import { PlaylistsState } from "@/state/playlists";
+import { PlaylistInfo } from "@/types/common";
 import PlaylistList from "./components/PlaylistList";
 import PlaylistDeleteDialog from "./components/PlaylistDeleteDialog";
 import styles from "./index.module.scss";

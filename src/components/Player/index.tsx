@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useRecoilState } from "recoil";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Grid } from "@mui/material";
 import storage from "@/utils/storage";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerController from "@/hooks/usePlayQueueController";
 import usePlayQueue from "@/hooks/usePlayQueue";
-import { PlayerStatusState } from "@/state/player";
+import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus } from "@/types/common";
 import PlayerCover from "./components/PlayerCover";
 import PlayerController from "./components/PlayerController";
@@ -14,6 +14,7 @@ import PlayerActions from "./components/PlayerActions";
 import { LoopMode } from "./types";
 
 const Player: React.FC = () => {
+    const hasSetMediaSessionHandler = useRef(false);
     const [loopMode, setLoopMode] = useState<LoopMode>(LoopMode.LIST_LOOP);
     const [isMute, setIsMute] = useState(false);
     const [volume, setVolume] = useState(100);
@@ -22,6 +23,7 @@ const Player: React.FC = () => {
     const [playQueue] = usePlayQueue();
     const { playNext, playRandom, replacePlayQueue } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
+    const nowPlayingInfo = useRecoilValue(NowPlayingInfoState);
     const onChangeLoopMode = (mode: LoopMode) => {
         setLoopMode(mode);
     };
@@ -41,6 +43,19 @@ const Player: React.FC = () => {
             playRandom();
         }
     }, [loopMode, playNext, playRandom, restart, setPlayerStatus]);
+    const onMediaSessionPlay = () => {
+        if (playerStatus === PlayerStatus.ENDED) {
+            restart();
+        } else {
+            resume();
+        }
+    };
+    const onMediaSessionPause = () => {
+        pause();
+    };
+    const onMediaSessionNextTrack = () => {
+        next();
+    };
     useEffect(() => {
         player.addEventListener("ended", next);
         return () => {
@@ -54,17 +69,34 @@ const Player: React.FC = () => {
             } else if (playerStatus === PlayerStatus.PAUSED) {
                 navigator.mediaSession.playbackState = "paused";
             }
-            navigator.mediaSession.setActionHandler("play", () => {
-                if (playerStatus === PlayerStatus.ENDED) {
-                    restart();
-                } else {
-                    resume();
-                }
-            });
-            navigator.mediaSession.setActionHandler("pause", pause);
-            navigator.mediaSession.setActionHandler("nexttrack", next);
         }
-    }, [next, pause, playerStatus, restart, resume]);
+    }, [playerStatus]);
+    useEffect(() => {
+        if ("mediaSession" in window.navigator && !!nowPlayingInfo.title) {
+            window.navigator.mediaSession.metadata = new MediaMetadata({
+                title: nowPlayingInfo.title,
+                artist: nowPlayingInfo.artist,
+                album: nowPlayingInfo.albumTitle,
+                ...(nowPlayingInfo.coverUrl
+                    ? {
+                          artwork: [
+                              {
+                                  src: nowPlayingInfo.coverUrl,
+                                  sizes: "512x512",
+                                  type: "image/jpeg",
+                              },
+                          ],
+                      }
+                    : {}),
+            });
+            if (!hasSetMediaSessionHandler.current) {
+                hasSetMediaSessionHandler.current = true;
+                navigator.mediaSession.setActionHandler("play", onMediaSessionPlay);
+                navigator.mediaSession.setActionHandler("pause", onMediaSessionPause);
+                navigator.mediaSession.setActionHandler("nexttrack", onMediaSessionNextTrack);
+            }
+        }
+    }, [nowPlayingInfo]);
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);
