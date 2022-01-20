@@ -14,7 +14,6 @@ import PlayerActions from "./components/PlayerActions";
 import { LoopMode } from "./types";
 
 const Player: React.FC = () => {
-    const hasSetMediaSessionHandler = useRef(false);
     const [loopMode, setLoopMode] = useState<LoopMode>(LoopMode.LIST_LOOP);
     const [isMute, setIsMute] = useState(false);
     const [volume, setVolume] = useState(100);
@@ -43,19 +42,19 @@ const Player: React.FC = () => {
             playRandom();
         }
     }, [loopMode, playNext, playRandom, restart, setPlayerStatus]);
-    const onMediaSessionPlay = () => {
+    const onMediaSessionPlay = useCallback(() => {
         if (playerStatus === PlayerStatus.ENDED) {
             restart();
         } else {
             resume();
         }
-    };
-    const onMediaSessionPause = () => {
+    }, [playerStatus, restart, resume]);
+    const onMediaSessionPause = useCallback(() => {
         pause();
-    };
-    const onMediaSessionNextTrack = () => {
+    }, [pause]);
+    const onMediaSessionNextTrack = useCallback(() => {
         next();
-    };
+    }, [next]);
     useEffect(() => {
         player.addEventListener("ended", next);
         return () => {
@@ -72,7 +71,11 @@ const Player: React.FC = () => {
         }
     }, [playerStatus]);
     useEffect(() => {
-        if ("mediaSession" in window.navigator && !!nowPlayingInfo.title) {
+        if (
+            "mediaSession" in window.navigator &&
+            !!nowPlayingInfo.title &&
+            nowPlayingInfo.title !== navigator.mediaSession.metadata?.title
+        ) {
             window.navigator.mediaSession.metadata = new MediaMetadata({
                 title: nowPlayingInfo.title,
                 artist: nowPlayingInfo.artist,
@@ -89,14 +92,11 @@ const Player: React.FC = () => {
                       }
                     : {}),
             });
-            if (!hasSetMediaSessionHandler.current) {
-                hasSetMediaSessionHandler.current = true;
-                navigator.mediaSession.setActionHandler("play", onMediaSessionPlay);
-                navigator.mediaSession.setActionHandler("pause", onMediaSessionPause);
-                navigator.mediaSession.setActionHandler("nexttrack", onMediaSessionNextTrack);
-            }
+            navigator.mediaSession.setActionHandler("play", onMediaSessionPlay);
+            navigator.mediaSession.setActionHandler("pause", onMediaSessionPause);
+            navigator.mediaSession.setActionHandler("nexttrack", onMediaSessionNextTrack);
         }
-    }, [nowPlayingInfo]);
+    }, [nowPlayingInfo, onMediaSessionNextTrack, onMediaSessionPause, onMediaSessionPlay]);
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);

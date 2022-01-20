@@ -27,7 +27,10 @@ const PlayQueue = () => {
                 <TrackList
                     tracks={playQueue}
                     itemIndex={0}
-                    features={[TrackListFeatures.SHOW_PLAY_QUEUE_REMOVE_ICON]}
+                    features={[
+                        TrackListFeatures.SHOW_PLAY_QUEUE_REMOVE_ICON,
+                        TrackListFeatures.SHOW_ADD_TO_PLAYLIST,
+                    ]}
                     onPlayQueueRemove={(track) => {
                         removeFromPlayQueue(track);
                     }}
