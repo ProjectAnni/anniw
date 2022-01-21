@@ -39,13 +39,13 @@ const SyncLibraryDialog: React.FC<Props> = (props) => {
                 albums: albums?.length ? albums : [],
                 albumCount: +albums?.length,
             });
+            addMessage("success", "音频仓库同步成功");
             onSyncEnded();
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);
             }
         } finally {
-            addMessage("success", "音频仓库同步成功");
             setLoading(false);
         }
     };
