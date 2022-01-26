@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import React, { useEffect, useState, useCallback } from "react";
+import { useRecoilState } from "recoil";
 import { Grid } from "@mui/material";
 import storage from "@/utils/storage";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerController from "@/hooks/usePlayQueueController";
 import usePlayQueue from "@/hooks/usePlayQueue";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
-import { PlayerStatus } from "@/types/common";
+import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import PlayerCover from "./components/PlayerCover";
 import PlayerController from "./components/PlayerController";
 import PlayerProgress from "./components/PlayerProgress";
@@ -22,7 +22,7 @@ const Player: React.FC = () => {
     const [playQueue] = usePlayQueue();
     const { playNext, playRandom, replacePlayQueue } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
-    const nowPlayingInfo = useRecoilValue(NowPlayingInfoState);
+    const [nowPlayingInfo, setNowPlayingInfo] = useRecoilState(NowPlayingInfoState);
     const onChangeLoopMode = (mode: LoopMode) => {
         setLoopMode(mode);
     };
@@ -103,11 +103,12 @@ const Player: React.FC = () => {
         }
     }, [playQueue]);
     useEffect(() => {
-        const localPlayQueue = storage.get("playlist");
+        const localPlayQueue = storage.get<PlayQueueItem[]>("playlist");
         if (localPlayQueue?.length) {
             replacePlayQueue(localPlayQueue);
+            setNowPlayingInfo(localPlayQueue[0]);
         }
-    }, [replacePlayQueue]);
+    }, [replacePlayQueue, setNowPlayingInfo]);
     useEffect(() => {
         setPlayerVolume(volume / 100);
     }, [player, setPlayerVolume, volume]);

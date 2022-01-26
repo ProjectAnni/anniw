@@ -24,6 +24,7 @@ import UserIndex from "./pages/UserIndex";
 import Playlist from "./pages/Playlist";
 import Tags from "./pages/Tags";
 import TagDetail from "./pages/TagDetail";
+import NowPlaying from "./pages/NowPlaying";
 import { DrawerIsOpen } from "./state/ui";
 import styles from "./index.module.scss";
 
@@ -102,6 +103,11 @@ function AppBody() {
                     <Route path="/fav" exact>
                         <NeedLoginPage>
                             <Favorite />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/now" exact>
+                        <NeedLoginPage>
+                            <NowPlaying />
                         </NeedLoginPage>
                     </Route>
                     <Route path="*">

@@ -31,7 +31,11 @@ const Favorite = () => {
                 <TrackList
                     tracks={parsedFavoriteTracks}
                     itemIndex={0}
-                    features={[TrackListFeatures.SHOW_FAVORITE_ICON]}
+                    features={[
+                        TrackListFeatures.SHOW_FAVORITE_ICON,
+                        TrackListFeatures.SHOW_ADD_TO_PLAYLIST,
+                        TrackListFeatures.SHOW_ADD_TO_LATER,
+                    ]}
                 />
             </Grid>
         </Grid>

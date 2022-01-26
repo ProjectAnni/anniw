@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from "react";
 import { AlbumInfo, AnnilToken } from "@/types/common";
 import Cover from "@/components/Cover";
-import "./index.scss";
+import styles from "./index.module.scss";
 
 interface Props {
     albumInfo?: AlbumInfo;
@@ -17,7 +17,7 @@ const AlbumCover: React.FC<Props> = (props) => {
         return `${credential.url}/${albumInfo?.albumId}/cover`;
     }, [credential, albumInfo]);
     return (
-        <div className="album-cover-container">
+        <div className={styles.albumCoverContainer}>
             <Cover coverUrl={coverUrl} />
         </div>
     );

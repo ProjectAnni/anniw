@@ -1,35 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import "./index.scss";
+import axios from "axios";
+import styles from "./index.module.scss";
 
 interface Props {
     coverUrl?: string;
+    onLoaded?: (url: string) => void;
 }
 
 const Cover: React.FC<Props> = (props) => {
-    const { coverUrl } = props;
+    const { coverUrl, onLoaded } = props;
+    const prevLoadedCoverUrl = useRef("");
     const [isCoverLoaded, setIsCoverLoaded] = useState(false);
+    const [loadedUrl, setLoadedUrl] = useState("");
     useEffect(() => {
+        let url: string;
         if (coverUrl) {
             setIsCoverLoaded(false);
-            const imgEl = new Image();
-            imgEl.src = coverUrl;
-            const onLoad = () => {
-                setIsCoverLoaded(true);
-            };
-            imgEl.addEventListener("load", onLoad);
-            return () => {
-                imgEl.removeEventListener("load", onLoad);
-            };
+            axios.get(coverUrl, { responseType: "arraybuffer" }).then((response) => {
+                const data = response.data as ArrayBuffer;
+                if (data.byteLength > 0) {
+                    const blob = new Blob([response.data], {
+                        type: response.headers["content-type"],
+                    });
+                    url = URL.createObjectURL(blob);
+                    prevLoadedCoverUrl.current = coverUrl;
+                    setIsCoverLoaded(true);
+                    setLoadedUrl(url);
+                    onLoaded && onLoaded(url);
+                }
+            });
         }
-    }, [coverUrl]);
+        return () => {
+            url && URL.revokeObjectURL(url);
+        };
+    }, [coverUrl, onLoaded]);
+    useEffect(() => {
+        // coverUrl 变化时销毁之前的 ObjectURL 防止内存泄漏（但愿
+        if (prevLoadedCoverUrl && prevLoadedCoverUrl.current !== coverUrl) {
+            console.log(coverUrl, prevLoadedCoverUrl.current, loadedUrl);
+            loadedUrl && URL.revokeObjectURL(loadedUrl);
+        }
+    }, [coverUrl, loadedUrl]);
     return (
         <div
-            className={classNames("cover", {
-                loaded: isCoverLoaded,
+            className={classNames(styles.cover, {
+                [styles.loaded]: isCoverLoaded,
             })}
         >
-            {isCoverLoaded ? <img src={coverUrl} /> : null}
+            {isCoverLoaded ? <img src={loadedUrl} /> : null}
         </div>
     );
 };
