@@ -5,6 +5,7 @@ import { Grid, Typography } from "@mui/material";
 import { NowPlayingInfoState } from "@/state/player";
 import Cover from "@/components/Cover";
 import styles from "./index.module.scss";
+import TrackInfo from "./components/TrackInfo";
 
 const NowPlaying: React.FC = () => {
     const pageContainerRef = useRef<HTMLDivElement>(null);
@@ -64,13 +65,7 @@ const NowPlaying: React.FC = () => {
                         </div>
                     </Grid>
                     <Grid item xs={12} lg={7} className={styles.right}>
-                        <div className={styles.info}>
-                            <div className={styles.title}>
-                                <Typography variant="h4" color="#000">
-                                    {title}
-                                </Typography>
-                            </div>
-                        </div>
+                        <TrackInfo />
                     </Grid>
                 </Grid>
             </Grid>

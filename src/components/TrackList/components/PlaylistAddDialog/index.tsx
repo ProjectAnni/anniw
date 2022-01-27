@@ -40,6 +40,7 @@ const PlaylistAddDialog: React.FC<Props> = (props) => {
                 },
             });
             onAdded();
+            addMessage("success", "添加成功");
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);

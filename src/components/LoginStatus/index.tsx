@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import useMessage from "@/hooks/useMessage";
-import { CurrentUserInfo, IsLoadingUserInfo } from "@/state/user";
+import { CurrentUserInfo, IsLoadedExtendUserInfo, IsLoadingUserInfo } from "@/state/user";
 import { CredentialState } from "@/state/credentials";
 import { FavoriteTracksState } from "@/state/favorite";
 import { PlaylistsState } from "@/state/playlists";
@@ -19,6 +19,7 @@ const LoginStatus: React.FC = () => {
     const setCredential = useSetRecoilState(CredentialState);
     const setFavoriteTracks = useSetRecoilState(FavoriteTracksState);
     const setFavoritePlaylists = useSetRecoilState(PlaylistsState);
+    const setIsLoadedExtendUserInfo = useSetRecoilState(IsLoadedExtendUserInfo);
     const [_, { addMessage }] = useMessage();
     useEffect(() => {
         (async () => {
@@ -35,6 +36,7 @@ const LoginStatus: React.FC = () => {
                 setCredential({ credentials: availableTokens });
                 setFavoriteTracks(favoriteTracks);
                 setFavoritePlaylists(favoritePlaylists);
+                setIsLoadedExtendUserInfo(true);
             } catch (e) {
                 if (e instanceof AnniwBusinessError && e.code === 902002) {
                     // 未登录 忽略
@@ -52,6 +54,7 @@ const LoginStatus: React.FC = () => {
         setFavoritePlaylists,
         setFavoriteTracks,
         setIsLoadingUserInfo,
+        setIsLoadedExtendUserInfo,
     ]);
     return null;
 };

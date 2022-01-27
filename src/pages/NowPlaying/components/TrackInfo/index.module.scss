@@ -1,0 +1,22 @@
+.info {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.title,
+.artist {
+    margin-top: 40px;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    word-break: break-all;
+}
+.title {
+    color: #000;
+}
+.artist {
+    margin-top: 10px;
+    font-size: 16px;
+}

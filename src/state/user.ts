@@ -11,6 +11,11 @@ export const IsLoadingUserInfo = atom<boolean>({
     default: true,
 });
 
+export const IsLoadedExtendUserInfo = atom<boolean>({
+    key: "IsLoadedExtendUserInfo",
+    default: false,
+});
+
 export const CurrentLoginStatus = selector({
     key: "CurrentLoginStatus",
     get: ({ get }) => {

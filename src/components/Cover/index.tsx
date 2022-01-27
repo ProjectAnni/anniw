@@ -38,7 +38,6 @@ const Cover: React.FC<Props> = (props) => {
     useEffect(() => {
         // coverUrl 变化时销毁之前的 ObjectURL 防止内存泄漏（但愿
         if (prevLoadedCoverUrl && prevLoadedCoverUrl.current !== coverUrl) {
-            console.log(coverUrl, prevLoadedCoverUrl.current, loadedUrl);
             loadedUrl && URL.revokeObjectURL(loadedUrl);
         }
     }, [coverUrl, loadedUrl]);
