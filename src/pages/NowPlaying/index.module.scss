@@ -5,6 +5,10 @@
     right: 0;
     bottom: 0;
     padding: 64px 0;
+    transition: padding-left 0.5s ease-in-out;
+}
+.withDrawerOpen {
+    padding-left: 240px;
 }
 .background {
     position: absolute;

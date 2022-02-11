@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import axios from "axios";
 import styles from "./index.module.scss";
@@ -52,4 +52,4 @@ const Cover: React.FC<Props> = (props) => {
     );
 };
 
-export default Cover;
+export default memo(Cover);
