@@ -11,14 +11,15 @@ import { PlayerStatus } from "@/types/common";
 
 interface Props {
     playNext: () => void;
+    playFirst: () => void;
 }
 
 const PlayerController: React.FC<Props> = (props) => {
-    const { playNext } = props;
+    const { playNext, playFirst } = props;
     const playerStatus = useRecoilValue(PlayerStatusState);
     const [player, { resume, pause, restart }] = usePlayer();
     return (
-        <Grid container alignContent="center" sx={{ height: "100%" }}>
+        <Grid container alignItems="center" sx={{ height: "100%" }}>
             <IconButton
                 color="inherit"
                 aria-label="menu"
@@ -30,7 +31,7 @@ const PlayerController: React.FC<Props> = (props) => {
                     } else if (playerStatus === PlayerStatus.PAUSED) {
                         resume();
                     } else if (playerStatus === PlayerStatus.EMPTY) {
-                        playNext();
+                        playFirst();
                     }
                 }}
             >

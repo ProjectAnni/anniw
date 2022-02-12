@@ -167,7 +167,8 @@ const TrackListItem: React.FC<Props> = (props) => {
                 <IconButton onClick={onClickPlayButton} disabled={!loading && !credential}>
                     {isPlaying ? (
                         playerStatus === PlayerStatus.PAUSED ||
-                        playerStatus === PlayerStatus.ENDED ? (
+                        playerStatus === PlayerStatus.ENDED ||
+                        playerStatus === PlayerStatus.EMPTY ? (
                             <PlayArrow />
                         ) : (
                             <Pause />

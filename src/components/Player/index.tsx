@@ -20,7 +20,7 @@ const Player: React.FC = () => {
     const [player, { restart, resume, pause, mute, unmute, setVolume: setPlayerVolume }] =
         usePlayer();
     const [playQueue] = usePlayQueue();
-    const { playNext, playRandom, replacePlayQueue } = usePlayerController();
+    const { playNext, playRandom, playIndex, replacePlayQueue } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const [nowPlayingInfo, setNowPlayingInfo] = useRecoilState(NowPlayingInfoState);
     const onChangeLoopMode = (mode: LoopMode) => {
@@ -30,7 +30,7 @@ const Player: React.FC = () => {
         isMute ? unmute() : mute();
         setIsMute((prevIsMute) => !prevIsMute);
     };
-    const next = useCallback(() => {
+    const onPlayNext = useCallback(() => {
         if (loopMode === LoopMode.LIST_LOOP) {
             setPlayerStatus(PlayerStatus.ENDED);
             playNext();
@@ -42,6 +42,9 @@ const Player: React.FC = () => {
             playRandom();
         }
     }, [loopMode, playNext, playRandom, restart, setPlayerStatus]);
+    const onPlayFirst = useCallback(() => {
+        playIndex(0);
+    }, [playIndex]);
     const onMediaSessionPlay = useCallback(() => {
         if (playerStatus === PlayerStatus.ENDED) {
             restart();
@@ -53,14 +56,14 @@ const Player: React.FC = () => {
         pause();
     }, [pause]);
     const onMediaSessionNextTrack = useCallback(() => {
-        next();
-    }, [next]);
+        onPlayNext();
+    }, [onPlayNext]);
     useEffect(() => {
-        player.addEventListener("ended", next);
+        player.addEventListener("ended", onPlayNext);
         return () => {
-            player.removeEventListener("ended", next);
+            player.removeEventListener("ended", onPlayNext);
         };
-    }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom, next]);
+    }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom, onPlayNext]);
     useEffect(() => {
         if ("mediaSession" in window.navigator) {
             if (playerStatus === PlayerStatus.PLAYING) {
@@ -118,7 +121,7 @@ const Player: React.FC = () => {
                 <PlayerCover />
             </Grid>
             <Grid item flexShrink={0}>
-                <PlayerController playNext={next} />
+                <PlayerController playNext={onPlayNext} playFirst={onPlayFirst} />
             </Grid>
             <Grid item flexGrow={1}>
                 <PlayerProgress />
