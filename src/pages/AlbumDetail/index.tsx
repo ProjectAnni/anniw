@@ -9,7 +9,7 @@ import usePlayQueueController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
 import { AlbumInfo, AnnilToken, PlayQueueItem } from "@/types/common";
 import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
-import { TrackItem, TrackListFeatures } from "@/components/TrackList/types";
+import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
 import { getAlbumInfo, getAlbumAvailableLibraries } from "./services";
@@ -112,6 +112,7 @@ const AlbumDetail: React.FC = () => {
                                 trackIndex,
                                 albumId,
                                 albumTitle,
+                                itemType: TrackItemType.NORMAL,
                             }));
                             return (
                                 <Grid container flexDirection="column" key={disc.catalog}>

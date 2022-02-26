@@ -4,7 +4,7 @@ import { Delete } from "@mui/icons-material";
 import usePlayQueue from "@/hooks/usePlayQueue";
 import usePlayerController from "@/hooks/usePlayQueueController";
 import TrackList from "@/components/TrackList";
-import { TrackListFeatures } from "@/components/TrackList/types";
+import { TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 
 const PlayQueue = () => {
     const [playQueue] = usePlayQueue();
@@ -25,7 +25,7 @@ const PlayQueue = () => {
             </Grid>
             <Grid item xs={12} lg={8}>
                 <TrackList
-                    tracks={playQueue}
+                    tracks={playQueue.map((item) => ({ ...item, itemType: TrackItemType.NORMAL }))}
                     itemIndex={0}
                     features={[
                         TrackListFeatures.SHOW_PLAY_QUEUE_REMOVE_ICON,

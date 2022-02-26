@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Grid, Typography } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import TrackList from "@/components/TrackList";
-import { TrackListFeatures } from "@/components/TrackList/types";
+import { TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import { FavoriteTracksState } from "@/state/favorite";
 import { PlayQueueItem } from "@/types/common";
 
@@ -29,7 +29,10 @@ const Favorite = () => {
             </Grid>
             <Grid item xs={12} lg={8}>
                 <TrackList
-                    tracks={parsedFavoriteTracks}
+                    tracks={parsedFavoriteTracks.map((track) => ({
+                        ...track,
+                        itemType: TrackItemType.NORMAL,
+                    }))}
                     itemIndex={0}
                     features={[
                         TrackListFeatures.SHOW_FAVORITE_ICON,

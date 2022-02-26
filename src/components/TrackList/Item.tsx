@@ -79,7 +79,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         if (!credential) {
             return;
         }
-        if (isPlaying) {
+        if (isPlaying && playerStatus !== PlayerStatus.EMPTY) {
             if (playerStatus === PlayerStatus.PAUSED) {
                 onResume();
             } else if (playerStatus === PlayerStatus.PLAYING) {

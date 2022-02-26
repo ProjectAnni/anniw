@@ -1,4 +1,4 @@
-import { TrackItem } from "@/components/TrackList/types";
+import { NormalTrackItem } from "@/components/TrackList/types";
 
 export enum LoginStatus {
     UNKNOWN,
@@ -86,7 +86,7 @@ export interface AlbumInfo {
     discs: DiscInfo[];
 }
 
-export interface PlayQueueItem extends TrackItem {
+export interface PlayQueueItem extends Omit<NormalTrackItem, "itemType"> {
     playUrl?: string;
     coverUrl?: string;
 }

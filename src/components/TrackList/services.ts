@@ -1,11 +1,16 @@
 import { groupBy } from "lodash";
-import { AnnilToken, PlaylistInfo, TrackIdentifier } from "@/types/common";
+import { AnnilToken, PlaylistInfo, PlayQueueItem, TrackIdentifier } from "@/types/common";
 import { default as AlbumDB } from "@/db/album";
 import request from "@/api/request";
-import { TrackItem } from "./types";
+
+interface IndexableTrackItem {
+    albumId: string;
+    discIndex: number;
+    trackIndex: number;
+}
 
 export async function getAvailableLibraryForTrack(
-    track: TrackItem,
+    track: PlayQueueItem,
     allCredentials: AnnilToken[]
 ): Promise<AnnilToken | undefined> {
     const { albumId } = track;
@@ -22,19 +27,19 @@ export async function getAvailableLibraryForTrack(
     }
 }
 
-export function getPlayUrlForTrack(track: TrackItem, credential: AnnilToken) {
+export function getPlayUrlForTrack<T extends IndexableTrackItem>(track: T, credential: AnnilToken) {
     const { albumId, discIndex, trackIndex } = track;
     const { url, token } = credential;
     return `${url}/${albumId}/${discIndex + 1}/${trackIndex + 1}?auth=${token}`;
 }
 
-export function getCoverUrlForTrack(track: TrackItem, credential: AnnilToken) {
+export function getCoverUrlForTrack<T extends IndexableTrackItem>(track: T, credential: AnnilToken) {
     const { albumId, discIndex } = track;
     const { url } = credential;
     return `${url}/${albumId}/${discIndex + 1}/cover`;
 }
 
-export function addFavorite(track: TrackItem) {
+export function addFavorite<T extends IndexableTrackItem>(track: T) {
     const { albumId, discIndex, trackIndex } = track;
     return request.put("/api/favorite/music", {
         albumId,
@@ -43,7 +48,7 @@ export function addFavorite(track: TrackItem) {
     });
 }
 
-export function removeFavorite(track: TrackItem) {
+export function removeFavorite<T extends IndexableTrackItem>(track: T) {
     const { albumId, discIndex, trackIndex } = track;
     return request.delete("/api/favorite/music", {
         albumId,
@@ -74,9 +79,11 @@ export function addTrackToPlaylist({
     return request.patch<PlaylistInfo>("/api/playlist", {
         id: playlistId,
         command: "append",
-        payload: [{
-            type: "normal",
-            ...trackId,
-        }],
+        payload: [
+            {
+                type: "normal",
+                ...trackId,
+            },
+        ],
     });
 }

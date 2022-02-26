@@ -1,4 +1,15 @@
-export interface TrackItem {
+export enum TrackItemType {
+    NORMAL,
+    DUMMY,
+}
+
+interface BaseTrackItem {
+    itemType: TrackItemType;
+    description?: string;
+}
+
+export interface NormalTrackItem extends BaseTrackItem {
+    itemType: TrackItemType.NORMAL;
     title: string;
     type: string;
     artist: string;
@@ -8,6 +19,17 @@ export interface TrackItem {
     albumTitle: string;
     tags: string[];
 }
+
+export interface DummyTrackItem extends BaseTrackItem {
+    itemType: TrackItemType.DUMMY;
+    
+    title: string;
+    artist: string;
+    type: string;
+    tags: string[];
+}
+
+export type TrackItem = NormalTrackItem | DummyTrackItem;
 
 export enum TrackListFeatures {
     /** 显示添加到播放队列按钮 */
