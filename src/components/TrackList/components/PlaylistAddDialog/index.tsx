@@ -35,8 +35,8 @@ const PlaylistAddDialog: React.FC<Props> = (props) => {
                 playlistId,
                 trackId: {
                     albumId: track.albumId,
-                    discId: track.discIndex + 1,
-                    trackId: track.trackIndex + 1,
+                    discId: track.discId,
+                    trackId: track.trackId,
                 },
             });
             onAdded();

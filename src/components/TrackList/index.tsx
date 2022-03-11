@@ -70,8 +70,8 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
                     playUrl: credential && getPlayUrlForTrack(track, credential),
                     type: track.type,
                     albumId: track.albumId,
-                    discIndex: track.discIndex,
-                    trackIndex: track.trackIndex,
+                    discId: track.discId,
+                    trackId: track.trackId,
                     albumTitle: track.albumTitle,
                     tags: track.tags,
                 });
@@ -85,7 +85,7 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
         }
         return keyBy(
             parsedTracks,
-            (track) => `${track.albumId}-${track.discIndex}-${track.trackIndex}`
+            (track) => `${track.albumId}-${track.discId}-${track.trackId}`
         );
     }, [parsedTracks]);
     const onPlay = useCallback(
@@ -120,7 +120,7 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
                         case TrackItemType.NORMAL: {
                             return (
                                 <Item
-                                    key={`${track.albumId}-${track.discIndex}-${track.trackIndex}-${track.title}`}
+                                    key={`${track.albumId}-${track.discId}-${track.trackId}-${track.title}`}
                                     track={track}
                                     itemIndex={index}
                                     features={features}

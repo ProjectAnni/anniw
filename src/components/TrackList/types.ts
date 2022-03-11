@@ -13,8 +13,8 @@ export interface NormalTrackItem extends BaseTrackItem {
     title: string;
     type: string;
     artist: string;
-    discIndex: number;
-    trackIndex: number;
+    discId: number;
+    trackId: number;
     albumId: string;
     albumTitle: string;
     tags: string[];

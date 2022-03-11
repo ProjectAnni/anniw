@@ -23,3 +23,8 @@ export async function getAlbumInfo(albumId: string) {
         return albumInfo;
     }
 }
+const getName = <T>(name: T): T => {
+    return name;
+}
+
+getName('string');

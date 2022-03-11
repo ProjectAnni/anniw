@@ -54,8 +54,8 @@ export default function usePlayQueue() {
             const index = playQueue.findIndex(
                 (t) =>
                     t.albumId === track.albumId &&
-                    t.discIndex === track.discIndex &&
-                    t.trackIndex === track.trackIndex
+                    t.discId === track.discId &&
+                    t.trackId === track.trackId
             );
             if (index !== -1) {
                 setPlayQueue((queue) => [...queue.slice(0, index), ...queue.slice(index + 1)]);

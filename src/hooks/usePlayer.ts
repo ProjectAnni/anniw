@@ -83,8 +83,8 @@ export default function usePlayer() {
             albumTitle,
             albumId,
             coverUrl,
-            discIndex,
-            trackIndex,
+            discId,
+            trackId,
         }: PlayQueueItem) => {
             if (!playUrl) {
                 return;
@@ -104,8 +104,8 @@ export default function usePlayer() {
                         albumTitle,
                         albumId,
                         coverUrl,
-                        discIndex,
-                        trackIndex,
+                        discId,
+                        trackId,
                     });
                 },
                 { once: true }

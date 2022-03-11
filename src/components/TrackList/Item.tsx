@@ -48,13 +48,13 @@ const TrackListItem: React.FC<Props> = (props) => {
         onResume,
         onPause,
     } = props;
-    const { title, artist, type, albumId, albumTitle, discIndex, trackIndex } = track;
+    const { title, artist, type, albumId, albumTitle, discId, trackId } = track;
     const favoriteRequestLock = useRef(false);
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
         albumId: nowPlayingAlbumId,
-        discIndex: nowPlayingDiscIndex,
-        trackIndex: nowPlayingTrackIndex,
+        discId: nowPlayingDiscId,
+        trackId: nowPlayingTrackId,
     } = useRecoilValue(NowPlayingInfoState);
     const playerStatus = useRecoilValue(PlayerStatusState);
     const setFavoriteTracks = useSetRecoilState(FavoriteTracksState);
@@ -62,15 +62,12 @@ const TrackListItem: React.FC<Props> = (props) => {
     const isFavored =
         favoriteTrackAlbumMap[albumId] &&
         favoriteTrackAlbumMap[albumId].some(
-            (item) =>
-                item.albumId === albumId &&
-                item.discId === discIndex + 1 &&
-                item.trackId === trackIndex + 1
+            (item) => item.albumId === albumId && item.discId === discId && item.trackId === trackId
         );
     const isPlaying =
         albumId === nowPlayingAlbumId &&
-        discIndex === nowPlayingDiscIndex &&
-        trackIndex === nowPlayingTrackIndex;
+        discId === nowPlayingDiscId &&
+        trackId === nowPlayingTrackId;
     const [credential, loading] = useRequest(() =>
         getAvailableLibraryForTrack(track, allCredentials)
     );
@@ -103,10 +100,7 @@ const TrackListItem: React.FC<Props> = (props) => {
             if (isFavored) {
                 setFavoriteTracks((prevTracks) => {
                     return prevTracks.filter(
-                        (t) =>
-                            t.albumId !== albumId ||
-                            t.discId !== discIndex + 1 ||
-                            t.trackId !== trackIndex + 1
+                        (t) => t.albumId !== albumId || t.discId !== discId || t.trackId !== trackId
                     );
                 });
             } else {
@@ -114,8 +108,8 @@ const TrackListItem: React.FC<Props> = (props) => {
                     {
                         albumId,
                         albumTitle,
-                        discId: discIndex + 1,
-                        trackId: trackIndex + 1,
+                        discId,
+                        trackId,
                         title: title,
                         artist: artist,
                         type: type,
@@ -136,12 +130,12 @@ const TrackListItem: React.FC<Props> = (props) => {
         albumId,
         albumTitle,
         artist,
-        discIndex,
+        discId,
         isFavored,
         setFavoriteTracks,
         title,
         track,
-        trackIndex,
+        trackId,
         type,
     ]);
     return (

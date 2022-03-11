@@ -22,6 +22,7 @@ import Search from "./pages/Search";
 import Favorite from "./pages/Favorite";
 import UserIndex from "./pages/UserIndex";
 import Playlist from "./pages/Playlist";
+import PlaylistDetail from "./pages/PlaylistDetail";
 import Tags from "./pages/Tags";
 import TagDetail from "./pages/TagDetail";
 import NowPlaying from "./pages/NowPlaying";
@@ -93,6 +94,11 @@ function AppBody() {
                     <Route path="/playlist" exact>
                         <NeedLoginPage>
                             <Playlist />
+                        </NeedLoginPage>
+                    </Route>
+                    <Route path="/playlist/:id">
+                        <NeedLoginPage>
+                            <PlaylistDetail />
                         </NeedLoginPage>
                     </Route>
                     <Route path="/search" exact>

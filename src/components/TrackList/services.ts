@@ -3,12 +3,6 @@ import { AnnilToken, PlaylistInfo, PlayQueueItem, TrackIdentifier } from "@/type
 import { default as AlbumDB } from "@/db/album";
 import request from "@/api/request";
 
-interface IndexableTrackItem {
-    albumId: string;
-    discIndex: number;
-    trackIndex: number;
-}
-
 export async function getAvailableLibraryForTrack(
     track: PlayQueueItem,
     allCredentials: AnnilToken[]
@@ -27,33 +21,33 @@ export async function getAvailableLibraryForTrack(
     }
 }
 
-export function getPlayUrlForTrack<T extends IndexableTrackItem>(track: T, credential: AnnilToken) {
-    const { albumId, discIndex, trackIndex } = track;
+export function getPlayUrlForTrack<T extends TrackIdentifier>(track: T, credential: AnnilToken) {
+    const { albumId, discId, trackId } = track;
     const { url, token } = credential;
-    return `${url}/${albumId}/${discIndex + 1}/${trackIndex + 1}?auth=${token}`;
+    return `${url}/${albumId}/${discId}/${trackId}?auth=${token}`;
 }
 
-export function getCoverUrlForTrack<T extends IndexableTrackItem>(track: T, credential: AnnilToken) {
-    const { albumId, discIndex } = track;
+export function getCoverUrlForTrack<T extends TrackIdentifier>(track: T, credential: AnnilToken) {
+    const { albumId, discId } = track;
     const { url } = credential;
-    return `${url}/${albumId}/${discIndex + 1}/cover`;
+    return `${url}/${albumId}/${discId}/cover`;
 }
 
-export function addFavorite<T extends IndexableTrackItem>(track: T) {
-    const { albumId, discIndex, trackIndex } = track;
+export function addFavorite<T extends TrackIdentifier>(track: T) {
+    const { albumId, discId, trackId } = track;
     return request.put("/api/favorite/music", {
         albumId,
-        discId: discIndex + 1,
-        trackId: trackIndex + 1,
+        discId,
+        trackId,
     });
 }
 
-export function removeFavorite<T extends IndexableTrackItem>(track: T) {
-    const { albumId, discIndex, trackIndex } = track;
+export function removeFavorite<T extends TrackIdentifier>(track: T) {
+    const { albumId, discId, trackId } = track;
     return request.delete("/api/favorite/music", {
         albumId,
-        discId: discIndex + 1,
-        trackId: trackIndex + 1,
+        discId,
+        trackId,
     });
 }
 

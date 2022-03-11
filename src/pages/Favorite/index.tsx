@@ -15,8 +15,6 @@ const Favorite = () => {
                 // .filter((t) => !!t.info)
                 .map((t) => ({
                     ...t,
-                    trackIndex: t.trackId - 1,
-                    discIndex: t.discId - 1,
                 })),
         [favoriteTracks]
     );

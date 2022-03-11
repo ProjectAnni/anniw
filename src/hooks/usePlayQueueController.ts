@@ -53,8 +53,8 @@ export default function usePlayQueueController() {
                     !playQueue.some(
                         (t) =>
                             t.albumId === i.albumId &&
-                            t.discIndex === i.discIndex &&
-                            t.trackIndex === i.trackIndex
+                            t.discId === i.discId &&
+                            t.trackId === i.trackId
                     )
             );
             if (addItems.length === 0) {

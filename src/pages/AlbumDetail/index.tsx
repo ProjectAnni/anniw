@@ -108,8 +108,8 @@ const AlbumDetail: React.FC = () => {
                             const { albumId, title: albumTitle } = albumInfo;
                             const trackList: TrackItem[] = tracks.map((track, trackIndex) => ({
                                 ...track,
-                                discIndex,
-                                trackIndex,
+                                discId: discIndex + 1,
+                                trackId: trackIndex + 1,
                                 albumId,
                                 albumTitle,
                                 itemType: TrackItemType.NORMAL,

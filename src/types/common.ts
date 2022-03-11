@@ -106,16 +106,15 @@ export interface Playlist extends PlaylistInfo {
 
 export interface BasePlaylistSong {
     id: string;
+    description?: string;
 }
 
 export interface PlaylistSongDummy extends TrackInfo, BasePlaylistSong {
     type: "dummy";
-    description?: string;
 }
 
-export interface PlaylistSongNormal extends TrackIdentifier, BasePlaylistSong {
+export interface PlaylistSongNormal extends TrackInfoWithAlbum, BasePlaylistSong {
     type: "normal";
-    description?: string;
 }
 
 export type PlaylistSong = PlaylistSongDummy | PlaylistSongNormal;
