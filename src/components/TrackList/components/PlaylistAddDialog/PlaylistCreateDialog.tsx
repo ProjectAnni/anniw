@@ -34,9 +34,6 @@ const PlaylistCreateDialog: React.FC<Props> = (props) => {
         if (!name) {
             return addMessage("error", "请输入播放列表名称");
         }
-        if (!description) {
-            return addMessage("error", "请输入播放列表描述");
-        }
         setLoading(true);
         try {
             const createdPlaylist = await createPlaylist({

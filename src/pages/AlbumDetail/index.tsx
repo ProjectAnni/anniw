@@ -24,7 +24,7 @@ const AlbumDetail: React.FC = () => {
     const [availableLibraries, loadingAvailableLibraries] = useRequest(() =>
         getAlbumAvailableLibraries(albumId)
     );
-    const [albumInfo, setAlbumInfo] = useState<AlbumInfo | undefined>();
+    const [albumInfo, setAlbumInfo] = useState<AlbumInfo>();
     const { addToPlayQueue, addToLater } = usePlayQueueController();
     useEffect(() => {
         (async () => {

@@ -16,7 +16,7 @@ const PlaylistDetail: React.FC = () => {
     const { id: playlistId } = useParams<{ id: string }>();
     const [playlistDetail] = useRequest(() => queryPlaylistDetail(+playlistId));
     const { addToPlayQueue, addToLater } = usePlayQueueController();
-    const { name, songs = [] } = playlistDetail || {};
+    const { name, description, songs = [] } = playlistDetail || {};
     const tracks = useMemo<TrackItem[]>(() => {
         if (!songs?.length) {
             return [];
@@ -41,9 +41,20 @@ const PlaylistDetail: React.FC = () => {
     return (
         <Grid container justifyContent="center" className={styles.pageContainer}>
             <Grid item xs={12} lg={8}>
-                <Typography variant="h4" className="title">
-                    {name}
-                </Typography>
+                <Grid container flexDirection="column">
+                    <Grid item xs={12}>
+                        <Typography variant="h4" className="title">
+                            {name}
+                        </Typography>
+                    </Grid>
+                    {!!description && (
+                        <Grid item xs={12}>
+                            <Typography variant="subtitle1" className={styles.description}>
+                                {name}
+                            </Typography>
+                        </Grid>
+                    )}
+                </Grid>
             </Grid>
             <Grid item xs={12} lg={8}>
                 <TrackList
