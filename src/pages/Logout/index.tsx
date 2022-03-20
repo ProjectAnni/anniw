@@ -22,6 +22,7 @@ const Logout: React.FC = () => {
                 storage.delete("playlist");
                 setCurrentUserInfo(null);
                 history.push("/");
+                location.reload();
             })
             .catch((e) => {
                 addMessage("error", e.message);
