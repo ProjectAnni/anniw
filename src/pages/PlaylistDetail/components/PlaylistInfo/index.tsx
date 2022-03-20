@@ -28,7 +28,7 @@ const PlaylistInfo: React.FC<Props> = (props) => {
                 </Typography>
             </div>
             <div className={styles.description}>
-                {!!description && <Typography variant="subtitle1"></Typography>}
+                {!!description && <Typography variant="subtitle1">{description}</Typography>}
             </div>
             {isPlaylistOwner && (
                 <div className={styles.actions}>
