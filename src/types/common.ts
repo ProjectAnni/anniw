@@ -96,7 +96,7 @@ export interface PlaylistInfo {
     name: string;
     description?: string;
     owner: string;
-    is_public: boolean;
+    isPublic: boolean;
     cover: AlbumDiscIdentifier;
 }
 
