@@ -1,0 +1,15 @@
+.container {
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.description {
+    color: #aaa;
+}
+.description {
+    flex-grow: 1;
+}
+.actions {
+    text-align: right;
+}

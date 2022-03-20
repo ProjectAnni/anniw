@@ -3,8 +3,8 @@ import { AnnilToken, PlaylistInfo, PlayQueueItem, TrackIdentifier } from "@/type
 import { default as AlbumDB } from "@/db/album";
 import request from "@/api/request";
 
-export async function getAvailableLibraryForTrack(
-    track: PlayQueueItem,
+export async function getAvailableLibraryForTrack<T extends { albumId: string } = PlayQueueItem>(
+    track: T,
     allCredentials: AnnilToken[]
 ): Promise<AnnilToken | undefined> {
     const { albumId } = track;
