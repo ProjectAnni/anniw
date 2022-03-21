@@ -49,7 +49,7 @@ export interface TrackIdentifier {
 }
 
 export interface AlbumDiscIdentifier {
-    discId: number;
+    discId?: number;
     albumId: string;
 }
 

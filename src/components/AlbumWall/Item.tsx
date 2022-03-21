@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { CircularProgress } from "@mui/material";
 import useRequest from "@/hooks/useRequest";
 import { CredentialState } from "@/state/credentials";
-import { getAvailableLibraryForTrack } from "@/utils/library";
+import { getAvailableLibraryForAlbum } from "@/utils/library";
 import Cover from "@/components/Cover";
 import { getAlbumInfo } from "./services";
 import styles from "./index.module.scss";
@@ -23,7 +23,7 @@ const AlbumWallItem: React.FC<Props> = (props) => {
     const [credential, loadingToken] = useRequest<{ url: string; token: string } | undefined>(() =>
         libraryInfo
             ? Promise.resolve(libraryInfo)
-            : getAvailableLibraryForTrack({ albumId }, allCredentials)
+            : getAvailableLibraryForAlbum(albumId, allCredentials)
     );
     const { url, token } = credential || {};
     const [albumInfo, loading] = useRequest(() => getAlbumInfo(albumId));

@@ -1,6 +1,10 @@
 import { groupBy } from "lodash";
-import { AnnilToken, PlayQueueItem, TrackIdentifier } from "@/types/common";
+import { AlbumDiscIdentifier, AnnilToken, PlayQueueItem, TrackIdentifier } from "@/types/common";
 import { default as AlbumDB } from "@/db/album";
+
+export function getAvailableLibraryForAlbum(albumId: string, allCredentials: AnnilToken[]) {
+    return getAvailableLibraryForTrack({ albumId }, allCredentials);
+}
 
 export async function getAvailableLibraryForTrack<T extends { albumId: string } = PlayQueueItem>(
     track: T,
@@ -26,7 +30,10 @@ export function getPlayUrlForTrack<T extends TrackIdentifier>(track: T, credenti
     return `${url}/${albumId}/${discId}/${trackId}?auth=${token}`;
 }
 
-export function getCoverUrlForTrack<T extends TrackIdentifier>(track: T, credential: AnnilToken) {
+export function getCoverUrlForTrack<T extends AlbumDiscIdentifier>(
+    track: T,
+    credential: AnnilToken
+) {
     const { albumId, discId } = track;
     const { url } = credential;
     return discId ? `${url}/${albumId}/${discId}/cover` : `${url}/${albumId}/cover`;

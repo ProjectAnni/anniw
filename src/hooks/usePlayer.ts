@@ -67,7 +67,7 @@ async function getAudioUrl(url: string) {
             result.url = URL.createObjectURL(mediaSource);
         }
         return result;
-    });
+    }).catch(() => ({ url }));
 }
 
 export default function usePlayer() {
@@ -91,7 +91,6 @@ export default function usePlayer() {
             setPlayerStatus(PlayerStatus.BUFFERING);
             // TODO: make use of audioInfo.useMSE and audioInfo.duration
             const audioInfo = await getAudioUrl(playUrl);
-            console.log(player)
             player.src = audioInfo.url;
             player.addEventListener(
                 "canplay",
