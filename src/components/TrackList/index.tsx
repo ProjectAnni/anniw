@@ -13,8 +13,8 @@ import { PlayQueueItem } from "@/types/common";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
+import { getAvailableLibraryForTrack, getCoverUrlForTrack, getPlayUrlForTrack } from "@/utils/library";
 import { NormalTrackItem, TrackItem, TrackItemType, TrackListFeatures } from "./types";
-import { getAvailableLibraryForTrack, getCoverUrlForTrack, getPlayUrlForTrack } from "./services";
 import Item from "./Item";
 
 interface Props {

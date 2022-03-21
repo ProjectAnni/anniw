@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { groupBy } from "lodash";
 import { Divider, Grid, Typography } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
-import useRequest from "@/hooks/useRequest";
 import usePlayQueueController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
 import { AlbumInfo, AnnilToken, PlayQueueItem } from "@/types/common";
@@ -12,8 +10,9 @@ import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
-import { getAlbumInfo, getAlbumAvailableLibraries } from "./services";
+import { getAlbumInfo } from "./services";
 import styles from "./index.module.scss";
+import { getAvailableLibraryForTrack } from "@/utils/library";
 
 const AlbumDetail: React.FC = () => {
     const trackListRefs = useRef<TrackListImperativeHandles[]>([]);
@@ -21,9 +20,6 @@ const AlbumDetail: React.FC = () => {
     const { credentials: allAvailableCredentials } = useRecoilValue(CredentialState);
     const [credential, setCredential] = useState<AnnilToken | undefined>(undefined);
     const { id: albumId } = useParams<{ id: string }>();
-    const [availableLibraries, loadingAvailableLibraries] = useRequest(() =>
-        getAlbumAvailableLibraries(albumId)
-    );
     const [albumInfo, setAlbumInfo] = useState<AlbumInfo>();
     const { addToPlayQueue, addToLater } = usePlayQueueController();
     useEffect(() => {
@@ -45,26 +41,13 @@ const AlbumDetail: React.FC = () => {
             addMessage("error", "请指定专辑 ID");
             return;
         }
-        if (!allAvailableCredentials?.length) {
-            addMessage("error", "无可用音频仓库");
-            return;
-        }
-        if (!availableLibraries?.length) {
-            !loadingAvailableLibraries && addMessage("error", "无可提供该专辑资源的音频后端");
-            return;
-        }
-        const credentialUrlMap = groupBy(allAvailableCredentials, "url");
-        const librariesByPriority = availableLibraries.sort(
-            (a, b) => credentialUrlMap[b][0].priority - credentialUrlMap[a][0].priority
-        );
-        setCredential(credentialUrlMap[librariesByPriority[0]][0]);
-    }, [
-        albumId,
-        allAvailableCredentials,
-        availableLibraries,
-        loadingAvailableLibraries,
-        addMessage,
-    ]);
+        (async () => {
+            const library = await getAvailableLibraryForTrack({ albumId }, allAvailableCredentials);
+            if (library) {
+                setCredential(library);
+            }
+        })();
+    }, [albumId, allAvailableCredentials, addMessage]);
     const playAll = useCallback(() => {
         if (!trackListRefs.current.length) {
             return;

@@ -7,12 +7,11 @@ async function getAudioUrl(url: string) {
     return await fetch(url, { method: "HEAD" }).then(async (resp) => {
         const mime = resp.headers.get("Content-Type") || "audio/aac";
         const originalMime = resp.headers.get("X-Origin-Type") || "audio/flac";
-        const originalSize = Number(resp.headers.get("X-Origin-Size") || "0");
         const duration = Number(resp.headers.get("X-Duration-Seconds") || "300");
 
         let useMSE = !!window.MediaSource;
-        if (mime === originalMime && originalSize > 10 * 1024 * 1024) {
-            // if audio is not transcoded, check whether file size exceeds the limit
+        if (mime === originalMime) {
+            // if audio is lossless, prefer direct URL
             useMSE = false;
         } else if (mime !== originalMime && duration > 10 * 60) {
             // if audio is transcoded and duration > 10 minutes, do not use MSE
@@ -92,6 +91,7 @@ export default function usePlayer() {
             setPlayerStatus(PlayerStatus.BUFFERING);
             // TODO: make use of audioInfo.useMSE and audioInfo.duration
             const audioInfo = await getAudioUrl(playUrl);
+            console.log(player)
             player.src = audioInfo.url;
             player.addEventListener(
                 "canplay",

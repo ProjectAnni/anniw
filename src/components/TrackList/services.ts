@@ -1,37 +1,5 @@
-import { groupBy } from "lodash";
-import { AnnilToken, PlaylistInfo, PlayQueueItem, TrackIdentifier } from "@/types/common";
-import { default as AlbumDB } from "@/db/album";
+import { PlaylistInfo, TrackIdentifier } from "@/types/common";
 import request from "@/api/request";
-
-export async function getAvailableLibraryForTrack<T extends { albumId: string } = PlayQueueItem>(
-    track: T,
-    allCredentials: AnnilToken[]
-): Promise<AnnilToken | undefined> {
-    const { albumId } = track;
-    const availableLibraries = await AlbumDB.getAvailableLibraries(albumId);
-    if (availableLibraries.length > 0) {
-        const credentialUrlMap = groupBy(
-            allCredentials.filter((c) => availableLibraries.includes(c.url)),
-            "url"
-        );
-        const librariesByPriority = availableLibraries.sort(
-            (a, b) => credentialUrlMap[b][0].priority - credentialUrlMap[a][0].priority
-        );
-        return credentialUrlMap[librariesByPriority[0]][0];
-    }
-}
-
-export function getPlayUrlForTrack<T extends TrackIdentifier>(track: T, credential: AnnilToken) {
-    const { albumId, discId, trackId } = track;
-    const { url, token } = credential;
-    return `${url}/${albumId}/${discId}/${trackId}?auth=${token}`;
-}
-
-export function getCoverUrlForTrack<T extends TrackIdentifier>(track: T, credential: AnnilToken) {
-    const { albumId, discId } = track;
-    const { url } = credential;
-    return `${url}/${albumId}/${discId}/cover`;
-}
 
 export function addFavorite<T extends TrackIdentifier>(track: T) {
     const { albumId, discId, trackId } = track;

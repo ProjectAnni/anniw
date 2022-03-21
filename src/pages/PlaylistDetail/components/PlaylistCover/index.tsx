@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { CredentialState } from "@/state/credentials";
 import useMessage from "@/hooks/useMessage";
-import { getAvailableLibraryForTrack } from "@/components/TrackList/services";
+import { getAvailableLibraryForTrack } from "@/utils/library";
 import Cover from "@/components/Cover";
 import { Playlist, PlaylistSongNormal } from "@/types/common";
 import styles from "./index.module.scss";
