@@ -1,5 +1,5 @@
 import request from "@/api/request";
-import { Playlist } from "@/types/common";
+import { Playlist, PlaylistInfo } from "@/types/common";
 
 export const queryPlaylistDetail = (id: number) => request.get<Playlist>("/api/playlist", { id });
 
@@ -8,12 +8,8 @@ export const updatePlaylistInfo = ({
     name,
     description,
     isPublic,
-}: {
-    id: string;
-    name: string;
-    description: string;
-    isPublic: boolean;
-}) =>
+    cover,
+}: Omit<PlaylistInfo, "owner">) =>
     request.patch("/api/playlist", {
         id,
         command: "info",
@@ -21,5 +17,6 @@ export const updatePlaylistInfo = ({
             name,
             description,
             isPublic,
+            cover,
         },
     });

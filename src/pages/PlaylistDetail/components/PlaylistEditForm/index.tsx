@@ -26,6 +26,7 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
         name: initialName,
         description: initialDescription,
         isPublic: initialIsPublic,
+        cover,
     } = playlist;
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(initialName);
@@ -43,6 +44,7 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
                 name,
                 description,
                 isPublic,
+                cover,
             });
             addMessage("success", "修改播放列表信息成功");
             onCancel();
