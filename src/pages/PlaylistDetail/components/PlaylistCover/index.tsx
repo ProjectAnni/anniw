@@ -44,7 +44,7 @@ const PlaylistCover: React.FC<Props> = (props) => {
                     setCoverUrl(coverUrl);
                 }
             } else {
-                addMessage("error", "播放列表封面无可用音频仓库");
+                return;
             }
         })();
     }, [playlist, allCredentials, albumId, discId, songs, addMessage]);

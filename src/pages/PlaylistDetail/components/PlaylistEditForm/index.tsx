@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Playlist } from "@/types/common";
+import useMessage from "@/hooks/useMessage";
+import { updatePlaylistInfo } from "../../services";
 
 interface Props {
     open: boolean;
-    playlist?: Playlist;
+    playlist: Playlist;
     onCancel: () => void;
 }
 
@@ -24,15 +26,37 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
         name: initialName,
         description: initialDescription,
         isPublic: initialIsPublic,
-    } = playlist || {};
+    } = playlist;
     const [loading, setLoading] = useState(false);
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [isPublic, setIsPublic] = useState(false);
-    const onSubmit = () => {};
+    const [name, setName] = useState(initialName);
+    const [description, setDescription] = useState(initialDescription || "");
+    const [isPublic, setIsPublic] = useState(initialIsPublic);
+    const [_, { addMessage }] = useMessage();
+    const onSubmit = async () => {
+        if (!playlist) {
+            return;
+        }
+        setLoading(true);
+        try {
+            await updatePlaylistInfo({
+                id: playlist.id,
+                name,
+                description,
+                isPublic,
+            });
+            addMessage("success", "修改播放列表信息成功");
+            onCancel();
+        } catch (e) {
+            if (e instanceof Error) {
+                addMessage("error", e.message);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <Dialog open={open} maxWidth="xs" fullWidth onBackdropClick={onCancel}>
-            <DialogTitle>创建播放列表</DialogTitle>
+            <DialogTitle>修改播放列表信息</DialogTitle>
             <DialogContent>
                 <TextField
                     margin="dense"
@@ -41,7 +65,7 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
                     variant="standard"
                     fullWidth
                     onChange={(e) => setName(e.target.value)}
-                    value={initialName}
+                    defaultValue={initialName}
                 />
                 <br />
                 <TextField
@@ -51,7 +75,7 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
                     variant="standard"
                     fullWidth
                     onChange={(e) => setDescription(e.target.value)}
-                    value={initialDescription}
+                    defaultValue={initialDescription}
                 />
                 <br />
                 <br />
@@ -61,7 +85,7 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
                             onChange={(e) => {
                                 setIsPublic(e.target.checked);
                             }}
-                            value={initialIsPublic}
+                            defaultChecked={initialIsPublic}
                         />
                     }
                     label="是否公开"

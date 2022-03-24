@@ -43,13 +43,15 @@ const PlaylistInfo: React.FC<Props> = (props) => {
                     </Tooltip>
                 </div>
             )}
-            <PlaylistEditForm
-                open={isShowPlaylistEditDialog}
-                playlist={playlist}
-                onCancel={() => {
-                    setIsShowPlaylistEditDialog(false);
-                }}
-            />
+            {!!playlist && (
+                <PlaylistEditForm
+                    open={isShowPlaylistEditDialog}
+                    playlist={playlist}
+                    onCancel={() => {
+                        setIsShowPlaylistEditDialog(false);
+                    }}
+                />
+            )}
         </Grid>
     );
 };

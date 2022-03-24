@@ -56,7 +56,7 @@ function AppBody() {
                     <Route path="/user/logout" exact>
                         <Logout />
                     </Route>
-                    <Route path={"/user/index"} exact>
+                    <Route path="/user/index" exact>
                         <NeedLoginPage>
                             <UserIndex />
                         </NeedLoginPage>
