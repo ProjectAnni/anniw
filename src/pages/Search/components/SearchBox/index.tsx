@@ -31,7 +31,7 @@ const SearchBox: React.FC = () => {
         >
             <InputBase
                 sx={{ ml: 1, flex: 1 }}
-                placeholder="搜索专辑 其他没实现"
+                placeholder="搜点啥呢.."
                 value={keyword}
                 onChange={(e) => {
                     setKeyword(e.target.value);

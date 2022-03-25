@@ -44,6 +44,8 @@ export enum TrackListFeatures {
     SHOW_ADD_TO_LATER,
     /** 显示 添加到播放列表 */
     SHOW_ADD_TO_PLAYLIST,
+    /** 显示 专辑信息 */
+    SHOW_ALBUM_INFO,
 }
 
 export const AdvancedFeatures = [

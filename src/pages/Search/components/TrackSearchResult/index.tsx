@@ -5,7 +5,7 @@ import useMessage from "@/hooks/useMessage";
 import TrackList from "@/components/TrackList";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import { searchTracks } from "../../services";
-import styles from './index.module.scss';
+import styles from "./index.module.scss";
 
 interface Props {
     keyword: string;
@@ -49,10 +49,16 @@ const TrackSearchResult: React.FC<Props> = (props) => {
     }, [trackResult]);
     return (
         <>
-            <TrackList tracks={tracks} itemIndex={1} features={[
-                TrackListFeatures.SHOW_FAVORITE_ICON,
-                TrackListFeatures.SHOW_ADD_TO_PLAYLIST
-            ]} />
+            <TrackList
+                tracks={tracks}
+                itemIndex={1}
+                features={[
+                    TrackListFeatures.SHOW_FAVORITE_ICON,
+                    TrackListFeatures.SHOW_ADD_TO_PLAYLIST,
+                    TrackListFeatures.SHOW_ADD_TO_LATER,
+                    TrackListFeatures.SHOW_ALBUM_INFO,
+                ]}
+            />
             {isSearching && (
                 <Grid item xs={12} className={styles.loadingContainer}>
                     <CircularProgress color="inherit" className={styles.loading} />

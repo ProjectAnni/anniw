@@ -14,8 +14,35 @@
     overflow: hidden;
     white-space: nowrap;
 }
-.artist {
+.secondaryContainer {
+    &.withAlbumTitle {
+        display: flex;
+        .artist {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.6);
+}
+.artist,
+.divider,
+.albumTitle {
     font-size: smaller;
+}
+.albumTitle {
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+.divider {
+    margin: 0 4px;
+}
+.divider,
+.albumTitle {
+    flex-shrink: 0;
 }
 .tag {
     flex-shrink: 0;

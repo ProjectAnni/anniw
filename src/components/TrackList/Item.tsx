@@ -1,4 +1,5 @@
 import React, { useCallback, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ListItem, ListItemText, ListItemIcon, IconButton } from "@mui/material";
@@ -9,7 +10,7 @@ import { CredentialState } from "@/state/credentials";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { FavoriteTrackAlbumMap, FavoriteTracksState } from "@/state/favorite";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
-import { getAvailableLibraryForTrack } from '@/utils/library';
+import { getAvailableLibraryForTrack } from "@/utils/library";
 import { addFavorite, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
@@ -50,6 +51,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         onPause,
     } = props;
     const { title, artist, type, albumId, albumTitle, discId, trackId } = track;
+    const history = useHistory();
     const favoriteRequestLock = useRef(false);
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
@@ -189,7 +191,34 @@ const TrackListItem: React.FC<Props> = (props) => {
                         )}
                     </div>
                 }
-                secondary={<span className={styles.artist}>{artist}</span>}
+                disableTypography
+                secondary={
+                    <div
+                        className={classNames(styles.secondaryContainer, {
+                            [styles.withAlbumTitle]: features.includes(
+                                TrackListFeatures.SHOW_ALBUM_INFO
+                            ),
+                        })}
+                    >
+                        <span className={styles.artist} title={artist}>
+                            {artist}
+                        </span>
+                        {features.includes(TrackListFeatures.SHOW_ALBUM_INFO) && (
+                            <>
+                                <span className={styles.divider}> - </span>
+                                <span
+                                    title={albumTitle}
+                                    className={styles.albumTitle}
+                                    onClick={() => {
+                                        history.push("/album/" + albumId);
+                                    }}
+                                >
+                                    {albumTitle}
+                                </span>
+                            </>
+                        )}
+                    </div>
+                }
                 className={styles.textContainer}
             >
                 {" "}
