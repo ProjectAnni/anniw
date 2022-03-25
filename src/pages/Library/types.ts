@@ -6,3 +6,9 @@ export interface LibraryInfoResponse {
     /** 服务端最近一次数据更新时间 */
     lastUpdate: number;
 }
+
+export interface AnnilTokenLocalInfo {
+    lastSync?: Date;
+    albumCount?: number;
+    serverLastUpdate?: Date;
+}

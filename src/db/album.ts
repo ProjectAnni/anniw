@@ -92,6 +92,13 @@ class Album {
         });
     }
 
+    async deleteLibraryForAllAlbums(libraryUrl: string) {
+        const albumIds = await (await this.db).getAllKeys(AlbumStoreNames.AlbumLibraryMap);
+        for (const albumId of albumIds) {
+            await this.deleteAvailableLibrary(albumId, libraryUrl);
+        }
+    }
+
     async getAlbumInfo(albumId: string) {
         return (await this.get(AlbumStoreNames.AlbumInfo, albumId)) as AlbumInfo | undefined;
     }

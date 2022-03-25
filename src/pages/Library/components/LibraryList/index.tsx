@@ -1,20 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { List, ListItemText, ListItem, Box, IconButton } from "@mui/material";
-import { Delete as DeleteIcon, Sync as SyncIcon } from "@mui/icons-material";
+import { List, Box } from "@mui/material";
 import { default as LibraryDB } from "@/db/library";
 import { AnnilToken } from "@/types/common";
+import { AnnilTokenLocalInfo } from "../../types";
+import LibraryListItem from "./Item";
 interface Props {
     libraries: AnnilToken[];
     localInfoRefreshIndicator: number;
     onClick: (library: AnnilToken) => void;
     onSync: (library: AnnilToken) => void;
     onDelete: (library: AnnilToken) => void;
-}
-
-interface AnnilTokenLocalInfo {
-    lastSync?: Date;
-    albumCount?: number;
-    serverLastUpdate?: Date;
 }
 
 const LibraryList: React.FC<Props> = (props) => {
@@ -53,46 +48,13 @@ const LibraryList: React.FC<Props> = (props) => {
             <List>
                 {librariesWithLocalInfo.map((library) => {
                     return (
-                        <ListItem
-                            button
+                        <LibraryListItem
                             key={library.id}
-                            onClick={() => {
-                                onClick(library);
-                            }}
-                            secondaryAction={
-                                <>
-                                    <IconButton
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onSync(library);
-                                        }}
-                                    >
-                                        <SyncIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onDelete(library);
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </>
-                            }
-                        >
-                            <ListItemText
-                                primary={library.name}
-                                secondary={`${library.url}${
-                                    library.lastSync
-                                        ? ` / 上次同步时间：${library.lastSync.toISOString()}`
-                                        : ""
-                                }${
-                                    library.serverLastUpdate
-                                        ? ` / 服务器更新时间：${library.serverLastUpdate.toISOString()}`
-                                        : ""
-                                }${library.albumCount ? ` / ${library.albumCount} Albums` : ""}`}
-                            />
-                        </ListItem>
+                            library={library}
+                            onClick={onClick}
+                            onSync={onSync}
+                            onDelete={onDelete}
+                        />
                     );
                 })}
             </List>
