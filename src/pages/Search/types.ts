@@ -4,3 +4,8 @@ export interface SearchResult {
     albums?: AlbumInfo[];
     tracks?: TrackInfoWithAlbum[];
 }
+
+export enum SearchType {
+    TRACK = 'TRACK',
+    ALBUM = 'ALBUM',
+}

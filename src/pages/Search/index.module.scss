@@ -2,16 +2,3 @@
     padding-top: 16px;
     text-align: center;
 }
-.searchResultContainer {
-    padding-top: 16px;
-}
-.loadingContainer,
-.noResultContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-}
-.noResultContainer {
-    opacity: 0.8;
-}

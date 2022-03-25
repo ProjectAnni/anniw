@@ -1,0 +1,10 @@
+.loadingContainer,
+.noResultContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+.noResultContainer {
+    opacity: 0.8;
+}

@@ -11,3 +11,10 @@ export async function searchAlbums({ keyword }: SearchAlbumParams) {
         keyword,
     });
 }
+
+export async function searchTracks({ keyword }: SearchAlbumParams) {
+    return request.get<SearchResult>("/api/search", {
+        searchTracks: true,
+        keyword,
+    });
+}
