@@ -3,7 +3,7 @@ import { Grid, IconButton, Tooltip, Typography, Skeleton } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
 import { AlbumInfo } from "@/types/common";
 import Tag from "@/components/Tag";
-import Placeholder from './Placeholder';
+import Placeholder from "./Placeholder";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -13,9 +13,9 @@ interface Props {
 
 const AlbumBasicInfo: React.FC<Props> = (props) => {
     const { albumInfo } = props;
-    const { title, artist, date, catalog, type, tags = [] } = albumInfo || {};
+    const { title, artist, date, catalog, edition, tags = [] } = albumInfo || {};
     if (!albumInfo) {
-        return <Placeholder />
+        return <Placeholder />;
     }
     return (
         <Grid container flexDirection="column" className={styles.basicInfoContainer}>
@@ -23,7 +23,8 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
                 <span title={title}>{title}</span>
             </Typography>
             <div className={styles.releaseDate}>
-                {catalog} / {date} / {type}
+                {catalog} / {date}
+                {edition ? ` / ${edition}` : ""}
             </div>
             <div className={styles.artist}>{artist}</div>
             <div className={styles.tagsContainer}>
