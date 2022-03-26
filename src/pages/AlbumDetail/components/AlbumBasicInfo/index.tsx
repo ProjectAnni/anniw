@@ -1,9 +1,10 @@
 import React, { memo } from "react";
-import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { Grid, IconButton, Tooltip, Typography, Skeleton } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
 import { AlbumInfo } from "@/types/common";
-import styles from "./index.module.scss";
 import Tag from "@/components/Tag";
+import Placeholder from './Placeholder';
+import styles from "./index.module.scss";
 
 interface Props {
     albumInfo?: AlbumInfo;
@@ -13,6 +14,9 @@ interface Props {
 const AlbumBasicInfo: React.FC<Props> = (props) => {
     const { albumInfo } = props;
     const { title, artist, date, catalog, type, tags = [] } = albumInfo || {};
+    if (!albumInfo) {
+        return <Placeholder />
+    }
     return (
         <Grid container flexDirection="column" className={styles.basicInfoContainer}>
             <Typography variant="h4" className={styles.titleContainer}>

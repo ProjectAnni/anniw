@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Divider, Grid, Typography } from "@mui/material";
+import { Divider, Grid, Skeleton, Typography } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 import usePlayQueueController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
@@ -85,6 +85,23 @@ const AlbumDetail: React.FC = () => {
                     <Divider />
                 </Grid>
                 <Grid item xs={12}>
+                    {!albumInfo && (
+                        <>
+                            <Skeleton variant="rectangular" height={32} width="20%" />
+                            <div style={{ marginTop: "8px" }}></div>
+                            {new Array(10).fill(0).map((_, index) => (
+                                <Skeleton
+                                    variant="rectangular"
+                                    height={62}
+                                    sx={{
+                                        bgcolor:
+                                            index % 2 === 0 ? "rgba(238, 238, 238, 0.2)" : "#fff",
+                                    }}
+                                    key={index}
+                                />
+                            ))}
+                        </>
+                    )}
                     {!!albumInfo?.discs?.length &&
                         albumInfo.discs.map((disc, discIndex) => {
                             const { tracks } = disc;
