@@ -165,7 +165,8 @@ const TrackListItem: React.FC<Props> = (props) => {
                     {isPlaying ? (
                         playerStatus === PlayerStatus.PAUSED ||
                         playerStatus === PlayerStatus.ENDED ||
-                        playerStatus === PlayerStatus.EMPTY ? (
+                        playerStatus === PlayerStatus.EMPTY ||
+                        playerStatus === PlayerStatus.BUFFERING ? (
                             <PlayArrow />
                         ) : (
                             <Pause />
