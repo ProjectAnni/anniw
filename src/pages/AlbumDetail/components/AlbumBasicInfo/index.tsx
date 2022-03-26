@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Grid, IconButton, Tooltip, Typography, Skeleton } from "@mui/material";
+import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
 import { AlbumInfo } from "@/types/common";
 import Tag from "@/components/Tag";

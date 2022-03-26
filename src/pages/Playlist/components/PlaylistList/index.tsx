@@ -25,7 +25,8 @@ const PlaylistList: React.FC<Props> = (props) => {
                     key={playlist.id}
                     secondaryAction={
                         <IconButton
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 onDelete(playlist);
                             }}
                         >
