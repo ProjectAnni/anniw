@@ -23,7 +23,7 @@ const LibraryListItem: React.FC<Props> = (props) => {
         if (!library.lastSync) {
             return true;
         }
-        return new Date(libraryInfo.lastUpdate).valueOf() > library.lastSync.valueOf();
+        return new Date(libraryInfo.lastUpdate * 1000).valueOf() > library.lastSync.valueOf();
     }, [library.lastSync, libraryInfo, loadingLibraryInfo]);
     return (
         <ListItem
