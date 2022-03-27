@@ -17,11 +17,12 @@ import { updatePlaylistInfo } from "../../services";
 interface Props {
     open: boolean;
     playlist: Playlist;
+    onSuccess: (playlist: Playlist) => void;
     onCancel: () => void;
 }
 
 const PlaylistEditForm: React.FC<Props> = (props) => {
-    const { open, playlist, onCancel } = props;
+    const { open, playlist, onSuccess, onCancel } = props;
     const {
         name: initialName,
         description: initialDescription,
@@ -39,7 +40,7 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
         }
         setLoading(true);
         try {
-            await updatePlaylistInfo({
+            const response = await updatePlaylistInfo({
                 id: playlist.id,
                 name,
                 description,
@@ -47,7 +48,7 @@ const PlaylistEditForm: React.FC<Props> = (props) => {
                 cover,
             });
             addMessage("success", "修改播放列表信息成功");
-            onCancel();
+            onSuccess(response);
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);

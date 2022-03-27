@@ -38,3 +38,11 @@ export function getCoverUrlForTrack<T extends AlbumDiscIdentifier>(
     const { url } = credential;
     return discId ? `${url}/${albumId}/${discId}/cover` : `${url}/${albumId}/cover`;
 }
+
+export function isSameTrack<T extends TrackIdentifier, U extends TrackIdentifier>(trackA: T, trackB: U) {
+    return (
+        trackA.albumId === trackB.albumId &&
+        trackA.discId === trackB.discId &&
+        trackA.trackId === trackB.trackId
+    );
+}

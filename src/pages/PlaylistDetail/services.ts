@@ -1,7 +1,7 @@
 import request from "@/api/request";
 import { Playlist, PlaylistInfo } from "@/types/common";
 
-export const queryPlaylistDetail = (id: number) => request.get<Playlist>("/api/playlist", { id });
+export const queryPlaylistDetail = (id: string) => request.get<Playlist>("/api/playlist", { id });
 
 export const updatePlaylistInfo = ({
     id,
@@ -10,7 +10,7 @@ export const updatePlaylistInfo = ({
     isPublic,
     cover,
 }: Omit<PlaylistInfo, "owner">) =>
-    request.patch("/api/playlist", {
+    request.patch<Playlist>("/api/playlist", {
         id,
         command: "info",
         payload: {
@@ -20,3 +20,11 @@ export const updatePlaylistInfo = ({
             cover,
         },
     });
+
+export const deleteTrackFromPlaylist = (playlistId: string, trackId: string) => {
+    return request.patch<Playlist>("/api/playlist", {
+        id: playlistId,
+        command: "remove",
+        payload: [trackId],
+    });
+};
