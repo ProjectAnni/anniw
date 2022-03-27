@@ -3,8 +3,14 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 
+const audioInfoCache = new Map();
+
 async function getAudioUrl(url: string) {
-    return await fetch(url, { method: "HEAD" }).then(async (resp) => {
+    try {
+        const resp = audioInfoCache.has(url)
+            ? audioInfoCache.get(url)
+            : await fetch(url, { method: "HEAD" });
+        audioInfoCache.set(url, resp);
         const mime = resp.headers.get("Content-Type") || "audio/aac";
         const originalMime = resp.headers.get("X-Origin-Type") || "audio/flac";
         const duration = Number(resp.headers.get("X-Duration-Seconds") || "300");
@@ -67,7 +73,9 @@ async function getAudioUrl(url: string) {
             result.url = URL.createObjectURL(mediaSource);
         }
         return result;
-    }).catch(() => ({ url }));
+    } catch (e) {
+        return { url };
+    }
 }
 
 export default function usePlayer() {
@@ -142,6 +150,9 @@ export default function usePlayer() {
     const unmute = useCallback(() => {
         player.muted = false;
     }, [player]);
+    const preload = useCallback(({ playUrl }) => {
+        return getAudioUrl(playUrl);
+    }, []);
     return [
         player,
         {
@@ -153,6 +164,7 @@ export default function usePlayer() {
             seek,
             mute,
             unmute,
+            preload,
         },
     ] as const;
 }

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { CurrentPlayIndex } from "@/state/queue";
 import { PlayQueueItem } from "@/types/common";
@@ -8,30 +8,54 @@ import useMessage from "./useMessage";
 
 export default function usePlayQueueController() {
     const [currentPlayIndex, setCurrentPlayIndex] = useRecoilState(CurrentPlayIndex);
-    const [player, { play }] = usePlayer();
+    const [player, { play, preload }] = usePlayer();
     const [playQueue, { append, insertToSecond, set, clear, remove }] = usePlayQueue();
     const [_, { addMessage }] = useMessage();
+    const isPreloading = useRef(false);
+
+    const onCurrentPlayIndexChange = useCallback(
+        async (newCurrentPlayIndex: number) => {
+            if (playQueue[newCurrentPlayIndex + 1] && !isPreloading.current) {
+                isPreloading.current = true;
+                await preload(playQueue[newCurrentPlayIndex + 1]);
+                isPreloading.current = false;
+            }
+        },
+        [playQueue, preload]
+    );
 
     const playNext = useCallback(() => {
         if (playQueue[currentPlayIndex + 1]) {
             play(playQueue[currentPlayIndex + 1]);
-            setCurrentPlayIndex((prev) => prev + 1);
+            setCurrentPlayIndex((prev) => {
+                onCurrentPlayIndexChange(prev + 1);
+                return prev + 1;
+            });
         } else if (currentPlayIndex === playQueue.length - 1) {
             play(playQueue[0]);
             setCurrentPlayIndex(0);
+            onCurrentPlayIndexChange(0);
         } else {
             addMessage("info", "播放队列播完啦");
         }
-    }, [playQueue, currentPlayIndex, setCurrentPlayIndex, play, addMessage]);
+    }, [
+        playQueue,
+        currentPlayIndex,
+        play,
+        setCurrentPlayIndex,
+        onCurrentPlayIndexChange,
+        addMessage,
+    ]);
 
     const playIndex = useCallback(
         (index: number) => {
             if (playQueue[index]) {
                 setCurrentPlayIndex(index);
+                onCurrentPlayIndexChange(index);
                 play(playQueue[index]);
             }
         },
-        [playQueue, setCurrentPlayIndex, play]
+        [playQueue, setCurrentPlayIndex, onCurrentPlayIndexChange, play]
     );
 
     const playRandom = useCallback(() => {
@@ -77,12 +101,13 @@ export default function usePlayQueueController() {
     );
 
     const replacePlayQueueAndPlay = useCallback(
-        (items: PlayQueueItem[], index: number) => {
-            play(items[index]);
+        async (items: PlayQueueItem[], index: number) => {
+            await play(items[index]);
             set(items);
             setCurrentPlayIndex(index);
+            onCurrentPlayIndexChange(index);
         },
-        [play, set, setCurrentPlayIndex]
+        [onCurrentPlayIndexChange, play, set, setCurrentPlayIndex]
     );
 
     const clearPlayQueue = useCallback(() => {
