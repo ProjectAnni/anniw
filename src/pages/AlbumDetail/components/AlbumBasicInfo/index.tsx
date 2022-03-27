@@ -3,6 +3,7 @@ import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
 import { AlbumInfo } from "@/types/common";
 import Tag from "@/components/Tag";
+import Artist from "@/components/Artist";
 import Placeholder from "./Placeholder";
 import styles from "./index.module.scss";
 
@@ -26,7 +27,9 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
                 {catalog} / {date}
                 {edition ? ` / ${edition}` : ""}
             </div>
-            <div className={styles.artist}>{artist}</div>
+            <div className={styles.artist}>
+                <Artist artist={artist} />
+            </div>
             <div className={styles.tagsContainer}>
                 {tags.map((tag) => (
                     <Tag key={tag} tag={tag} />

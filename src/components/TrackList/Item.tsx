@@ -11,6 +11,7 @@ import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { FavoriteTrackAlbumMap, FavoriteTracksState } from "@/state/favorite";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { getAvailableLibraryForTrack } from "@/utils/library";
+import Artist from "../Artist";
 import { addFavorite, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
@@ -201,13 +202,13 @@ const TrackListItem: React.FC<Props> = (props) => {
                             ),
                         })}
                     >
-                        <span className={styles.artist} title={artist}>
-                            {artist}
-                        </span>
+                        <div className={styles.artist} title={artist}>
+                            <Artist artist={artist} />
+                        </div>
                         {features.includes(TrackListFeatures.SHOW_ALBUM_INFO) && (
                             <>
-                                <span className={styles.divider}> - </span>
-                                <span
+                                <div className={styles.divider}> - </div>
+                                <div
                                     title={albumTitle}
                                     className={styles.albumTitle}
                                     onClick={() => {
@@ -215,7 +216,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                                     }}
                                 >
                                     {albumTitle}
-                                </span>
+                                </div>
                             </>
                         )}
                     </div>

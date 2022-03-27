@@ -7,6 +7,7 @@ import usePlayerBufferedRanges from "@/hooks/usePlayerBufferedRanges";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus } from "@/types/common";
 import styles from "./index.module.scss";
+import Artist from "@/components/Artist";
 
 const formatSeconds = (seconds: number) => {
     return seconds < 60
@@ -97,7 +98,9 @@ const PlayerProgress: React.FC = () => {
             </div>
             {!!title && !!artist && (
                 <div className={styles.topTexts}>
-                    {artist.length > 30 ? `${artist.slice(0, 30)}...` : artist} - {title}
+                    <Artist artist={artist} expandDepth={1} className={styles.artist} />
+                    <div className={styles.divider}>-</div>
+                    <div className={styles.title}>{title}</div>
                 </div>
             )}
             {!!albumTitle && (
