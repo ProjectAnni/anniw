@@ -27,9 +27,7 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
                 {catalog} / {date}
                 {edition ? ` / ${edition}` : ""}
             </div>
-            <div className={styles.artist}>
-                <Artist artist={artist} />
-            </div>
+            <div className={styles.artist}>{!!artist && <Artist artist={artist} />}</div>
             <div className={styles.tagsContainer}>
                 {tags.map((tag) => (
                     <Tag key={tag} tag={tag} />
