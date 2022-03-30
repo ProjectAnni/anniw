@@ -117,9 +117,10 @@ const AlbumDetail: React.FC = () => {
                             return (
                                 <Grid container flexDirection="column" key={disc.catalog}>
                                     <Grid item xs={12}>
-                                        <Typography variant="h5">{`Disc ${
-                                            discIndex + 1
-                                        }`}</Typography>
+                                        <Typography variant="h5">
+                                            {`Disc ${discIndex + 1}`}
+                                            {disc.title ? ` - ${disc.title}` : ""}
+                                        </Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TrackList
