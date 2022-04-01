@@ -119,7 +119,7 @@ const AlbumDetail: React.FC = () => {
                                     <Grid item xs={12}>
                                         <Typography variant="h5">
                                             {`Disc ${discIndex + 1}`}
-                                            {disc.title ? ` - ${disc.title}` : ""}
+                                            {disc.title && disc.title !== albumTitle ? ` - ${disc.title}` : ""}
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12}>

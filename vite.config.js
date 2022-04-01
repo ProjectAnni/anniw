@@ -23,7 +23,7 @@ export default defineConfig({
     server: {
         proxy: {
             "/api": {
-                target: "https://anni.s8k.top/api",
+                target: "https://ribbon.anni.rs/api",
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, ""),
             },
