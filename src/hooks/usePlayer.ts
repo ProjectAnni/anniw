@@ -27,7 +27,7 @@ async function getAudioUrl(url: string) {
         const result = {
             useMSE,
             duration,
-            url: url,
+            url: MediaSource.isTypeSupported(mime) ? url : `${url}&quality=lossless`,
         };
 
         if (useMSE) {
