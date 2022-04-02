@@ -15,7 +15,7 @@ async function getAudioUrl(url: string) {
         const originalMime = resp.headers.get("X-Origin-Type") || "audio/flac";
         const duration = Number(resp.headers.get("X-Duration-Seconds") || "300");
 
-        let useMSE = !!window.MediaSource && !window.navigator.userAgent.includes("Firefox/");
+        let useMSE = !!window.MediaSource && MediaSource.isTypeSupported(mime);
         if (mime === originalMime) {
             // if audio is lossless, prefer direct URL
             useMSE = false;
