@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { memo, useCallback, useMemo, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -20,11 +20,12 @@ import ItemActions from "./components/ItemActions";
 interface Props {
     track: PlayQueueItem;
     itemIndex: number;
+    listIndex: number;
     features?: TrackListFeatures[];
-    onPlay: () => void;
-    onPlayQueueAdd: () => void;
-    onPlayQueueRemove: () => void;
-    onPlayQueueAddToLater: () => void;
+    onPlay: (itemIndex: number) => void;
+    onPlayQueueAdd: (itemIndex: number) => void;
+    onPlayQueueRemove: (itemIndex: number) => void;
+    onPlayQueueAddToLater: (itemIndex: number) => void;
     onPause: () => void;
     onResume: () => void;
     onRestart: () => void;
@@ -41,6 +42,7 @@ const TypeTextMap: Record<string, string> = {
 const TrackListItem: React.FC<Props> = (props) => {
     const {
         track,
+        listIndex,
         itemIndex,
         features = [],
         onPlay,
@@ -53,6 +55,7 @@ const TrackListItem: React.FC<Props> = (props) => {
     } = props;
     const { title, artist, type, albumId, albumTitle, discId, trackId } = track;
     const history = useHistory();
+    const itemContainerRef = useRef<HTMLLIElement>(null);
     const favoriteRequestLock = useRef(false);
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
@@ -89,11 +92,11 @@ const TrackListItem: React.FC<Props> = (props) => {
                 onRestart();
             }
         } else {
-            onPlay();
+            onPlay(itemIndex);
         }
-    }, [credential, isPlaying, onPause, onPlay, onRestart, onResume, playerStatus]);
+    }, [credential, isPlaying, itemIndex, onPause, onPlay, onRestart, onResume, playerStatus]);
 
-    const onClickFavoriteButton = useCallback(async () => {
+    const onFavoriteButtonClick = useCallback(async () => {
         if (favoriteRequestLock.current) {
             return;
         }
@@ -142,24 +145,48 @@ const TrackListItem: React.FC<Props> = (props) => {
         trackId,
         type,
     ]);
+    const onPlayQueueAddButtonClick = useCallback(() => {
+        onPlayQueueAdd(itemIndex);
+    }, [itemIndex, onPlayQueueAdd]);
+    const onPlayQueueRemoveButtonClick = useCallback(() => {
+        onPlayQueueRemove(itemIndex);
+    }, [itemIndex, onPlayQueueRemove]);
+    const onPlayQueueAddToLaterButtonClick = useCallback(() => {
+        onPlayQueueAddToLater(itemIndex);
+    }, [itemIndex, onPlayQueueAddToLater]);
+    const secondaryActions = useMemo(
+        () => (
+            <ItemActions
+                features={features}
+                resourceUnavailable={!loading && !credential}
+                isFavored={isFavored}
+                track={track}
+                onPlayQueueAdd={onPlayQueueAddButtonClick}
+                onPlayQueueRemove={onPlayQueueRemoveButtonClick}
+                onPlayQueueAddToLater={onPlayQueueAddToLaterButtonClick}
+                onClickFavoriteButton={onFavoriteButtonClick}
+            />
+        ),
+        [
+            credential,
+            features,
+            isFavored,
+            loading,
+            onFavoriteButtonClick,
+            onPlayQueueAddButtonClick,
+            onPlayQueueAddToLaterButtonClick,
+            onPlayQueueRemoveButtonClick,
+            track,
+        ]
+    );
     return (
         <ListItem
+            ref={itemContainerRef}
             key={title}
             className={classNames({
                 [styles.oddItem]: itemIndex % 2 === 0,
             })}
-            secondaryAction={
-                <ItemActions
-                    features={features}
-                    resourceUnavailable={!loading && !credential}
-                    isFavored={isFavored}
-                    track={track}
-                    onPlayQueueAdd={onPlayQueueAdd}
-                    onPlayQueueRemove={onPlayQueueRemove}
-                    onPlayQueueAddToLater={onPlayQueueAddToLater}
-                    onClickFavoriteButton={onClickFavoriteButton}
-                />
-            }
+            secondaryAction={secondaryActions}
         >
             <ListItemIcon className={styles.playButton}>
                 <IconButton onClick={onClickPlayButton} disabled={!loading && !credential}>
@@ -229,4 +256,4 @@ const TrackListItem: React.FC<Props> = (props) => {
     );
 };
 
-export default TrackListItem;
+export default memo(TrackListItem);

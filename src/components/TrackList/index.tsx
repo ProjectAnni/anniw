@@ -106,12 +106,23 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     const addAllToPlayQueue = useCallback(() => {
         addToPlayQueue(parsedTracks.filter((t) => !!t.playUrl));
     }, [parsedTracks, addToPlayQueue]);
+    const onItemPlay = useCallback((index: number) => {
+        onPlay(index);
+    }, [onPlay]);
+    const onItemPlayQueueAdd = useCallback((index: number) => {
+        onPlayQueueAdd && onPlayQueueAdd(parsedTracks[index]);
+    }, [onPlayQueueAdd, parsedTracks]);
+    const onItemPlayQueueRemove = useCallback((index: number) => {
+        onPlayQueueRemove && onPlayQueueRemove(parsedTracks[index]);
+    }, [onPlayQueueRemove, parsedTracks]);
+    const onItemPlayQueueAddToLater = useCallback((index: number) => {
+        onPlayQueueAddToLater && onPlayQueueAddToLater(parsedTracks[index]);
+    }, [onPlayQueueAddToLater, parsedTracks]);
     useImperativeHandle(
         ref,
         () => ({ playAll, addAllToPlayQueue, parsedTracks, index: itemIndex }),
         [addAllToPlayQueue, playAll, itemIndex, parsedTracks]
     );
-
     return (
         <List dense>
             {Object.keys(parsedTrackMap).length !== 0 &&
@@ -123,21 +134,12 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
                                     key={`${track.albumId}-${track.discId}-${track.trackId}-${track.title}`}
                                     track={track}
                                     itemIndex={index}
+                                    listIndex={itemIndex}
                                     features={features}
-                                    onPlay={() => {
-                                        onPlay(index);
-                                    }}
-                                    onPlayQueueAdd={() => {
-                                        onPlayQueueAdd && onPlayQueueAdd(parsedTracks[index]);
-                                    }}
-                                    onPlayQueueRemove={() => {
-                                        onPlayQueueRemove && onPlayQueueRemove(parsedTracks[index]);
-                                    }}
-                                    onPlayQueueAddToLater={() => {
-                                        console.log(onPlayQueueAddToLater)
-                                        onPlayQueueAddToLater &&
-                                            onPlayQueueAddToLater(parsedTracks[index]);
-                                    }}
+                                    onPlay={onItemPlay}
+                                    onPlayQueueAdd={onItemPlayQueueAdd}
+                                    onPlayQueueRemove={onItemPlayQueueRemove}
+                                    onPlayQueueAddToLater={onItemPlayQueueAddToLater}
                                     onPause={pause}
                                     onResume={resume}
                                     onRestart={restart}

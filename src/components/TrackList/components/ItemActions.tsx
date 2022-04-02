@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, memo, useMemo } from "react";
 import { IconButton, Tooltip, Menu, MenuItem } from "@mui/material";
 import {
     PlaylistAdd,
@@ -36,18 +36,30 @@ const ItemActions: React.FC<Props> = (props) => {
     const [isShowPlaylistAddDialog, setIsShowPlaylistAddDialog] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
     const [isShowMoreActionsMenu, setIsShowMoreActionsMenu] = useState(false);
+    const menuAnchorOrigin = useMemo(() => ({
+        vertical: "bottom",
+        horizontal: "center",
+    } as const), [])
+    const menuTransformOrigin = useMemo(() => ({
+        vertical: "top",
+        horizontal: "center",
+    } as const), []);
     const onClickMoreActionsButton = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(e.currentTarget);
         setIsShowMoreActionsMenu(true);
+    }, []);
+    const closeMoreActionsMenu = useCallback(() => {
+        setIsShowMoreActionsMenu(false);
+    }, []);
+    const onPlaylistAddDialogCancelOrAdded = useCallback(() => {
+        setIsShowPlaylistAddDialog(false);
     }, []);
     return (
         <>
             {features.includes(TrackListFeatures.SHOW_PLAY_QUEUE_ADD_ICON) && (
                 <Tooltip title="添加到当前播放队列">
                     <IconButton
-                        onClick={() => {
-                            onPlayQueueAdd();
-                        }}
+                        onClick={onPlayQueueAdd}
                         disabled={resourceUnavailable}
                     >
                         <PlaylistAdd />
@@ -57,9 +69,7 @@ const ItemActions: React.FC<Props> = (props) => {
             {features.includes(TrackListFeatures.SHOW_PLAY_QUEUE_REMOVE_ICON) && (
                 <Tooltip title="从播放队列移除">
                     <IconButton
-                        onClick={() => {
-                            onPlayQueueRemove();
-                        }}
+                        onClick={onPlayQueueRemove}
                         disabled={resourceUnavailable}
                     >
                         <PlaylistRemove />
@@ -90,17 +100,9 @@ const ItemActions: React.FC<Props> = (props) => {
             <Menu
                 anchorEl={anchorEl}
                 open={isShowMoreActionsMenu}
-                onClose={() => {
-                    setIsShowMoreActionsMenu(false);
-                }}
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                }}
+                onClose={closeMoreActionsMenu}
+                anchorOrigin={menuAnchorOrigin}
+                transformOrigin={menuTransformOrigin}
             >
                 {features.includes(TrackListFeatures.SHOW_ADD_TO_LATER) && (
                     <MenuItem
@@ -128,15 +130,11 @@ const ItemActions: React.FC<Props> = (props) => {
             <PlaylistAddDialog
                 open={isShowPlaylistAddDialog}
                 track={track}
-                onCancel={() => {
-                    setIsShowPlaylistAddDialog(false);
-                }}
-                onAdded={() => {
-                    setIsShowPlaylistAddDialog(false);
-                }}
+                onCancel={onPlaylistAddDialogCancelOrAdded}
+                onAdded={onPlaylistAddDialogCancelOrAdded}
             />
         </>
     );
 };
 
-export default ItemActions;
+export default memo(ItemActions);
