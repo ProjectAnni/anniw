@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo, useMemo } from "react";
-import { IconButton, Tooltip, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import {
     PlaylistAdd,
     PlaylistRemove,
@@ -7,9 +7,10 @@ import {
     FavoriteBorder,
     MoreHoriz,
 } from "@mui/icons-material";
+import Tooltip from '@/components/LazyTooltip';
+import { PlayQueueItem } from "@/types/common";
 import { TrackListFeatures, AdvancedFeatures } from "../types";
 import PlaylistAddDialog from "./PlaylistAddDialog";
-import { PlayQueueItem } from "@/types/common";
 
 interface Props {
     features: TrackListFeatures[];

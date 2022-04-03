@@ -32,6 +32,7 @@ const SyncLibraryDialog: React.FC<Props> = (props) => {
                     await AlbumDB.addAvailableLibrary(albumId, currentLibrary.url);
                 }
             }
+            AlbumDB.clearCache();
             await LibraryDB.set({
                 url: currentLibrary.url,
                 serverLastUpdate: new Date(lastUpdate * 1000),

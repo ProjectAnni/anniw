@@ -28,6 +28,7 @@ interface AlbumDB extends DBSchema {
 
 class Album {
     db: Promise<IDBPDatabase<AlbumDB>>;
+    albumLibraryMapCache = new Map<string, string[]>();
 
     constructor() {
         this.db = openDB<AlbumDB>(DB_NAME, DB_VERSION, {
@@ -55,11 +56,16 @@ class Album {
     }
 
     async getAvailableLibraries(albumId: string) {
+        if (this.albumLibraryMapCache.has(albumId)) {
+            return this.albumLibraryMapCache.get(albumId);
+        }
         const mapItem = (await this.get(
             AlbumStoreNames.AlbumLibraryMap,
             albumId
         )) as AlbumLibraryMapItem;
-        return mapItem?.availableLibraries || [];
+        const result = mapItem?.availableLibraries || [];
+        this.albumLibraryMapCache.set(albumId, result);
+        return result;
     }
 
     async addAvailableLibrary(albumId: string, libraryUrl: string) {
@@ -113,6 +119,10 @@ class Album {
 
     async dropAllStores() {
         return await deleteDB(DB_NAME);
+    }
+
+    async clearCache() {
+        this.albumLibraryMapCache.clear();
     }
 }
 
