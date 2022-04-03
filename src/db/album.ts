@@ -57,7 +57,7 @@ class Album {
 
     async getAvailableLibraries(albumId: string) {
         if (this.albumLibraryMapCache.has(albumId)) {
-            return this.albumLibraryMapCache.get(albumId);
+            return this.albumLibraryMapCache.get(albumId) || [];
         }
         const mapItem = (await this.get(
             AlbumStoreNames.AlbumLibraryMap,
