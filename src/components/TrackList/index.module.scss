@@ -1,6 +1,20 @@
 .oddItem {
     background-color: rgba($color: #eee, $alpha: 0.2);
 }
+.highlighted {
+    animation: 1.5s ease-in-out highlight 2 forwards;
+}
+@keyframes highlight {
+    0% {
+        background-color: unset;
+    }
+    50% {
+        background-color: #d3eaff;
+    }
+    100% {
+        background-color: unset;
+    }
+}
 .textContainer {
     max-width: 80%;
 }

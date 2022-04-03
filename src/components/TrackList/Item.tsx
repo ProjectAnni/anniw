@@ -1,17 +1,19 @@
-import React, { memo, useCallback, useMemo, useRef } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { ListItem, ListItemText, ListItemIcon, IconButton } from "@mui/material";
 import { PlayArrow, Pause } from "@mui/icons-material";
 import useRequest from "@/hooks/useRequest";
 import useMessage from "@/hooks/useMessage";
+import useQuery from "@/hooks/useQuery";
 import { CredentialState } from "@/state/credentials";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { FavoriteTrackAlbumMap, FavoriteTracksState } from "@/state/favorite";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { getAvailableLibraryForTrack } from "@/utils/library";
 import Artist from "../Artist";
+import { IsHighlightCheckDoneState } from "./store";
 import { addFavorite, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
@@ -55,7 +57,10 @@ const TrackListItem: React.FC<Props> = (props) => {
     } = props;
     const { title, artist, type, albumId, albumTitle, discId, trackId } = track;
     const history = useHistory();
+    const query = useQuery();
+    const [isHighlighted, setIsHighlighted] = useState(false);
     const itemContainerRef = useRef<HTMLLIElement>(null);
+    const isHighlightCheckDone = useRef(false);
     const favoriteRequestLock = useRef(false);
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
@@ -63,6 +68,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         discId: nowPlayingDiscId,
         trackId: nowPlayingTrackId,
     } = useRecoilValue(NowPlayingInfoState);
+    const [isHighlightCheckDoneState, setIsHighlightCheckDoneState] = useRecoilState(IsHighlightCheckDoneState);
     const playerStatus = useRecoilValue(PlayerStatusState);
     const setFavoriteTracks = useSetRecoilState(FavoriteTracksState);
     const favoriteTrackAlbumMap = useRecoilValue(FavoriteTrackAlbumMap);
@@ -154,6 +160,12 @@ const TrackListItem: React.FC<Props> = (props) => {
     const onPlayQueueAddToLaterButtonClick = useCallback(() => {
         onPlayQueueAddToLater(itemIndex);
     }, [itemIndex, onPlayQueueAddToLater]);
+    const onDoubleClick = useCallback(() => {
+        query.set('highlight', `${listIndex}-${itemIndex}`);
+        history.replace({
+            search: query.toString(),
+        });
+    }, [history, itemIndex, listIndex, query]);
     const secondaryActions = useMemo(
         () => (
             <ItemActions
@@ -179,14 +191,28 @@ const TrackListItem: React.FC<Props> = (props) => {
             track,
         ]
     );
+    useEffect(() => {
+        requestIdleCallback(() => {
+            const highlight = query.get("highlight");
+            if (highlight === `${listIndex}-${itemIndex}` && itemContainerRef.current && !isHighlightCheckDoneState) {
+                setIsHighlightCheckDoneState(true);
+                itemContainerRef.current.scrollIntoView({ block: "center" });
+                setTimeout(() => {
+                    setIsHighlighted(true);
+                }, 300);
+            }
+        })
+    }, [isHighlightCheckDoneState, itemIndex, listIndex, query, setIsHighlightCheckDoneState])
     return (
         <ListItem
             ref={itemContainerRef}
             key={title}
             className={classNames({
                 [styles.oddItem]: itemIndex % 2 === 0,
+                [styles.highlighted]: isHighlighted,
             })}
             secondaryAction={secondaryActions}
+            onDoubleClick={onDoubleClick}
         >
             <ListItemIcon className={styles.playButton}>
                 <IconButton onClick={onClickPlayButton} disabled={!loading && !credential}>
