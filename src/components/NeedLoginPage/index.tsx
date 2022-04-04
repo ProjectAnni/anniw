@@ -54,10 +54,10 @@ const NeedLoginPage: React.FC<Props> = (props) => {
             })();
         }
     }, [
-        addMessage,
         currentLoginStatus,
         history,
         isLoadedExtendUserInfo,
+        addMessage,
         setCredential,
         setFavoritePlaylists,
         setFavoriteTracks,

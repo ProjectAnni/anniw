@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { ListItem, IconButton, ListItemText } from "@mui/material";
-import { Delete as DeleteIcon, Sync as SyncIcon } from "@mui/icons-material";
+import { Delete as DeleteIcon } from "@mui/icons-material";
 import { AnnilToken } from "@/types/common";
 import { AnnilTokenLocalInfo } from "../../types";
 import useRequest from "@/hooks/useRequest";
@@ -8,13 +8,12 @@ import { getLibraryInfo } from "../../services";
 
 interface Props {
     library: AnnilToken & AnnilTokenLocalInfo;
-    onSync: (library: AnnilToken & AnnilTokenLocalInfo) => void;
     onClick: (library: AnnilToken & AnnilTokenLocalInfo) => void;
     onDelete: (library: AnnilToken & AnnilTokenLocalInfo) => void;
 }
 
 const LibraryListItem: React.FC<Props> = (props) => {
-    const { library, onClick, onSync, onDelete } = props;
+    const { library, onClick, onDelete } = props;
     const [libraryInfo, loadingLibraryInfo] = useRequest(() => getLibraryInfo(library));
     const hasUpdate = useMemo(() => {
         if (!libraryInfo || loadingLibraryInfo || !libraryInfo.lastUpdate) {
@@ -34,14 +33,6 @@ const LibraryListItem: React.FC<Props> = (props) => {
             }}
             secondaryAction={
                 <>
-                    <IconButton
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onSync(library);
-                        }}
-                    >
-                        <SyncIcon />
-                    </IconButton>
                     <IconButton
                         onClick={(e) => {
                             e.stopPropagation();

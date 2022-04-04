@@ -8,17 +8,15 @@ import { AnnilToken } from "@/types/common";
 import { default as LibraryDB } from "@/db/library";
 import LibraryList from "./components/LibraryList";
 import AddLibraryDialog from "./components/AddLibraryFormDialog";
-import SyncLibraryDialog from "./components/LibrarySyncDialog";
 import DeleteLibraryDialog from "./components/DeleteLibraryDialog";
 import "./index.scss";
 
 const Library: React.FC = () => {
     const [currentClickedLibrary, setCurrentClickedLibrary] = useState<AnnilToken | null>(null);
     const [isShowAddLibraryDialog, setIsShowAddLibraryDialog] = useState(false);
-    const [isShowSyncLibraryDialog, setIsShowSyncLibraryDialog] = useState(false);
     const [isShowDeleteLibraryDialog, setIsShowDeleteLibraryDialog] = useState(false);
-    const [localInfoRefreshIndicator, setLocalInfoRefreshIndicator] = useState(0);
     const [credentials, setCredentials] = useRecoilState(CredentialState);
+    const { credentials: libraries } = credentials;
     const [_, { addMessage }] = useMessage();
     const history = useHistory();
     const onLibraryDeleted = useCallback(
@@ -33,13 +31,6 @@ const Library: React.FC = () => {
         },
         [setCredentials]
     );
-    const onLibrarySyncEnded = useCallback(async () => {
-        if (!currentClickedLibrary) {
-            return;
-        }
-        setLocalInfoRefreshIndicator((prev) => prev + 1);
-        setIsShowSyncLibraryDialog(false);
-    }, [currentClickedLibrary]);
     const onLibraryAdded = useCallback(
         (createdAnnilToken: AnnilToken) => {
             setCredentials((prev) => {
@@ -73,13 +64,8 @@ const Library: React.FC = () => {
             </Grid>
             <Grid item xs={12} lg={8}>
                 <LibraryList
-                    libraries={credentials.credentials}
-                    localInfoRefreshIndicator={localInfoRefreshIndicator}
+                    libraries={libraries}
                     onClick={onLibraryClicked}
-                    onSync={(library) => {
-                        setIsShowSyncLibraryDialog(true);
-                        setCurrentClickedLibrary(library);
-                    }}
                     onDelete={(library) => {
                         setIsShowDeleteLibraryDialog(true);
                         setCurrentClickedLibrary(library);
@@ -103,14 +89,6 @@ const Library: React.FC = () => {
                     setIsShowAddLibraryDialog(false);
                 }}
                 onAdded={onLibraryAdded}
-            />
-            <SyncLibraryDialog
-                open={isShowSyncLibraryDialog}
-                onCancel={() => {
-                    setIsShowSyncLibraryDialog(false);
-                }}
-                currentLibrary={currentClickedLibrary}
-                onSyncEnded={onLibrarySyncEnded}
             />
             <DeleteLibraryDialog
                 open={isShowDeleteLibraryDialog}

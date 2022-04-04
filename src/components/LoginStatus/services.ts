@@ -15,3 +15,35 @@ export function getFavoriteTracks() {
 export function getFavoritePlaylists() {
     return request.get<PlaylistInfo[]>("/api/playlists");
 }
+
+export function getLibraryAlbums(library: AnnilToken) {
+    return request.get<string[]>(
+        `${library.url}/albums`,
+        {
+            auth: library.token,
+        },
+        {
+            unwrapResponse: false,
+        }
+    );
+}
+
+export interface LibraryInfoResponse {
+    /** 服务端版本描述 */
+    version: string;
+    /** 服务端运行的 Annil 音频仓库协议版本 */
+    protocolVersion: string;
+    /** 服务端最近一次数据更新时间 */
+    lastUpdate: number;
+}
+
+
+export function getLibraryInfo(library: AnnilToken) {
+    return request.get<LibraryInfoResponse>(
+        `${library.url}/info`,
+        {},
+        {
+            unwrapResponse: false,
+        }
+    );
+}

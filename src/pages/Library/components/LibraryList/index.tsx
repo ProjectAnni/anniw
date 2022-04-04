@@ -6,14 +6,12 @@ import { AnnilTokenLocalInfo } from "../../types";
 import LibraryListItem from "./Item";
 interface Props {
     libraries: AnnilToken[];
-    localInfoRefreshIndicator: number;
     onClick: (library: AnnilToken) => void;
-    onSync: (library: AnnilToken) => void;
     onDelete: (library: AnnilToken) => void;
 }
 
 const LibraryList: React.FC<Props> = (props) => {
-    const { libraries, localInfoRefreshIndicator, onClick, onDelete, onSync } = props;
+    const { libraries, onClick, onDelete } = props;
     const [localLibraryInfo, setLocalLibraryInfo] = useState<
         (AnnilToken & AnnilTokenLocalInfo)[] | null
     >(null);
@@ -39,7 +37,7 @@ const LibraryList: React.FC<Props> = (props) => {
             }
             setLocalLibraryInfo(result);
         })();
-    }, [libraries, localInfoRefreshIndicator]);
+    }, [libraries]);
     if (!librariesWithLocalInfo?.length) {
         return null;
     }
@@ -52,7 +50,6 @@ const LibraryList: React.FC<Props> = (props) => {
                             key={library.id}
                             library={library}
                             onClick={onClick}
-                            onSync={onSync}
                             onDelete={onDelete}
                         />
                     );
