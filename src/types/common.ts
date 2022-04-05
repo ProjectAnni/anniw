@@ -118,3 +118,18 @@ export interface PlaylistSongNormal extends TrackInfoWithAlbum, BasePlaylistSong
 }
 
 export type PlaylistSong = PlaylistSongDummy | PlaylistSongNormal;
+
+export type TagType =
+    | "artist"
+    | "group"
+    | "animation"
+    | "series"
+    | "project"
+    | "game"
+    | "organization"
+    | "category"
+    | "default";
+export interface Tag {
+    name: string;
+    type: TagType;
+}

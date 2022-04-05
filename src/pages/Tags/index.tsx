@@ -15,7 +15,7 @@ const Tags = () => {
                 setTagGraph(await getTagGraph());
             }
             if (!tags?.length) {
-                setTags(await getTags());
+                setTags((await getTags()).map((t) => t.name));
             }
         })();
     }, [tags, setTags, tagGraph, setTagGraph]);

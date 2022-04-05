@@ -39,7 +39,7 @@ const TagDetail = () => {
         (async () => {
             const tags = await getTags();
             const tagGraph = await getTagGraph();
-            setTags(tags);
+            setTags(tags.map((t) => t.name));
             setTagGraph(tagGraph);
         })();
     }, [setTags, setTagGraph, setAlbums]);
