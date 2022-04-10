@@ -65,6 +65,21 @@
     white-space: nowrap;
 }
 
+.edition {
+    position: absolute;
+    padding: 2px;
+    right: 0;
+    top: 0;
+    transform: translateY(-100%);
+    font-size: 12px;
+    line-height: 12px;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: rgba($color: #000, $alpha: 0.7);
+}
+
 .loading {
     position: absolute;
     right: 8px;

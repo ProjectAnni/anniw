@@ -28,11 +28,11 @@ const AlbumWallItem: React.FC<Props> = (props) => {
     const { url, token } = credential || {};
     const [albumInfo, loading] = useRequest(() => getAlbumInfo(albumId));
     const history = useHistory();
-    const { title, artist } = albumInfo || {};
+    const { title, artist, edition } = albumInfo || {};
     const coverUrl = useMemo(() => {
         return `${url}/${albumId}/cover`;
     }, [albumId, url]);
-
+    console.log(edition)
     return (
         <div
             className={styles.item}
@@ -50,6 +50,7 @@ const AlbumWallItem: React.FC<Props> = (props) => {
             )}
             <div className={styles.itemMask}>
                 <div className={styles.itemInfo}>
+                    {!!edition && <div className={styles.edition}>{edition}</div>}
                     <div className={styles.title}>{title}</div>
                     <div className={styles.artist}>{artist}</div>
                 </div>
