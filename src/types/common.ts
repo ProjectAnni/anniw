@@ -177,7 +177,7 @@ export interface PlayQueueItem extends Omit<NormalTrackItem, "itemType"> {
     coverUrl?: string;
 }
 
-interface PlaylistInfo {
+export interface PlaylistInfo {
     // 播放列表 ID
     id: string;
     // 播放列表标题
