@@ -41,84 +41,122 @@ export interface UserInfo {
     avatar: string;
 }
 
-export interface TrackIdentifier {
-    // track_id 与 disc_id 均为从 1 开始
-    trackId: number;
+// 专辑标识符
+export type AlbumIdentifier = string; // UUID
+
+// 光盘标识符
+export interface DiscIdentifier {
+    // 专辑 ID
+    albumId: AlbumIdentifier;
+    // 光盘 ID，从 1 开始
     discId: number;
-    albumId: string;
 }
 
-export interface AlbumDiscIdentifier {
-    discId?: number;
-    albumId: string;
-}
+// 音轨标识符
+export type TrackIdentifier = DiscIdentifier & {
+    // 音轨 ID，从 1 开始
+    trackId: number;
+};
 
-export interface TrackInfo {
-    title: string;
-    artist: string;
-    type: string;
-    tags: string[];
-}
-
-export interface TrackInfoWithAlbum extends TrackInfo, TrackIdentifier {
-    albumTitle: string;
-}
-
-export interface DiscInfo {
-    // meta 仓库中为空时返回所属 Album 的 title
-    title: string;
-    artist: string;
-    catalog: string;
-    tags: string[];
-    type: string;
-    tracks: TrackInfo[];
-}
-
+// 专辑信息
 export interface AlbumInfo {
-    albumId: string;
+    // 专辑 ID
+    albumId: AlbumIdentifier;
+    // 专辑名称
     title: string;
+    // 专辑类型
     edition?: string;
+    // 专辑品番
     catalog: string;
+    // 专辑艺术家
     artist: string;
+    // 专辑的发行日期
     date: string;
-    tags: string[];
-    type: string;
+    // 音乐类型
+    type: TrackType;
+    // 光盘信息
     discs: DiscInfo[];
 }
-
-export interface PlayQueueItem extends Omit<NormalTrackItem, "itemType"> {
-    playUrl?: string;
-    coverUrl?: string;
+// 专辑详细信息
+export type AlbumDetail = AlbumInfo & {
+    // 专辑详细艺术家
+    artists?: Artists;
+    // 专辑标签
+    tags?: string[];
+    // 光盘信息
+    discs: DiscDetail[];
+};
+// 光盘信息
+export interface DiscInfo {
+    // 光盘名称
+    title?: string;
+    // 光盘品番
+    catalog: string;
+    // 光盘艺术家
+    artist?: string;
+    // 音乐类型
+    type?: TrackType;
+    // 音轨信息
+    tracks: TrackInfo[];
 }
+// 光盘详细信息
+export type DiscDetail = DiscInfo & {
+    // 光盘详细艺术家
+    artists?: Artists;
+    // 光盘标签
+    tags?: string[];
+    // 音轨信息
+    tracks: TrackDetail[];
+};
+// 音轨信息
+export interface TrackInfo {
+    // 音轨标题
+    title: string;
+    // 音轨艺术家
+    artist?: string;
+    // 音乐类型
+    type?: TrackType;
+}
+// 音轨详细信息
+export type TrackDetail = TrackInfo & {
+    // 音轨详细艺术家
+    artists?: Artists;
+    // 音轨标签
+    tags?: string[];
+};
+// 详细艺术家
+export type Artists = ExtendedArtists & Record<string, string>;
+// 详细艺术家的预定义字段
+export interface ExtendedArtists {
+    // 歌手
+    vocal?: string;
+    // 作曲
+    composer?: string;
+    // 作词
+    lyricist?: string;
+    // 编曲
+    arranger?: string;
+}
+// 音乐类型
+export type TrackType = "normal" | "instrumental" | "absolute" | "drama" | "radio" | "vocal";
 
-export interface PlaylistInfo {
-    id: string;
+// 标签简介
+export interface TagInfo {
+    // Tag 名称
     name: string;
-    description?: string;
-    owner: string;
-    isPublic: boolean;
-    cover: AlbumDiscIdentifier;
+    // Tag 类型
+    type: TagType;
 }
-
-export interface Playlist extends PlaylistInfo {
-    songs: PlaylistSong[];
-}
-
-export interface BasePlaylistSong {
-    id: string;
-    description?: string;
-}
-
-export interface PlaylistSongDummy extends TrackInfo, BasePlaylistSong {
-    type: "dummy";
-}
-
-export interface PlaylistSongNormal extends TrackInfoWithAlbum, BasePlaylistSong {
-    type: "normal";
-}
-
-export type PlaylistSong = PlaylistSongDummy | PlaylistSongNormal;
-
+// 标签详细信息
+export type TagDetail = TagInfo & {
+    // Tag 别名
+    alias?: string[];
+    // 父级 Tag
+    includedBy?: string[];
+    // 子 Tag
+    includes?: Record<TagType, string[]>;
+};
+// 标签类型
 export type TagType =
     | "artist"
     | "group"
@@ -129,7 +167,81 @@ export type TagType =
     | "organization"
     | "category"
     | "default";
-export interface Tag {
+
+export type AlbumTitle = { albumTitle: string };
+
+export type TrackInfoWithAlbum = TrackIdentifier & Required<TrackInfo> & AlbumTitle;
+
+export interface PlayQueueItem extends Omit<NormalTrackItem, "itemType"> {
+    playUrl?: string;
+    coverUrl?: string;
+}
+
+interface PlaylistInfo {
+    // 播放列表 ID
+    id: string;
+    // 播放列表标题
     name: string;
-    type: TagType;
+    // 播放列表说明
+    description?: string;
+    // 播放列表创建者
+    owner: string;
+    // 是否公开
+    isPublic: boolean;
+    // 封面
+    cover: DiscIdentifier;
+}
+
+export interface Id {
+    id: string;
+}
+
+export interface Playlist extends PlaylistInfo {
+    items: (PlaylistItem & Id)[];
+}
+
+export interface BasePlaylistItem<Info> {
+    // 内容类型
+    type: string;
+    // 内容说明
+    description?: string;
+    // 内容附加信息
+    info: Info;
+}
+
+// 普通音轨
+export interface PlaylistItemTrack extends BasePlaylistItem<TrackInfoWithAlbum>, TrackIdentifier {
+    type: "normal";
+}
+
+// 占位音轨
+export interface PlaylistItemDummyTrack extends BasePlaylistItem<Required<TrackInfo>> {
+    type: "dummy";
+}
+
+// 普通专辑
+export interface PlaylistItemAlbum extends BasePlaylistItem<AlbumIdentifier> {
+    type: "album";
+}
+
+export type PlaylistItem = PlaylistItemDummyTrack | PlaylistItemTrack | PlaylistItemAlbum;
+
+export function isPlaylistItemTrack(item: PlaylistItem): item is PlaylistItemTrack;
+export function isPlaylistItemTrack(item: PlaylistItem & Id): item is PlaylistItemTrack & Id;
+export function isPlaylistItemTrack(item: PlaylistItem): boolean {
+    return item.type === "normal";
+}
+
+export function isPlaylistItemDummyTrack(item: PlaylistItem): item is PlaylistItemDummyTrack;
+export function isPlaylistItemDummyTrack(
+    item: PlaylistItem & Id
+): item is PlaylistItemDummyTrack & Id;
+export function isPlaylistItemDummyTrack(item: PlaylistItem): boolean {
+    return item.type === "dummy";
+}
+
+export function isPlaylistItemAlbum(item: PlaylistItem): item is PlaylistItemAlbum;
+export function isPlaylistItemAlbum(item: PlaylistItem & Id): item is PlaylistItemAlbum & Id;
+export function isPlaylistItemAlbum(item: PlaylistItem): boolean {
+    return item.type === "album";
 }
