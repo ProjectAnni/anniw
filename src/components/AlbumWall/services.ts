@@ -1,42 +1,24 @@
 import { default as AlbumDB } from "@/db/album";
 import request from "@/api/request";
 import { formatResponse } from "@/utils/format";
-import { AlbumDetail, InheritedAlbumDetail } from "@/types/common";
+import { AlbumDetail } from "@/types/common";
 
 export async function getAlbumInfo(albumId: string) {
-    const cachedAlbumInfo = await AlbumDB.getAlbumInfo(albumId);
-    if (cachedAlbumInfo) {
-        return cachedAlbumInfo;
-    }
-    const albumInfoResponse = await request.get<Record<string, AlbumDetail | null>>(
-        `/api/meta/album`,
-        {
-            id: [albumId],
-        },
-        {
-            formatResponse: false,
-        }
-    );
-    const albumInfo: AlbumDetail = formatResponse(albumInfoResponse?.[albumId]);
-    if (albumInfo) {
-        // inherit fields
-        for (const disc of albumInfo.discs) {
-            if (!disc.title) {
-                disc.title = albumInfo.title;
+    // if no cache was found, try to fetch from server
+    if (!(await AlbumDB.getAlbumInfo(albumId))) {
+        const albumInfoResponse = await request.get<Record<string, AlbumDetail | null>>(
+            `/api/meta/album`,
+            {
+                id: [albumId],
+            },
+            {
+                formatResponse: false,
             }
-            for (const track of disc.tracks) {
-                if (!track.type) {
-                    track.type = disc.type ?? albumInfo.type;
-                }
-                if (!track.artist) {
-                    track.artist = disc.artist ?? albumInfo.artist;
-                }
-                if (!track.artists) {
-                    track.artists = disc.artists ?? albumInfo.artists;
-                }
-            }
+        );
+        const albumInfo: AlbumDetail = formatResponse(albumInfoResponse?.[albumId]);
+        if (albumInfo) {
+            await AlbumDB.addAlbumInfo(albumInfo);
         }
-        await AlbumDB.addAlbumInfo(albumInfo as InheritedAlbumDetail);
-        return albumInfo;
     }
+    return await AlbumDB.getAlbumInfo(albumId);
 }

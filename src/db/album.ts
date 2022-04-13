@@ -1,6 +1,6 @@
 import { openDB, deleteDB } from "idb";
 import type { DBSchema, IDBPDatabase } from "idb";
-import { AlbumInfo } from "@/types/common";
+import { AlbumDetail, InheritedAlbumDetail } from "@/types/common";
 
 const DB_VERSION = 2;
 const DB_NAME = "anniw_album";
@@ -22,7 +22,7 @@ interface AlbumDB extends DBSchema {
     };
     [AlbumStoreNames.AlbumInfo]: {
         key: string;
-        value: AlbumInfo;
+        value: AlbumDetail;
     };
 }
 
@@ -51,7 +51,7 @@ class Album {
         return (await this.db).get(storeName, albumId);
     }
 
-    async set(storeName: AlbumStoreNames, payload: AlbumLibraryMapItem | AlbumInfo) {
+    async set(storeName: AlbumStoreNames, payload: AlbumLibraryMapItem | AlbumDetail) {
         return (await this.db).put(storeName, payload);
     }
 
@@ -105,11 +105,32 @@ class Album {
         }
     }
 
-    async getAlbumInfo(albumId: string) {
-        return (await this.get(AlbumStoreNames.AlbumInfo, albumId)) as AlbumInfo | undefined;
+    async getAlbumInfo(albumId: string): Promise<InheritedAlbumDetail | undefined> {
+        const albumInfo = (await this.get(AlbumStoreNames.AlbumInfo, albumId)) as
+            | AlbumDetail
+            | undefined;
+        if (albumInfo) {
+            for (const disc of albumInfo.discs) {
+                if (!disc.title) {
+                    disc.title = albumInfo.title;
+                }
+                for (const track of disc.tracks) {
+                    if (!track.type) {
+                        track.type = disc.type ?? albumInfo.type;
+                    }
+                    if (!track.artist) {
+                        track.artist = disc.artist ?? albumInfo.artist;
+                    }
+                    if (!track.artists) {
+                        track.artists = disc.artists ?? albumInfo.artists;
+                    }
+                }
+            }
+        }
+        return albumInfo as InheritedAlbumDetail | undefined;
     }
 
-    async addAlbumInfo(albumInfo: AlbumInfo) {
+    async addAlbumInfo(albumInfo: AlbumDetail) {
         return this.set(AlbumStoreNames.AlbumInfo, albumInfo);
     }
 
