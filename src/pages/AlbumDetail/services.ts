@@ -1,7 +1,7 @@
 import request from "@/api/request";
 import { default as AlbumDB } from "@/db/album";
 import { formatResponse } from "@/utils/format";
-import { AlbumInfo } from "@/types/common";
+import { AlbumInfo, InheritedAlbumDetail } from "@/types/common";
 
 export async function getAlbumInfo(albumId: string | null) {
     if (!albumId) {
@@ -16,7 +16,7 @@ export async function getAlbumInfo(albumId: string | null) {
             formatResponse: false,
         }
     );
-    const albumInfo = formatResponse(albumInfoResponse?.[albumId]) as AlbumInfo;
+    const albumInfo = formatResponse(albumInfoResponse?.[albumId]) as InheritedAlbumDetail;
     if (albumInfo) {
         return albumInfo;
     }

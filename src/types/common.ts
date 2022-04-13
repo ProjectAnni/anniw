@@ -124,6 +124,11 @@ export interface TrackDetail extends TrackInfo {
     // 音轨标签
     tags?: string[];
 }
+
+export type InheritedAlbumDetail = AlbumDetail & { discs: InheritedDiscDetail[] };
+export type InheritedDiscDetail = DiscInfo & { title: string } & { tracks: InheritedTrackDetail[] };
+export type InheritedTrackDetail = Required<TrackInfo> & TrackDetail;
+
 // 详细艺术家
 export type Artists = ExtendedArtists & Record<string, string>;
 // 详细艺术家的预定义字段

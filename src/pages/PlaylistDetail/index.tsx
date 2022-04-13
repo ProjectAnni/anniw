@@ -30,9 +30,9 @@ const PlaylistDetail: React.FC = () => {
             return [];
         }
         return items.filter(isPlaylistItemTrack).map((item) => ({
+            tags: [],
             ...item,
             ...item.info,
-            tags: [],
             itemType: TrackItemType.NORMAL,
         }));
     }, [items]);

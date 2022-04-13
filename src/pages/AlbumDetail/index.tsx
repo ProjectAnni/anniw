@@ -5,7 +5,13 @@ import { Divider, Grid, Skeleton, Typography } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 import usePlayQueueController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
-import { AlbumDetail, AnnilToken, DiscDetail, PlayQueueItem } from "@/types/common";
+import {
+    InheritedAlbumDetail,
+    AnnilToken,
+    InheritedDiscDetail,
+    PlayQueueItem,
+    InheritedTrackDetail,
+} from "@/types/common";
 import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
@@ -20,7 +26,7 @@ const AlbumDetail: React.FC = () => {
     const { credentials: allAvailableCredentials } = useRecoilValue(CredentialState);
     const [credential, setCredential] = useState<AnnilToken | undefined>(undefined);
     const { id: albumId } = useParams<{ id: string }>();
-    const [albumInfo, setAlbumInfo] = useState<AlbumDetail>();
+    const [albumInfo, setAlbumInfo] = useState<InheritedAlbumDetail>();
     const { addToPlayQueue, addToLater } = usePlayQueueController();
     useEffect(() => {
         (async () => {
@@ -103,17 +109,20 @@ const AlbumDetail: React.FC = () => {
                         </>
                     )}
                     {!!albumInfo?.discs?.length &&
-                        albumInfo.discs.map((disc: DiscDetail, discIndex) => {
+                        albumInfo.discs.map((disc: InheritedDiscDetail, discIndex) => {
                             const { tracks } = disc;
                             const { albumId, title: albumTitle } = albumInfo;
-                            const trackList: TrackItem[] = tracks.map((track, trackIndex) => ({
-                                ...track,
-                                discId: discIndex + 1,
-                                trackId: trackIndex + 1,
-                                albumId,
-                                albumTitle,
-                                itemType: TrackItemType.NORMAL,
-                            }));
+                            const trackList: TrackItem[] = tracks.map(
+                                (track: InheritedTrackDetail, trackIndex) => ({
+                                    tags: [],
+                                    ...track,
+                                    discId: discIndex + 1,
+                                    trackId: trackIndex + 1,
+                                    albumId,
+                                    albumTitle,
+                                    itemType: TrackItemType.NORMAL,
+                                })
+                            );
                             return (
                                 <Grid container flexDirection="column" key={disc.catalog}>
                                     <Grid item xs={12}>
