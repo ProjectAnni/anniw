@@ -78,14 +78,14 @@ export interface AlbumInfo {
     discs: DiscInfo[];
 }
 // 专辑详细信息
-export type AlbumDetail = AlbumInfo & {
+export interface AlbumDetail extends AlbumInfo {
     // 专辑详细艺术家
     artists?: Artists;
     // 专辑标签
     tags?: string[];
     // 光盘信息
     discs: DiscDetail[];
-};
+}
 // 光盘信息
 export interface DiscInfo {
     // 光盘名称
@@ -100,14 +100,14 @@ export interface DiscInfo {
     tracks: TrackInfo[];
 }
 // 光盘详细信息
-export type DiscDetail = DiscInfo & {
+export interface DiscDetail extends DiscInfo {
     // 光盘详细艺术家
     artists?: Artists;
     // 光盘标签
     tags?: string[];
     // 音轨信息
     tracks: TrackDetail[];
-};
+}
 // 音轨信息
 export interface TrackInfo {
     // 音轨标题
@@ -118,12 +118,12 @@ export interface TrackInfo {
     type?: TrackType;
 }
 // 音轨详细信息
-export type TrackDetail = TrackInfo & {
+export interface TrackDetail extends TrackInfo {
     // 音轨详细艺术家
     artists?: Artists;
     // 音轨标签
     tags?: string[];
-};
+}
 // 详细艺术家
 export type Artists = ExtendedArtists & Record<string, string>;
 // 详细艺术家的预定义字段

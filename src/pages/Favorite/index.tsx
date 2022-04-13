@@ -15,6 +15,7 @@ const Favorite = () => {
                 // .filter((t) => !!t.info)
                 .map((t) => ({
                     ...t,
+                    tags: [],
                 })),
         [favoriteTracks]
     );

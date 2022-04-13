@@ -1,3 +1,5 @@
+import { TrackType } from "@/types/common";
+
 export enum TrackItemType {
     NORMAL,
     DUMMY,
@@ -11,7 +13,7 @@ interface BaseTrackItem {
 export interface NormalTrackItem extends BaseTrackItem {
     itemType: TrackItemType.NORMAL;
     title: string;
-    type: string;
+    type: TrackType;
     artist: string;
     discId: number;
     trackId: number;
@@ -22,10 +24,10 @@ export interface NormalTrackItem extends BaseTrackItem {
 
 export interface DummyTrackItem extends BaseTrackItem {
     itemType: TrackItemType.DUMMY;
-    
+
     title: string;
     artist: string;
-    type: string;
+    type: TrackType;
     tags: string[];
 }
 

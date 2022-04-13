@@ -5,7 +5,7 @@ import { Divider, Grid, Skeleton, Typography } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 import usePlayQueueController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
-import { AlbumInfo, AnnilToken, PlayQueueItem } from "@/types/common";
+import { AlbumDetail, AnnilToken, DiscDetail, PlayQueueItem } from "@/types/common";
 import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
@@ -20,7 +20,7 @@ const AlbumDetail: React.FC = () => {
     const { credentials: allAvailableCredentials } = useRecoilValue(CredentialState);
     const [credential, setCredential] = useState<AnnilToken | undefined>(undefined);
     const { id: albumId } = useParams<{ id: string }>();
-    const [albumInfo, setAlbumInfo] = useState<AlbumInfo>();
+    const [albumInfo, setAlbumInfo] = useState<AlbumDetail>();
     const { addToPlayQueue, addToLater } = usePlayQueueController();
     useEffect(() => {
         (async () => {
@@ -103,7 +103,7 @@ const AlbumDetail: React.FC = () => {
                         </>
                     )}
                     {!!albumInfo?.discs?.length &&
-                        albumInfo.discs.map((disc, discIndex) => {
+                        albumInfo.discs.map((disc: DiscDetail, discIndex) => {
                             const { tracks } = disc;
                             const { albumId, title: albumTitle } = albumInfo;
                             const trackList: TrackItem[] = tracks.map((track, trackIndex) => ({
@@ -119,7 +119,9 @@ const AlbumDetail: React.FC = () => {
                                     <Grid item xs={12}>
                                         <Typography variant="h5">
                                             {`Disc ${discIndex + 1}`}
-                                            {disc.title && disc.title !== albumTitle ? ` - ${disc.title}` : ""}
+                                            {disc.title && disc.title !== albumTitle
+                                                ? ` - ${disc.title}`
+                                                : ""}
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12}>

@@ -1,14 +1,14 @@
 import React, { memo } from "react";
 import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
-import { AlbumInfo } from "@/types/common";
+import { AlbumDetail } from "@/types/common";
 import Tag from "@/components/Tag";
 import Artist from "@/components/Artist";
 import Placeholder from "./Placeholder";
 import styles from "./index.module.scss";
 
 interface Props {
-    albumInfo?: AlbumInfo;
+    albumInfo?: AlbumDetail;
     onPlayAlbum: () => void;
 }
 

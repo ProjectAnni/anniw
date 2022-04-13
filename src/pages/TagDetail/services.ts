@@ -1,8 +1,8 @@
 import request from "@/api/request";
-import { AlbumInfo, Tag } from "@/types/common";
+import { AlbumInfo, TagInfo } from "@/types/common";
 
 export async function getTags() {
-    return await request.get<Tag[]>("/api/meta/tags");
+    return await request.get<TagInfo[]>("/api/meta/tags");
 }
 
 export async function getTagGraph() {
