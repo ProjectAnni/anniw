@@ -16,7 +16,7 @@ import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
-import { getAlbumInfo } from "./services";
+import { getAlbumInfo } from "../../components/AlbumWall/services";
 import styles from "./index.module.scss";
 import { getAvailableLibraryForTrack } from "@/utils/library";
 

@@ -1,4 +1,4 @@
-import album, { default as AlbumDB } from "@/db/album";
+import { default as AlbumDB } from "@/db/album";
 import request from "@/api/request";
 import { formatResponse } from "@/utils/format";
 import { AlbumDetail, InheritedAlbumDetail } from "@/types/common";
