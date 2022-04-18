@@ -33,6 +33,7 @@ export function createPlaylist({
         name,
         description,
         isPublic,
+        // FIXME: use default cover
         cover: { albumId: "", discId: 1 },
         items: [],
     });

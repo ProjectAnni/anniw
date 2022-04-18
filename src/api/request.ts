@@ -39,7 +39,7 @@ class Request {
      * @param path
      * @param payload
      */
-    async request<Response, Request = Record<string, unknown>>(
+    async request<Request, Response>(
         method: HttpMethod = "GET",
         path = "/",
         payload: Request,
@@ -88,8 +88,12 @@ class Request {
      * @param path
      * @param payload
      */
-    get<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("GET", path, payload, requestOptions);
+    get<R = Record<string, unknown>, P = unknown>(
+        path = "/",
+        payload?: P,
+        requestOptions?: RequestOptions
+    ) {
+        return this.request<P | undefined, R>("GET", path, payload, requestOptions);
     }
 
     /**
@@ -98,7 +102,7 @@ class Request {
      * @param payload
      */
     post<P, R = unknown>(path = "/", payload: P, requestOptions?: RequestOptions) {
-        return this.request<R, P>("POST", path, payload, requestOptions);
+        return this.request<P, R>("POST", path, payload, requestOptions);
     }
 
     /**
@@ -107,7 +111,7 @@ class Request {
      * @param payload
      */
     put<P, R = unknown>(path = "/", payload: P, requestOptions?: RequestOptions) {
-        return this.request<R, P>("PUT", path, payload, requestOptions);
+        return this.request<P, R>("PUT", path, payload, requestOptions);
     }
 
     /**
@@ -117,7 +121,7 @@ class Request {
      * @returns
      */
     patch<P, R>(path = "/", payload: P, requestOptions?: RequestOptions) {
-        return this.request<R, P>("PATCH", path, payload, requestOptions);
+        return this.request<P, R>("PATCH", path, payload, requestOptions);
     }
 
     /**
@@ -126,8 +130,12 @@ class Request {
      * @param payload
      * @returns
      */
-    delete<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("DELETE", path, payload, requestOptions);
+    delete<R, P = Record<string, unknown>>(
+        path = "/",
+        payload: P,
+        requestOptions?: RequestOptions
+    ) {
+        return this.request<P, R>("DELETE", path, payload, requestOptions);
     }
 
     parseError(e: AxiosError): AnniwRequestError {
