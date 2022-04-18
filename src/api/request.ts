@@ -97,8 +97,8 @@ class Request {
      * @param path
      * @param payload
      */
-    post<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("POST", path, payload, requestOptions);
+    post<P, R = unknown>(path = "/", payload: P, requestOptions?: RequestOptions) {
+        return this.request<R, P>("POST", path, payload, requestOptions);
     }
 
     /**

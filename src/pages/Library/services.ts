@@ -9,7 +9,7 @@ export function deleteAnnilToken(id: string) {
 }
 
 export function createAnnilToken({ name, token, url, priority }: Omit<AnnilToken, "id">) {
-    return request.post<AnnilToken>("/api/credential", {
+    return request.post<Omit<AnnilToken, "id">, AnnilToken>("/api/credential", {
         name,
         token,
         url,

@@ -8,7 +8,7 @@ interface LoginParams {
 }
 
 export async function login({ email, password }: LoginParams) {
-    return request.post<UserInfo>("/api/user/login", {
+    return request.post<LoginParams, UserInfo>("/api/user/login", {
         email,
         password: await sha256(password),
     });
@@ -22,7 +22,7 @@ interface RegisterParams {
 }
 
 export async function register({ email, password, nickname, inviteCode }: RegisterParams) {
-    return request.post<UserInfo>("/api/user/register", {
+    return request.post<RegisterParams, UserInfo>("/api/user/register", {
         email,
         password: await sha256(password),
         nickname,
