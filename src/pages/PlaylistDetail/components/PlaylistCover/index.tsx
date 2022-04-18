@@ -4,7 +4,7 @@ import { CredentialState } from "@/state/credentials";
 import useMessage from "@/hooks/useMessage";
 import { getAvailableLibraryForTrack, getCoverUrlForTrack } from "@/utils/library";
 import Cover from "@/components/Cover";
-import { Playlist, isPlaylistItemTrack } from "@/types/common";
+import { Playlist, isPlaylistItemTrack } from "@/types/playlist";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -41,7 +41,7 @@ const PlaylistCover: React.FC<Props> = (props) => {
                     allCredentials
                 );
                 if (library) {
-                    const coverUrl = getCoverUrlForTrack(firstNonDummyTrack, library);
+                    const coverUrl = getCoverUrlForTrack(firstNonDummyTrack.info, library);
                     setCoverUrl(coverUrl);
                 }
             } else {

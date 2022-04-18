@@ -10,7 +10,7 @@ import {
     TextField,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Playlist } from "@/types/common";
+import { Playlist } from "@/types/playlist";
 import useMessage from "@/hooks/useMessage";
 import { updatePlaylistInfo } from "../../services";
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
-import { PlaylistInfo } from "@/types/common";
+import { PlaylistInfo } from "@/types/playlist";
 import useMessage from "@/hooks/useMessage";
 import { deletePlaylist } from "../../services";
 

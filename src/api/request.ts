@@ -39,12 +39,12 @@ class Request {
      * @param path
      * @param payload
      */
-    async request<T>(
+    async request<Request, Response>(
         method: HttpMethod = "GET",
         path = "/",
-        payload: Record<string, unknown> = {},
+        payload: Request,
         requestOptions?: RequestOptions
-    ): Promise<T> {
+    ): Promise<Response> {
         console.log(`[${new Date().toISOString()}] ${method} ${path}`);
         const options: AxiosRequestConfig = {
             method,
@@ -88,8 +88,12 @@ class Request {
      * @param path
      * @param payload
      */
-    get<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("GET", path, payload, requestOptions);
+    get<R = Record<string, unknown>, P = unknown>(
+        path = "/",
+        payload?: P,
+        requestOptions?: RequestOptions
+    ) {
+        return this.request<P | undefined, R>("GET", path, payload, requestOptions);
     }
 
     /**
@@ -97,8 +101,8 @@ class Request {
      * @param path
      * @param payload
      */
-    post<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("POST", path, payload, requestOptions);
+    post<P, R = unknown>(path = "/", payload: P, requestOptions?: RequestOptions) {
+        return this.request<P, R>("POST", path, payload, requestOptions);
     }
 
     /**
@@ -106,8 +110,8 @@ class Request {
      * @param path
      * @param payload
      */
-    put<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("PUT", path, payload, requestOptions);
+    put<P, R = unknown>(path = "/", payload: P, requestOptions?: RequestOptions) {
+        return this.request<P, R>("PUT", path, payload, requestOptions);
     }
 
     /**
@@ -116,8 +120,8 @@ class Request {
      * @param payload
      * @returns
      */
-    patch<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("PATCH", path, payload, requestOptions);
+    patch<P, R>(path = "/", payload: P, requestOptions?: RequestOptions) {
+        return this.request<P, R>("PATCH", path, payload, requestOptions);
     }
 
     /**
@@ -126,8 +130,12 @@ class Request {
      * @param payload
      * @returns
      */
-    delete<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("DELETE", path, payload, requestOptions);
+    delete<R, P = Record<string, unknown>>(
+        path = "/",
+        payload: P,
+        requestOptions?: RequestOptions
+    ) {
+        return this.request<P, R>("DELETE", path, payload, requestOptions);
     }
 
     parseError(e: AxiosError): AnniwRequestError {

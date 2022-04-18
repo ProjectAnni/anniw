@@ -7,11 +7,12 @@ import useMessage from "@/hooks/useMessage";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import TrackList from "@/components/TrackList";
 import { isSameTrack } from "@/utils/library";
-import { Playlist, PlayQueueItem, isPlaylistItemTrack } from "@/types/common";
+import { Playlist, isPlaylistItemTrack } from "@/types/playlist";
 import { queryPlaylistDetail, deleteTrackFromPlaylist } from "./services";
 import styles from "./index.module.scss";
 import PlaylistCover from "./components/PlaylistCover";
 import PlaylistInfo from "./components/PlaylistInfo";
+import { PlayQueueItem } from "@/types/common";
 
 const PlaylistDetail: React.FC = () => {
     const { id: playlistId } = useParams<{ id: string }>();

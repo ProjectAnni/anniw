@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { IconButton, List, ListItem, ListItemText } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { PlaylistsState } from "@/state/playlists";
-import { PlaylistInfo } from "@/types/common";
+import { PlaylistInfo } from "@/types/playlist";
 import { useHistory } from "react-router-dom";
 
 interface Props {

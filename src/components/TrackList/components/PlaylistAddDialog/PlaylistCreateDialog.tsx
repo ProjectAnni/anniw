@@ -13,8 +13,8 @@ import {
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { PlaylistsState } from "@/state/playlists";
-import { PlaylistInfo } from "@/types/common";
 import { createPlaylist } from "../../services";
+import { PlaylistInfo } from "@/types/playlist";
 
 interface Props {
     open: boolean;
