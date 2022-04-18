@@ -106,8 +106,8 @@ class Request {
      * @param path
      * @param payload
      */
-    put<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("PUT", path, payload, requestOptions);
+    put<P, R = unknown>(path = "/", payload: P, requestOptions?: RequestOptions) {
+        return this.request<R, P>("PUT", path, payload, requestOptions);
     }
 
     /**
@@ -116,8 +116,8 @@ class Request {
      * @param payload
      * @returns
      */
-    patch<S, Q = Record<string, unknown>>(path = "/", payload: Q, requestOptions?: RequestOptions) {
-        return this.request<S, Q>("PATCH", path, payload, requestOptions);
+    patch<P, R>(path = "/", payload: P, requestOptions?: RequestOptions) {
+        return this.request<R, P>("PATCH", path, payload, requestOptions);
     }
 
     /**

@@ -1,4 +1,3 @@
-import { NormalTrackItem } from "@/components/TrackList/types";
 import {
     AlbumIdentifier,
     DiscIdentifier,
@@ -19,8 +18,10 @@ export interface PlaylistInfo {
     // 是否公开
     isPublic: boolean;
     // 封面
-    cover: DiscIdentifier;
+    cover: PlaylistCover;
 }
+
+export type PlaylistCover = DiscIdentifier;
 
 export interface Id {
     id: string;
@@ -82,6 +83,10 @@ export function isPlaylistItemAlbum(item: PlaylistItem): boolean {
     return item.type === "album";
 }
 
+export interface CreatePlaylistBody extends Omit<PlaylistInfo, "id" | "owner"> {
+    items: PlaylistPatchItem[];
+}
+
 export type PatchPlaylistRequestBody =
     | PatchPlaylistInfoBody
     | AppendPlaylistBody
@@ -105,9 +110,4 @@ type PatchPlaylistBodyType<K, P> = Id & {
     payload: P;
 };
 
-export interface PatchedPlaylistInfo {
-    name?: string;
-    description?: string;
-    is_public?: boolean;
-    cover?: DiscIdentifier;
-}
+export type PatchedPlaylistInfo = Partial<Omit<PlaylistInfo, "id" | "owner">>;
