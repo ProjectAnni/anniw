@@ -39,12 +39,12 @@ class Request {
      * @param path
      * @param payload
      */
-    async request<T>(
+    async request<Response, Request = Record<string, unknown>>(
         method: HttpMethod = "GET",
         path = "/",
-        payload: Record<string, unknown> = {},
+        payload: Request,
         requestOptions?: RequestOptions
-    ): Promise<T> {
+    ): Promise<Response> {
         console.log(`[${new Date().toISOString()}] ${method} ${path}`);
         const options: AxiosRequestConfig = {
             method,
@@ -116,8 +116,8 @@ class Request {
      * @param payload
      * @returns
      */
-    patch<T>(path = "/", payload: Record<string, unknown> = {}, requestOptions?: RequestOptions) {
-        return this.request<T>("PATCH", path, payload, requestOptions);
+    patch<S, Q = Record<string, unknown>>(path = "/", payload: Q, requestOptions?: RequestOptions) {
+        return this.request<S, Q>("PATCH", path, payload, requestOptions);
     }
 
     /**

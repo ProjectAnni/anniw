@@ -1,5 +1,6 @@
-import { PlaylistInfo, TrackIdentifier } from "@/types/common";
+import { TrackIdentifier } from "@/types/common";
 import request from "@/api/request";
+import { AppendPlaylistBody, PlaylistInfo } from "@/types/playlist";
 
 export function addFavorite<T extends TrackIdentifier>(track: T) {
     const { albumId, discId, trackId } = track;
@@ -38,13 +39,13 @@ export function addTrackToPlaylist({
     playlistId: string;
     trackId: TrackIdentifier;
 }) {
-    return request.patch<PlaylistInfo>("/api/playlist", {
+    return request.patch<PlaylistInfo, AppendPlaylistBody>("/api/playlist", {
         id: playlistId,
         command: "append",
         payload: [
             {
                 type: "normal",
-                ...trackId,
+                info: trackId,
             },
         ],
     });

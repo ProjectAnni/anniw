@@ -1,5 +1,5 @@
 import request from "@/api/request";
-import { Playlist, PlaylistInfo } from "@/types/common";
+import { Playlist, PlaylistInfo } from "@/types/playlist";
 
 export const queryPlaylistDetail = (id: string) => request.get<Playlist>("/api/playlist", { id });
 

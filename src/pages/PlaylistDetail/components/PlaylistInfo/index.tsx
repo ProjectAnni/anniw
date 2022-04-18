@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { Edit } from "@mui/icons-material";
-import { Playlist } from "@/types/common";
+import { Playlist } from "@/types/playlist";
 import { CurrentUserInfo } from "@/state/user";
 import PlaylistEditForm from "../PlaylistEditForm";
 import styles from "./index.module.scss";

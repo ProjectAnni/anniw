@@ -1,5 +1,6 @@
+import { PlaylistInfo } from "@/types/playlist";
 import request from "../../api/request";
-import { AnnilToken, TrackInfoWithAlbum, UserInfo, PlaylistInfo } from "../../types/common";
+import { AnnilToken, TrackInfoWithAlbum, UserInfo } from "../../types/common";
 
 export function getUserInfo() {
     return request.get<UserInfo>("/api/user/info");
@@ -36,7 +37,6 @@ export interface LibraryInfoResponse {
     /** 服务端最近一次数据更新时间 */
     lastUpdate: number;
 }
-
 
 export function getLibraryInfo(library: AnnilToken) {
     return request.get<LibraryInfoResponse>(
