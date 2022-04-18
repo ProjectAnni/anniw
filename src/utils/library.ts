@@ -1,5 +1,5 @@
 import { groupBy } from "lodash";
-import { AlbumDiscIdentifier, AnnilToken, PlayQueueItem, TrackIdentifier } from "@/types/common";
+import { DiscIdentifier, AnnilToken, PlayQueueItem, TrackIdentifier } from "@/types/common";
 import { default as AlbumDB } from "@/db/album";
 
 export function getAvailableLibraryForAlbum(albumId: string, allCredentials: AnnilToken[]) {
@@ -30,16 +30,16 @@ export function getPlayUrlForTrack<T extends TrackIdentifier>(track: T, credenti
     return `${url}/${albumId}/${discId}/${trackId}?auth=${token}`;
 }
 
-export function getCoverUrlForTrack<T extends AlbumDiscIdentifier>(
-    track: T,
-    credential: AnnilToken
-) {
+export function getCoverUrlForTrack<T extends DiscIdentifier>(track: T, credential: AnnilToken) {
     const { albumId, discId } = track;
     const { url } = credential;
     return discId ? `${url}/${albumId}/${discId}/cover` : `${url}/${albumId}/cover`;
 }
 
-export function isSameTrack<T extends TrackIdentifier, U extends TrackIdentifier>(trackA: T, trackB: U) {
+export function isSameTrack<T extends TrackIdentifier, U extends TrackIdentifier>(
+    trackA: T,
+    trackB: U
+) {
     return (
         trackA.albumId === trackB.albumId &&
         trackA.discId === trackB.discId &&

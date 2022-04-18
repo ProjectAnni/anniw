@@ -7,14 +7,11 @@ import useMessage from "@/hooks/useMessage";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
 import TrackList from "@/components/TrackList";
 import { isSameTrack } from "@/utils/library";
-import { Playlist, PlaylistSong, PlaylistSongNormal, PlayQueueItem } from "@/types/common";
+import { Playlist, PlayQueueItem, isPlaylistItemTrack } from "@/types/common";
 import { queryPlaylistDetail, deleteTrackFromPlaylist } from "./services";
 import styles from "./index.module.scss";
 import PlaylistCover from "./components/PlaylistCover";
 import PlaylistInfo from "./components/PlaylistInfo";
-
-const isNormalPlaylistSong = (item: PlaylistSong): item is PlaylistSongNormal =>
-    item.type === "normal";
 
 const PlaylistDetail: React.FC = () => {
     const { id: playlistId } = useParams<{ id: string }>();
@@ -22,21 +19,23 @@ const PlaylistDetail: React.FC = () => {
     const [playlist, setPlaylist] = useState<Playlist>();
     const { addToPlayQueue, addToLater } = usePlayQueueController();
     const [_, { addMessage }] = useMessage();
-    const { songs = [] } = playlist || {};
+    const { items = [] } = playlist || {};
     useEffect(() => {
         if (playlistResponse) {
             setPlaylist(playlistResponse);
         }
     }, [playlistResponse]);
     const tracks = useMemo<TrackItem[]>(() => {
-        if (!songs?.length) {
+        if (!items?.length) {
             return [];
         }
-        return songs.filter(isNormalPlaylistSong).map((item: PlaylistSongNormal) => ({
+        return items.filter(isPlaylistItemTrack).map((item) => ({
+            tags: [],
             ...item,
+            ...item.info,
             itemType: TrackItemType.NORMAL,
         }));
-    }, [songs]);
+    }, [items]);
     const onPlayQueueAdd = useCallback(
         (track: PlayQueueItem) => {
             addToPlayQueue(track);
@@ -52,9 +51,9 @@ const PlaylistDetail: React.FC = () => {
     const onPlaylistRemove = useCallback(
         async (track: PlayQueueItem) => {
             try {
-                const deleteTrack = songs
-                    .filter(isNormalPlaylistSong)
-                    .find((song) => isSameTrack(song, track));
+                const deleteTrack = items
+                    .filter(isPlaylistItemTrack)
+                    .find((song) => isSameTrack(song.info, track));
                 if (deleteTrack) {
                     const response = await deleteTrackFromPlaylist(playlistId, deleteTrack.id);
                     setPlaylist(response);
@@ -66,7 +65,7 @@ const PlaylistDetail: React.FC = () => {
                 }
             }
         },
-        [addMessage, playlistId, songs]
+        [addMessage, playlistId, items]
     );
     return (
         <Grid container justifyContent="center" className={styles.pageContainer}>

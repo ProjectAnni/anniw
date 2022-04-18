@@ -4,7 +4,7 @@ import { CredentialState } from "@/state/credentials";
 import useMessage from "@/hooks/useMessage";
 import { getAvailableLibraryForTrack, getCoverUrlForTrack } from "@/utils/library";
 import Cover from "@/components/Cover";
-import { Playlist, PlaylistSongNormal } from "@/types/common";
+import { Playlist, isPlaylistItemTrack } from "@/types/common";
 import styles from "./index.module.scss";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 const PlaylistCover: React.FC<Props> = (props) => {
     const { playlist } = props;
-    const { cover, songs } = playlist || {};
+    const { cover, items } = playlist || {};
     const { albumId, discId } = cover || {};
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const [_, { addMessage }] = useMessage();
@@ -23,7 +23,7 @@ const PlaylistCover: React.FC<Props> = (props) => {
             return;
         }
         (async () => {
-            if (albumId) {
+            if (albumId && discId) {
                 const library = await getAvailableLibraryForTrack({ albumId }, allCredentials);
                 if (library) {
                     const coverUrl = getCoverUrlForTrack({ albumId, discId }, library);
@@ -31,12 +31,13 @@ const PlaylistCover: React.FC<Props> = (props) => {
                 } else {
                     addMessage("error", "播放列表封面无可用音频仓库");
                 }
-            } else if (songs?.length) {
-                const firstNonDummyTrack = songs.find(
-                    (track) => track.type === "normal"
-                ) as PlaylistSongNormal;
+            } else if (items?.length) {
+                const firstNonDummyTrack = items.find(isPlaylistItemTrack);
+                if (!firstNonDummyTrack) {
+                    return;
+                }
                 const library = await getAvailableLibraryForTrack(
-                    firstNonDummyTrack,
+                    firstNonDummyTrack.info,
                     allCredentials
                 );
                 if (library) {
@@ -47,7 +48,7 @@ const PlaylistCover: React.FC<Props> = (props) => {
                 return;
             }
         })();
-    }, [playlist, allCredentials, albumId, discId, songs, addMessage]);
+    }, [playlist, allCredentials, albumId, discId, items, addMessage]);
     if (!playlist) {
         return null;
     }

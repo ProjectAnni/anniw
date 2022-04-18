@@ -43,6 +43,7 @@ const TrackSearchResult: React.FC<Props> = (props) => {
             return [];
         }
         return trackResult.map((track) => ({
+            tags: [],
             ...track,
             itemType: TrackItemType.NORMAL,
         }));
