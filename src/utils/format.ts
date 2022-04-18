@@ -28,6 +28,9 @@ export function formatRequest(request: any): any {
     if (typeof request === "string") {
         return request;
     }
+    if (request === null || request === undefined) {
+        request = {};
+    }
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(request)) {
         if (typeof request[key] === "object") {
