@@ -10,11 +10,16 @@ interface BaseTrackItem {
     description?: string;
 }
 
+interface DetailArtists {
+    [key: string]: string;
+}
+
 export interface NormalTrackItem extends BaseTrackItem {
     itemType: TrackItemType.NORMAL;
     title: string;
     type: TrackType;
     artist: string;
+    artists?: DetailArtists;
     discId: number;
     trackId: number;
     albumId: string;

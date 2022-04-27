@@ -32,7 +32,6 @@ const AlbumWallItem: React.FC<Props> = (props) => {
     const coverUrl = useMemo(() => {
         return `${url}/${albumId}/cover`;
     }, [albumId, url]);
-    console.log(edition)
     return (
         <div
             className={styles.item}

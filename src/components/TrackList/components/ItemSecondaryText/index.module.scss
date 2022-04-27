@@ -1,0 +1,53 @@
+.secondaryContainer {
+    &.withAlbumTitle {
+        display: flex;
+        .artist {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.6);
+}
+.artist,
+.divider,
+.albumTitle {
+    font-size: smaller;
+}
+.artist {
+    &.withDetailedArtist {
+        cursor: pointer;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}
+.albumTitle {
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+.divider {
+    margin: 0 4px;
+}
+.divider,
+.albumTitle {
+    flex-shrink: 0;
+}
+.arrow {
+    margin-left: 4px;
+    &::after {
+        content: "";
+        display: inline-block;
+        position: relative;
+        top: -2px;
+        margin-left: 2px;
+        width: 5px;
+        height: 5px;
+        border-top: 1px solid rgba(25, 118, 210, 0.6);
+        border-left: 1px solid rgba(25, 118, 210, 0.6);
+        transform: rotate(225deg);
+    }
+}

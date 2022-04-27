@@ -12,12 +12,12 @@ import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { FavoriteTrackAlbumMap, FavoriteTracksState } from "@/state/favorite";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { getAvailableLibraryForTrack } from "@/utils/library";
-import Artist from "../Artist";
 import { IsHighlightCheckDoneState } from "./store";
 import { addFavorite, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";
 import styles from "./index.module.scss";
 import ItemActions from "./components/ItemActions";
+import ItemSecondaryText from "./components/ItemSecondaryText";
 
 interface Props {
     track: PlayQueueItem;
@@ -60,7 +60,6 @@ const TrackListItem: React.FC<Props> = (props) => {
     const query = useQuery();
     const [isHighlighted, setIsHighlighted] = useState(false);
     const itemContainerRef = useRef<HTMLLIElement>(null);
-    const isHighlightCheckDone = useRef(false);
     const favoriteRequestLock = useRef(false);
     const { credentials: allCredentials } = useRecoilValue(CredentialState);
     const {
@@ -68,7 +67,8 @@ const TrackListItem: React.FC<Props> = (props) => {
         discId: nowPlayingDiscId,
         trackId: nowPlayingTrackId,
     } = useRecoilValue(NowPlayingInfoState);
-    const [isHighlightCheckDoneState, setIsHighlightCheckDoneState] = useRecoilState(IsHighlightCheckDoneState);
+    const [isHighlightCheckDoneState, setIsHighlightCheckDoneState] =
+        useRecoilState(IsHighlightCheckDoneState);
     const playerStatus = useRecoilValue(PlayerStatusState);
     const setFavoriteTracks = useSetRecoilState(FavoriteTracksState);
     const favoriteTrackAlbumMap = useRecoilValue(FavoriteTrackAlbumMap);
@@ -161,7 +161,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         onPlayQueueAddToLater(itemIndex);
     }, [itemIndex, onPlayQueueAddToLater]);
     const onDoubleClick = useCallback(() => {
-        query.set('highlight', `${listIndex}-${itemIndex}`);
+        query.set("highlight", `${listIndex}-${itemIndex}`);
         history.replace({
             search: query.toString(),
         });
@@ -194,15 +194,19 @@ const TrackListItem: React.FC<Props> = (props) => {
     useEffect(() => {
         requestIdleCallback(() => {
             const highlight = query.get("highlight");
-            if (highlight === `${listIndex}-${itemIndex}` && itemContainerRef.current && !isHighlightCheckDoneState) {
+            if (
+                highlight === `${listIndex}-${itemIndex}` &&
+                itemContainerRef.current &&
+                !isHighlightCheckDoneState
+            ) {
                 setIsHighlightCheckDoneState(true);
                 itemContainerRef.current.scrollIntoView({ block: "center" });
                 setTimeout(() => {
                     setIsHighlighted(true);
                 }, 300);
             }
-        })
-    }, [isHighlightCheckDoneState, itemIndex, listIndex, query, setIsHighlightCheckDoneState])
+        });
+    }, [isHighlightCheckDoneState, itemIndex, listIndex, query, setIsHighlightCheckDoneState]);
     return (
         <ListItem
             ref={itemContainerRef}
@@ -247,33 +251,7 @@ const TrackListItem: React.FC<Props> = (props) => {
                     </div>
                 }
                 disableTypography
-                secondary={
-                    <div
-                        className={classNames(styles.secondaryContainer, {
-                            [styles.withAlbumTitle]: features.includes(
-                                TrackListFeatures.SHOW_ALBUM_INFO
-                            ),
-                        })}
-                    >
-                        <div className={styles.artist} title={artist}>
-                            <Artist artist={artist} />
-                        </div>
-                        {features.includes(TrackListFeatures.SHOW_ALBUM_INFO) && (
-                            <>
-                                <div className={styles.divider}> - </div>
-                                <div
-                                    title={albumTitle}
-                                    className={styles.albumTitle}
-                                    onClick={() => {
-                                        history.push("/album/" + albumId);
-                                    }}
-                                >
-                                    {albumTitle}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                }
+                secondary={<ItemSecondaryText track={track} features={features} />}
                 className={styles.textContainer}
             >
                 {" "}

@@ -19,7 +19,8 @@ const ArtistItem: React.FC<Props> = (props) => {
                 className={classNames({
                     [styles.folded]: !isShowChildren && canShowChildren,
                 })}
-                onClick={() => {
+                onClick={(e) => {
+                    canShowChildren && !isShowChildren && e.stopPropagation();
                     setIsShowChildren(true);
                 }}
             >
