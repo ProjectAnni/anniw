@@ -27,7 +27,8 @@ const AlbumDetail: React.FC = () => {
     const [credential, setCredential] = useState<AnnilToken | undefined>(undefined);
     const { id: albumId } = useParams<{ id: string }>();
     const [albumInfo, setAlbumInfo] = useState<InheritedAlbumDetail>();
-    const { addToPlayQueue, addToLater } = usePlayQueueController();
+    const { addToPlayQueue, addToLater, clearPlayQueue, replacePlayQueueAndPlay } =
+        usePlayQueueController();
     useEffect(() => {
         (async () => {
             if (albumId) {
@@ -58,12 +59,15 @@ const AlbumDetail: React.FC = () => {
         if (!trackListRefs.current.length) {
             return;
         }
+        clearPlayQueue();
+        const tracksForAdding: PlayQueueItem[] = [];
         trackListRefs.current
             .sort((a, b) => a.index - b.index)
             .forEach((ref, index) => {
-                index === 0 ? ref.playAll() : ref.addAllToPlayQueue();
+                tracksForAdding.push(...ref.parsedTracks.filter((i) => !!i.playUrl));
             });
-    }, []);
+        replacePlayQueueAndPlay(tracksForAdding, 0);
+    }, [clearPlayQueue, replacePlayQueueAndPlay]);
     const onPlayQueueAdd = useCallback(
         (track: PlayQueueItem) => {
             addToPlayQueue(track);

@@ -12,7 +12,6 @@ export default function usePlayQueueController() {
     const [playQueue, { append, insertToSecond, set, clear, remove }] = usePlayQueue();
     const [_, { addMessage }] = useMessage();
     const isPreloading = useRef(false);
-
     const onCurrentPlayIndexChange = useCallback(
         async (newCurrentPlayIndex: number) => {
             if (playQueue[newCurrentPlayIndex + 1] && !isPreloading.current) {

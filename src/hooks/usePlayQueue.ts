@@ -5,7 +5,6 @@ import { PlayQueueItem } from "@/types/common";
 
 export default function usePlayQueue() {
     const [playQueue, setPlayQueue] = useRecoilState(PlayQueueState);
-
     const append = useCallback(
         ([...tracks]: PlayQueueItem[]) => {
             setPlayQueue((queue) => [...queue, ...tracks]);
