@@ -107,7 +107,7 @@ const AddLibraryDialog: React.FC<Props> = (props) => {
                     label="优先级"
                     variant="standard"
                     type="number"
-                    value={0}
+                    defaultValue={0}
                     fullWidth
                     onChange={(e) => setPriority(+e.target.value)}
                 />
