@@ -51,6 +51,9 @@ const PlaylistDetail: React.FC = () => {
     );
     const onPlaylistRemove = useCallback(
         async (track: PlayQueueItem) => {
+            if (!playlistId) {
+                return;
+            }
             try {
                 const deleteTrack = items
                     .filter(isPlaylistItemTrack)

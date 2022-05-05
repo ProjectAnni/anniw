@@ -6,7 +6,7 @@ import {
     RemovePlaylistItemBody,
 } from "@/types/playlist";
 
-export const queryPlaylistDetail = (id: string) => request.get<Playlist>("/api/playlist", { id });
+export const queryPlaylistDetail = (id?: string) => request.get<Playlist>("/api/playlist", { id });
 
 export const updatePlaylistInfo = ({
     id,

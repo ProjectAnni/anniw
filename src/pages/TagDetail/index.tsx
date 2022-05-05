@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { FormControlLabel, FormGroup, Grid, Switch } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
 import CommonPagination from "@/components/Pagination";
@@ -12,16 +12,30 @@ import { getAlbumsByTag, getTagGraph, getTags } from "./services";
 
 const TagDetail = () => {
     const { tag } = useParams<{ tag: string }>();
-    const includes: string[] | undefined = useRecoilValue(TagGraph)[tag];
-    const includedBy: string | undefined = useRecoilValue(TagIncludedBy)[tag];
+    const [tagGraph, setTagGraph] = useRecoilState(TagGraph);
+    const tagIncludedBy = useRecoilValue(TagIncludedBy);
     const setTags = useSetRecoilState(Tags);
-    const setTagGraph = useSetRecoilState(TagGraph);
     const [albums, setAlbums] = useState<string[]>();
     const [recursive, setRecursive] = useState(false);
     const [loadingAlbum, setLoadingAlbum] = useState(false);
     const [_, { addMessage }] = useMessage();
+    const includes = useMemo(() => {
+        if (!tag || !tagGraph) {
+            return [];
+        }
+        return tagGraph[tag];
+    }, [tag, tagGraph]);
+    const includedBy = useMemo(() => {
+        if (!tag || !tagIncludedBy) {
+            return "";
+        }
+        return tagIncludedBy[tag];
+    }, [tag, tagIncludedBy]);
     useEffect(() => {
         (async () => {
+            if (!tag) {
+                return;
+            }
             setLoadingAlbum(true);
             try {
                 const result = (await getAlbumsByTag(tag, recursive)).map((a) => a.albumId);

@@ -150,7 +150,10 @@ export default function usePlayer() {
     const unmute = useCallback(() => {
         player.muted = false;
     }, [player]);
-    const preload = useCallback(({ playUrl }) => {
+    const preload = useCallback(({ playUrl }: PlayQueueItem) => {
+        if (!playUrl) {
+            return;
+        }
         return getAudioUrl(playUrl);
     }, []);
     return [

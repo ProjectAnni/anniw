@@ -18,7 +18,7 @@
         "react-dom": "^18.1.0",
         "react-i18next": "^11.11.4",
         "react-router-dom": "^6.3.0",
-        "recoil": "^0.5.2",
+        "recoil": "^0.7.2",
         "workbox-background-sync": "^5.1.3",
         "workbox-broadcast-update": "^5.1.3",
         "workbox-cacheable-response": "^5.1.3",
@@ -56,7 +56,7 @@
         "mockjs": "^1.1.0",
         "prettier": "^2.5.0",
         "sass": "^1.45.0",
-        "typescript": "^4.5.4",
+        "typescript": "^4.6.4",
         "vite": "^2.9.1",
         "vite-plugin-mock": "^2.9.6"
     }
