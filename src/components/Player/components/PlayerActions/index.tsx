@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Grid, IconButton, Slider, Tooltip } from "@mui/material";
 import { QueueMusic, Repeat, RepeatOne, Shuffle, VolumeOff, VolumeUp } from "@mui/icons-material";
 import { LoopMode, LoopModeNextMap } from "../../types";
@@ -17,7 +17,7 @@ interface Props {
 const PlayerActions: React.FC<Props> = (props) => {
     const { loopMode, isMute, currentVolume, setVolume, onChangeLoopMode, onVolumeButtonClick } =
         props;
-    const history = useHistory();
+    const navigate = useNavigate();
     const onClickLoopMode = () => {
         onChangeLoopMode(LoopModeNextMap[loopMode]);
     };
@@ -54,7 +54,7 @@ const PlayerActions: React.FC<Props> = (props) => {
                 <IconButton
                     color="inherit"
                     onClick={() => {
-                        history.push("/queue");
+                        navigate("/queue");
                     }}
                 >
                     <QueueMusic />

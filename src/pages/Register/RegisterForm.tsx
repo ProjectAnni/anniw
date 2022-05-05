@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 import { Grid, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -15,7 +15,7 @@ const RegisterForm: React.FC = () => {
     const [inviteCode, setInviteCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const needInvitation = useRecoilValue(SiteNeedInvitation);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [_, { addMessage }] = useMessage();
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -47,7 +47,7 @@ const RegisterForm: React.FC = () => {
                 password,
                 inviteCode,
             });
-            history.push("/user/login");
+            navigate("/user/login");
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);

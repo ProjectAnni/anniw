@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { TextField, Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
@@ -15,7 +15,7 @@ const LoginForm: React.FC = () => {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
-    const history = useHistory();
+    const navigate = useNavigate();
     const query = useQuery();
     const [_, { addMessage }] = useMessage();
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,9 +34,9 @@ const LoginForm: React.FC = () => {
             storage.set("userInfo", userInfo);
             const returnTo = query.get("return");
             if (returnTo) {
-                history.push(returnTo);
+                navigate(returnTo);
             } else {
-                history.push("/");
+                navigate("/");
             }
         } catch (e) {
             if (e instanceof Error) {

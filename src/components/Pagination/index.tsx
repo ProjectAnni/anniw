@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useMemo, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Grid, Select, MenuItem, Pagination } from "@mui/material";
 import useQuery from "@/hooks/useQuery";
 
@@ -11,7 +11,7 @@ interface Props<T> {
 function CommonPagination<T>(props: Props<T>): JSX.Element {
     const { items, children } = props;
     const query = useQuery();
-    const history = useHistory();
+    const [searchParams, setSearchParams] = useSearchParams();
     const listRef = useRef<HTMLDivElement>(null);
     const [pageNum, setPageNum] = useState<number>(parseInt(query.get("page") || "1"));
     const [itemPerPage, setItemPerPage] = useState<number>(parseInt(query.get("count") || "30"));
@@ -26,20 +26,16 @@ function CommonPagination<T>(props: Props<T>): JSX.Element {
     }, [items, pageNum, itemPerPage]);
     const onPageCountChange = (count: number) => {
         setItemPerPage(count);
-        query.set("page", pageNum.toString());
-        query.set("count", count.toString());
-        history.replace({
-            search: query.toString(),
-        });
+        searchParams.set("page", pageNum.toString());
+        searchParams.set("count", count.toString());
+        setSearchParams(searchParams, { replace: true });
     };
     const onPageChange = (page: number) => {
         setPageNum(page);
         listRef.current && listRef.current.scrollIntoView();
-        query.set("page", page.toString());
-        query.set("count", itemPerPage.toString());
-        history.replace({
-            search: query.toString(),
-        });
+        searchParams.set("page", page.toString());
+        searchParams.set("count", itemPerPage.toString());
+        setSearchParams(searchParams, { replace: true });
     };
     return (
         <Grid container ref={listRef}>

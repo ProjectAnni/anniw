@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { Container, AppBar, Toolbar, CssBaseline, createTheme, ThemeProvider } from "@mui/material";
 import { AnniwAppBar } from "./components/AppBar";
@@ -43,83 +43,112 @@ function AppBody() {
                 }}
             />
             <Container component="main" className={styles.mainContainer}>
-                <Switch>
-                    <Route path="/" exact>
-                        <div style={{ padding: "20px" }}>空无一物的主页</div>
-                    </Route>
-                    <Route path="/user/login" exact>
-                        <Login />
-                    </Route>
-                    <Route path="/user/register" exact>
-                        <Register />
-                    </Route>
-                    <Route path="/user/logout" exact>
-                        <Logout />
-                    </Route>
-                    <Route path="/user/index" exact>
-                        <NeedLoginPage>
-                            <UserIndex />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/library" exact>
-                        <NeedLoginPage>
-                            <Library />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/album/list" exact>
-                        <NeedLoginPage>
-                            <AlbumList />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/album/:id">
-                        <NeedLoginPage>
-                            <AlbumDetail />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/tag/:tag">
-                        <NeedLoginPage>
-                            <TagDetail />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/tags">
-                        <NeedLoginPage>
-                            <Tags />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/queue" exact>
-                        <NeedLoginPage>
-                            <PlayQueue />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/playlist" exact>
-                        <NeedLoginPage>
-                            <Playlist />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/playlist/:id">
-                        <NeedLoginPage>
-                            <PlaylistDetail />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/search" exact>
-                        <NeedLoginPage>
-                            <Search />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/fav" exact>
-                        <NeedLoginPage>
-                            <Favorite />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="/now" exact>
-                        <NeedLoginPage>
-                            <NowPlaying />
-                        </NeedLoginPage>
-                    </Route>
-                    <Route path="*">
-                        <NotFound />
-                    </Route>
-                </Switch>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<div style={{ padding: "20px" }}>空无一物的主页</div>}
+                    />
+                    <Route path="/user/login" element={<Login />} />
+                    <Route path="/user/register" element={<Register />} />
+                    <Route path="/user/logout" element={<Logout />} />
+                    <Route
+                        path="/user/index"
+                        element={
+                            <NeedLoginPage>
+                                <UserIndex />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/library"
+                        element={
+                            <NeedLoginPage>
+                                <Library />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/album/list"
+                        element={
+                            <NeedLoginPage>
+                                <AlbumList />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/album/:id"
+                        element={
+                            <NeedLoginPage>
+                                <AlbumDetail />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/tag/:tag"
+                        element={
+                            <NeedLoginPage>
+                                <TagDetail />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/tags"
+                        element={
+                            <NeedLoginPage>
+                                <Tags />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/queue"
+                        element={
+                            <NeedLoginPage>
+                                <PlayQueue />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/playlist"
+                        element={
+                            <NeedLoginPage>
+                                <Playlist />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/playlist/:id"
+                        element={
+                            <NeedLoginPage>
+                                <PlaylistDetail />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/search"
+                        element={
+                            <NeedLoginPage>
+                                <Search />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/fav"
+                        element={
+                            <NeedLoginPage>
+                                <Favorite />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/now"
+                        element={
+                            <NeedLoginPage>
+                                <NowPlaying />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
                 <AppBar
                     position="fixed"
                     color="primary"

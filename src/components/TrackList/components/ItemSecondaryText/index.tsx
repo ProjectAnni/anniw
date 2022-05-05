@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { PlayQueueItem } from "@/types/common";
 import Artist from "@/components/Artist";
@@ -27,7 +27,7 @@ const ArtistTypeTextMap: Record<string, string> = {
 const ItemSecondaryText: React.FC<Props> = (props) => {
     const { track, features } = props;
     const { artist, artists, albumTitle, albumId } = track;
-    const history = useHistory();
+    const navigate = useNavigate();
     const [isShowDetailedArtists, setIsShowDetailedArtists] = useState(false);
     return (
         <div
@@ -64,7 +64,7 @@ const ItemSecondaryText: React.FC<Props> = (props) => {
                         title={albumTitle}
                         className={styles.albumTitle}
                         onClick={() => {
-                            history.push("/album/" + albumId);
+                            navigate("/album/" + albumId);
                         }}
                     >
                         {albumTitle}

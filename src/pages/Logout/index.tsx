@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Alert, AlertTitle } from "@mui/material";
 import useMessage from "@/hooks/useMessage";
@@ -12,7 +12,7 @@ import "./index.scss";
 
 const Logout: React.FC = () => {
     const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
-    const history = useHistory();
+    const navigate = useNavigate();
     const { credentials: allAvailableCredentials } = useRecoilValue(CredentialState);
     const [_, { addMessage }] = useMessage();
     useEffect(() => {
@@ -29,13 +29,13 @@ const Logout: React.FC = () => {
                     }
                 }
                 setCurrentUserInfo(null);
-                history.push("/");
+                navigate("/");
                 location.reload();
             })
             .catch((e) => {
                 addMessage("error", e.message);
             });
-    }, [addMessage, allAvailableCredentials, history, setCurrentUserInfo]);
+    }, [addMessage, allAvailableCredentials, navigate, setCurrentUserInfo]);
     return (
         <div className="logout-container">
             <Alert severity="info" sx={{ width: "50%" }}>

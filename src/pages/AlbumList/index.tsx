@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Grid, Typography } from "@mui/material";
 import useQuery from "@/hooks/useQuery";
@@ -17,7 +17,7 @@ interface LibraryInfo {
 
 const AlbumList: React.FC = () => {
     const query = useQuery();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [libraryInfo, setLibraryInfo] = useState<LibraryInfo | null>(null);
     const [albums, setAlbums] = useState<string[]>([]);
     const { credentials } = useRecoilValue(CredentialState);
@@ -32,7 +32,7 @@ const AlbumList: React.FC = () => {
         const sessionLibraryInfo = credentials.find((item) => item.url === libraryUrl);
         if (!sessionLibraryInfo) {
             addMessage("error", "未找到指定的音频仓库");
-            history.push("/library");
+            navigate("/library");
             return;
         }
         setLibraryInfo({
@@ -42,7 +42,7 @@ const AlbumList: React.FC = () => {
         getLibraryAlbums(libraryUrl).then((albums) => {
             setAlbums(albums);
         });
-    }, [query, addMessage, credentials, history]);
+    }, [query, addMessage, credentials, navigate]);
 
     return (
         <Grid container justifyContent="center" className="album-list-page-container">

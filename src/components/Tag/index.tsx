@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import styles from "./index.module.scss";
 
 interface TagProps {
@@ -8,9 +8,9 @@ interface TagProps {
 
 const Tag = (props: TagProps) => {
     const { tag } = props;
-    const history = useHistory();
+    const navigate = useNavigate();
     const onClick = () => {
-        history.push("/tag/" + encodeURI(tag));
+        navigate("/tag/" + encodeURI(tag));
     };
     return (
         <div className={styles.tag} onClick={onClick}>

@@ -1,5 +1,5 @@
 import React, { useMemo, memo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { CircularProgress } from "@mui/material";
 import useRequest from "@/hooks/useRequest";
@@ -27,7 +27,7 @@ const AlbumWallItem: React.FC<Props> = (props) => {
     );
     const { url, token } = credential || {};
     const [albumInfo, loading] = useRequest(() => getAlbumInfo(albumId));
-    const history = useHistory();
+    const navigate = useNavigate();
     const { title, artist, edition } = albumInfo || {};
     const coverUrl = useMemo(() => {
         return `${url}/${albumId}/cover`;
@@ -36,7 +36,7 @@ const AlbumWallItem: React.FC<Props> = (props) => {
         <div
             className={styles.item}
             onClick={() => {
-                history.push(`/album/${albumId}`);
+                navigate(`/album/${albumId}`);
             }}
         >
             {token && <Cover coverUrl={coverUrl} />}

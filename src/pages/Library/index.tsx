@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Grid, Typography } from "@mui/material";
 import { CredentialState } from "@/state/credentials";
 import useMessage from "@/hooks/useMessage";
@@ -18,7 +18,7 @@ const Library: React.FC = () => {
     const [credentials, setCredentials] = useRecoilState(CredentialState);
     const { credentials: libraries } = credentials;
     const [_, { addMessage }] = useMessage();
-    const history = useHistory();
+    const navigate = useNavigate();
     const onLibraryDeleted = useCallback(
         async (deletedLibrary: AnnilToken) => {
             const { id } = deletedLibrary;
@@ -50,9 +50,9 @@ const Library: React.FC = () => {
                 addMessage("error", "请先同步一次该音频仓库");
                 return;
             }
-            history.push(`/album/list?url=${encodeURI(url)}`);
+            navigate(`/album/list?url=${encodeURI(url)}`);
         },
-        [history, addMessage]
+        [navigate, addMessage]
     );
 
     return (

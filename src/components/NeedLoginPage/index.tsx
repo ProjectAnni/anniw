@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useMessage from "@/hooks/useMessage";
 import { CurrentLoginStatus, IsLoadedExtendUserInfo } from "@/state/user";
 import { CredentialState } from "@/state/credentials";
@@ -27,11 +27,12 @@ const NeedLoginPage: React.FC<Props> = (props) => {
     const setFavoritePlaylists = useSetRecoilState(PlaylistsState);
     const [isLoadedExtendUserInfo, setIsLoadedExtendUserInfo] =
         useRecoilState(IsLoadedExtendUserInfo);
-    const history = useHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [_, { addMessage }] = useMessage();
     useEffect(() => {
         if (currentLoginStatus === LoginStatus.LOGGED_OUT) {
-            history.push(`/user/login?return=${history.location.pathname}`);
+            navigate(`/user/login?return=${location.pathname}`);
             return;
         }
         if (!isLoadedExtendUserInfo) {

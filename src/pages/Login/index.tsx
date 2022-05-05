@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Grid } from "@mui/material";
 import { CurrentLoginStatus } from "@/state/user";
 import { LoginStatus } from "@/types/common";
@@ -8,13 +8,13 @@ import LoginForm from "./LoginForm";
 import "./index.scss";
 
 function Login() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const currentLoginStatus = useRecoilValue(CurrentLoginStatus);
     useEffect(() => {
         if (currentLoginStatus === LoginStatus.LOGGED_IN) {
-            history.push("/");
+            navigate("/");
         }
-    }, [currentLoginStatus, history]);
+    }, [currentLoginStatus, navigate]);
     return (
         <Grid
             container

@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { ListItem, ListItemText, ListItemIcon, IconButton } from "@mui/material";
@@ -56,7 +56,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         onPause,
     } = props;
     const { title, artist, type, albumId, albumTitle, discId, trackId } = track;
-    const history = useHistory();
+    const navigate = useNavigate();
     const query = useQuery();
     const [isHighlighted, setIsHighlighted] = useState(false);
     const itemContainerRef = useRef<HTMLLIElement>(null);
@@ -162,10 +162,10 @@ const TrackListItem: React.FC<Props> = (props) => {
     }, [itemIndex, onPlayQueueAddToLater]);
     const onDoubleClick = useCallback(() => {
         query.set("highlight", `${listIndex}-${itemIndex}`);
-        history.replace({
+        navigate({
             search: query.toString(),
         });
-    }, [history, itemIndex, listIndex, query]);
+    }, [itemIndex, listIndex, navigate, query]);
     const secondaryActions = useMemo(
         () => (
             <ItemActions

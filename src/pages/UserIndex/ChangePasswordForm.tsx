@@ -4,7 +4,7 @@ import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
 import { useState } from "react";
 import { changePassword } from "./services";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { CurrentUserInfo } from "@/state/user";
 
@@ -13,7 +13,7 @@ const ChangePasswordForm = () => {
     const [newPassword, setNewPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [_, { addMessage }] = useMessage();
     const setUserInfo = useSetRecoilState(CurrentUserInfo);
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +26,7 @@ const ChangePasswordForm = () => {
         try {
             await changePassword({ oldPassword, newPassword });
             setUserInfo(null);
-            history.push("/user/login");
+            navigate("/user/login");
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);

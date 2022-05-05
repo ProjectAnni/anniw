@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Paper, InputBase, IconButton } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import useQuery from "@/hooks/useQuery";
@@ -7,13 +7,11 @@ import useQuery from "@/hooks/useQuery";
 const SearchBox: React.FC = () => {
     const [keyword, setKeyword] = useState("");
     const query = useQuery();
-    const history = useHistory();
+    const [searchParams, setSearchParams] = useSearchParams();
     const onSubmit = useCallback(() => {
-        query.set("keyword", keyword);
-        history.replace({
-            search: query.toString(),
-        });
-    }, [history, keyword, query]);
+        searchParams.set("keyword", keyword);
+        setSearchParams(searchParams, { replace: true });
+    }, [keyword, searchParams, setSearchParams]);
     useEffect(() => {
         const queryKeyword = query.get("keyword");
         if (queryKeyword) {

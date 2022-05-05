@@ -4,7 +4,7 @@ import { IconButton, List, ListItem, ListItemText } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { PlaylistsState } from "@/state/playlists";
 import { PlaylistInfo } from "@/types/playlist";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     onDelete: (playlist: PlaylistInfo) => void;
@@ -13,9 +13,9 @@ interface Props {
 const PlaylistList: React.FC<Props> = (props) => {
     const { onDelete } = props;
     const playlists = useRecoilValue(PlaylistsState);
-    const history = useHistory();
+    const navigate = useNavigate();
     const onPlaylistItemClicked = (playlist: PlaylistInfo) => {
-        history.push(`/playlist/${playlist.id}`);
+        navigate(`/playlist/${playlist.id}`);
     };
     return (
         <List>
