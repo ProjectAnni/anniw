@@ -20,7 +20,7 @@ const Player: React.FC = () => {
     const [player, { restart, resume, pause, mute, unmute, setVolume: setPlayerVolume }] =
         usePlayer();
     const [playQueue] = usePlayQueue();
-    const { playNext, playRandom, playIndex, replacePlayQueue } = usePlayerController();
+    const { playPrev, playNext, playRandom, playIndex, replacePlayQueue } = usePlayerController();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const [nowPlayingInfo, setNowPlayingInfo] = useRecoilState(NowPlayingInfoState);
     const onChangeLoopMode = (mode: LoopMode) => {
@@ -121,7 +121,7 @@ const Player: React.FC = () => {
                 <PlayerCover />
             </Grid>
             <Grid item flexShrink={0}>
-                <PlayerController playNext={onPlayNext} playFirst={onPlayFirst} />
+                <PlayerController playPrev={playPrev} playNext={onPlayNext} playFirst={onPlayFirst} />
             </Grid>
             <Grid item flexGrow={1}>
                 <PlayerProgress />

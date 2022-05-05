@@ -23,6 +23,29 @@ export default function usePlayQueueController() {
         [playQueue, preload]
     );
 
+    const playPrev = useCallback(() => {
+        if (playQueue[currentPlayIndex - 1]) {
+            play(playQueue[currentPlayIndex - 1]);
+            setCurrentPlayIndex((prev) => {
+                onCurrentPlayIndexChange(prev - 1);
+                return prev - 1;
+            });
+        } else if (currentPlayIndex === 0) {
+            play(playQueue[playQueue.length - 1]);
+            setCurrentPlayIndex(playQueue.length - 1);
+            onCurrentPlayIndexChange(playQueue.length - 1);
+        } else {
+            addMessage("info", "播放队列播完啦");
+        }
+    }, [
+        playQueue,
+        currentPlayIndex,
+        play,
+        setCurrentPlayIndex,
+        onCurrentPlayIndexChange,
+        addMessage,
+    ]);
+
     const playNext = useCallback(() => {
         if (playQueue[currentPlayIndex + 1]) {
             play(playQueue[currentPlayIndex + 1]);
@@ -121,6 +144,7 @@ export default function usePlayQueueController() {
     );
 
     return {
+        playPrev,
         playNext,
         playIndex,
         playRandom,
