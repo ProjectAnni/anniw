@@ -1,5 +1,6 @@
 import { openDB, deleteDB } from "idb";
 import type { DBSchema, IDBPDatabase } from "idb";
+import dayjs from "dayjs";
 import { AlbumDetail, InheritedAlbumDetail } from "@/types/common";
 
 const DB_VERSION = 2;
@@ -13,6 +14,7 @@ enum AlbumStoreNames {
 interface AlbumLibraryMapItem {
     albumId: string;
     availableLibraries: string[];
+    createdAt?: string;
 }
 
 interface AlbumDB extends DBSchema {
@@ -79,6 +81,9 @@ class Album {
             return this.set(AlbumStoreNames.AlbumLibraryMap, {
                 albumId,
                 availableLibraries: newAvailableLibraryUrls,
+                ...(currentAvailableLibraryUrls.length === 0
+                    ? { createdAt: dayjs().format("YYYY-MM-DD") }
+                    : {}),
             });
         }
     }

@@ -61,6 +61,9 @@ const LoginStatus: React.FC = () => {
                             });
                             addMessage("success", "音频仓库同步成功");
                         } catch (e) {
+                            if (e instanceof Error) {
+                                addMessage("error", `同步音频仓库失败: ${e.message}`);
+                            }
                             console.error("同步音频仓库失败", e);
                         }
                     }
