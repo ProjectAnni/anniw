@@ -12,11 +12,12 @@ import PlayerController from "./components/PlayerController";
 import PlayerProgress from "./components/PlayerProgress";
 import PlayerActions from "./components/PlayerActions";
 import { LoopMode } from "./types";
+import useLocalStorageValue from "@/hooks/useLocalStorageValue";
 
 const Player: React.FC = () => {
     const [loopMode, setLoopMode] = useState<LoopMode>(LoopMode.LIST_LOOP);
     const [isMute, setIsMute] = useState(false);
-    const [volume, setVolume] = useState(100);
+    const [volume, setVolume] = useLocalStorageValue("player.volume", "100");
     const [player, { restart, resume, pause, mute, unmute, setVolume: setPlayerVolume }] =
         usePlayer();
     const [playQueue] = usePlayQueue();
@@ -113,7 +114,7 @@ const Player: React.FC = () => {
         }
     }, [replacePlayQueue, setNowPlayingInfo]);
     useEffect(() => {
-        setPlayerVolume(volume / 100);
+        setPlayerVolume(+volume / 100);
     }, [player, setPlayerVolume, volume]);
     return (
         <Grid container>
@@ -121,7 +122,11 @@ const Player: React.FC = () => {
                 <PlayerCover />
             </Grid>
             <Grid item flexShrink={0}>
-                <PlayerController playPrev={playPrev} playNext={onPlayNext} playFirst={onPlayFirst} />
+                <PlayerController
+                    playPrev={playPrev}
+                    playNext={onPlayNext}
+                    playFirst={onPlayFirst}
+                />
             </Grid>
             <Grid item flexGrow={1}>
                 <PlayerProgress />
@@ -130,8 +135,10 @@ const Player: React.FC = () => {
                 <PlayerActions
                     loopMode={loopMode}
                     isMute={isMute}
-                    currentVolume={volume}
-                    setVolume={setVolume}
+                    currentVolume={+volume}
+                    setVolume={(v) => {
+                        setVolume(v.toString());
+                    }}
                     onChangeLoopMode={onChangeLoopMode}
                     onVolumeButtonClick={onVolumeButtonClick}
                 />
