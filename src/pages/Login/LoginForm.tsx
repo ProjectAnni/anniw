@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { TextField, Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import useMessage from "@/hooks/useMessage";
-import useQuery from "@/hooks/useQuery";
 import { CurrentUserInfo } from "@/state/user";
 import storage from "@/utils/storage";
 import { login } from "./services";
@@ -14,9 +14,9 @@ const LoginForm: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [searchParams] = useSearchParams();
     const setCurrentUserInfo = useSetRecoilState(CurrentUserInfo);
     const navigate = useNavigate();
-    const query = useQuery();
     const [_, { addMessage }] = useMessage();
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -32,12 +32,14 @@ const LoginForm: React.FC = () => {
             });
             setCurrentUserInfo(userInfo);
             storage.set("userInfo", userInfo);
-            const returnTo = query.get("return");
-            if (returnTo) {
-                navigate(returnTo);
-            } else {
-                navigate("/");
-            }
+            const returnTo = searchParams.get("return");
+            setTimeout(() => {
+                if (returnTo) {
+                    navigate(returnTo);
+                } else {
+                    navigate("/");
+                }
+            });
         } catch (e) {
             if (e instanceof Error) {
                 addMessage("error", e.message);

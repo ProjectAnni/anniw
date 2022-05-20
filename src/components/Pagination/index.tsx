@@ -1,7 +1,6 @@
 import React, { ReactElement, useState, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Grid, Select, MenuItem, Pagination } from "@mui/material";
-import useQuery from "@/hooks/useQuery";
 
 interface Props<T> {
     items: T[];
@@ -10,11 +9,10 @@ interface Props<T> {
 
 function CommonPagination<T>(props: Props<T>): JSX.Element {
     const { items, children } = props;
-    const query = useQuery();
     const [searchParams, setSearchParams] = useSearchParams();
     const listRef = useRef<HTMLDivElement>(null);
-    const [pageNum, setPageNum] = useState<number>(parseInt(query.get("page") || "1"));
-    const [itemPerPage, setItemPerPage] = useState<number>(parseInt(query.get("count") || "30"));
+    const [pageNum, setPageNum] = useState<number>(parseInt(searchParams.get("page") || "1"));
+    const [itemPerPage, setItemPerPage] = useState<number>(parseInt(searchParams.get("count") || "30"));
     const pageCount = useMemo(
         () => Math.floor(items.length / itemPerPage) + 1,
         [items, itemPerPage]

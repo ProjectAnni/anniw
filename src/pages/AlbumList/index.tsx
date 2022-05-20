@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Grid, Typography } from "@mui/material";
-import useQuery from "@/hooks/useQuery";
 import useMessage from "@/hooks/useMessage";
 import { CredentialState } from "@/state/credentials";
 import CommonPagination from "@/components/Pagination";
@@ -16,7 +15,7 @@ interface LibraryInfo {
 }
 
 const AlbumList: React.FC = () => {
-    const query = useQuery();
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [libraryInfo, setLibraryInfo] = useState<LibraryInfo | null>(null);
     const [albums, setAlbums] = useState<string[]>([]);
@@ -24,7 +23,7 @@ const AlbumList: React.FC = () => {
     const [_, { addMessage }] = useMessage();
 
     useEffect(() => {
-        const libraryUrl = query.get("url");
+        const libraryUrl = searchParams.get("url");
         if (!libraryUrl) {
             addMessage("error", "请指定音频仓库 URL");
             return;
@@ -42,7 +41,7 @@ const AlbumList: React.FC = () => {
         getLibraryAlbums(libraryUrl).then((albums) => {
             setAlbums(albums);
         });
-    }, [query, addMessage, credentials, navigate]);
+    }, [searchParams, addMessage, credentials, navigate]);
 
     return (
         <Grid container justifyContent="center" className="album-list-page-container">

@@ -2,22 +2,20 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Paper, InputBase, IconButton } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
-import useQuery from "@/hooks/useQuery";
 
 const SearchBox: React.FC = () => {
     const [keyword, setKeyword] = useState("");
-    const query = useQuery();
     const [searchParams, setSearchParams] = useSearchParams();
     const onSubmit = useCallback(() => {
         searchParams.set("keyword", keyword);
         setSearchParams(searchParams, { replace: true });
     }, [keyword, searchParams, setSearchParams]);
     useEffect(() => {
-        const queryKeyword = query.get("keyword");
+        const queryKeyword = searchParams.get("keyword");
         if (queryKeyword) {
             setKeyword(queryKeyword);
         }
-    }, [query, setKeyword]);
+    }, [searchParams, setKeyword]);
     return (
         <Paper
             component="form"

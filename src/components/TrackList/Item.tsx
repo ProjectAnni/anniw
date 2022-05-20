@@ -1,12 +1,11 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import classNames from "classnames";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { ListItem, ListItemText, ListItemIcon, IconButton } from "@mui/material";
 import { PlayArrow, Pause } from "@mui/icons-material";
 import useRequest from "@/hooks/useRequest";
 import useMessage from "@/hooks/useMessage";
-import useQuery from "@/hooks/useQuery";
 import { CredentialState } from "@/state/credentials";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { FavoriteTrackAlbumMap, FavoriteTracksState } from "@/state/favorite";
@@ -56,8 +55,7 @@ const TrackListItem: React.FC<Props> = (props) => {
         onPause,
     } = props;
     const { title, artist, type, albumId, albumTitle, discId, trackId } = track;
-    const navigate = useNavigate();
-    const query = useQuery();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [isHighlighted, setIsHighlighted] = useState(false);
     const itemContainerRef = useRef<HTMLLIElement>(null);
     const favoriteRequestLock = useRef(false);
@@ -161,11 +159,11 @@ const TrackListItem: React.FC<Props> = (props) => {
         onPlayQueueAddToLater(itemIndex);
     }, [itemIndex, onPlayQueueAddToLater]);
     const onDoubleClick = useCallback(() => {
-        query.set("highlight", `${listIndex}-${itemIndex}`);
-        navigate({
-            search: query.toString(),
+        searchParams.set("highlight", `${listIndex}-${itemIndex}`);
+        setSearchParams(searchParams, {
+            replace: true,
         });
-    }, [itemIndex, listIndex, navigate, query]);
+    }, [itemIndex, listIndex, searchParams, setSearchParams]);
     const secondaryActions = useMemo(
         () => (
             <ItemActions
@@ -193,7 +191,7 @@ const TrackListItem: React.FC<Props> = (props) => {
     );
     useEffect(() => {
         requestIdleCallback(() => {
-            const highlight = query.get("highlight");
+            const highlight = searchParams.get("highlight");
             if (
                 highlight === `${listIndex}-${itemIndex}` &&
                 itemContainerRef.current &&
@@ -206,7 +204,13 @@ const TrackListItem: React.FC<Props> = (props) => {
                 }, 300);
             }
         });
-    }, [isHighlightCheckDoneState, itemIndex, listIndex, query, setIsHighlightCheckDoneState]);
+    }, [
+        isHighlightCheckDoneState,
+        itemIndex,
+        listIndex,
+        searchParams,
+        setIsHighlightCheckDoneState,
+    ]);
     return (
         <ListItem
             ref={itemContainerRef}

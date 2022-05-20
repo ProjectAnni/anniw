@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Box, Grid, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import SearchBox from "./components/SearchBox";
 import styles from "./index.module.scss";
-import useQuery from "@/hooks/useQuery";
 import { SearchType } from "./types";
 import AlbumSearchResult from "./components/AlbumSearchResult";
 import TrackSearchResult from "./components/TrackSearchResult";
@@ -11,13 +11,13 @@ import TrackSearchResult from "./components/TrackSearchResult";
 const Search = () => {
     const [searchType, setSearchType] = useState<SearchType>(SearchType.TRACK);
     const [keyword, setKeyword] = useState("");
-    const query = useQuery();
+    const [searchParams] = useSearchParams();
     useEffect(() => {
-        const keyword = query.get("keyword");
+        const keyword = searchParams.get("keyword");
         if (keyword) {
             setKeyword(keyword);
         }
-    }, [query]);
+    }, [searchParams]);
     return (
         <Grid container justifyContent="center">
             <Grid item xs={12} className={styles.searchBoxContainer}>
