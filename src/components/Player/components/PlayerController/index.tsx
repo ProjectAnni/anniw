@@ -4,7 +4,7 @@ import { Grid, CircularProgress } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import PrevIcon from "@mui/icons-material/SkipPrevious"
+import PrevIcon from "@mui/icons-material/SkipPrevious";
 import NextIcon from "@mui/icons-material/SkipNext";
 import usePlayer from "@/hooks/usePlayer";
 import { PlayerStatusState } from "@/state/player";
@@ -22,6 +22,9 @@ const PlayerController: React.FC<Props> = (props) => {
     const [player, { resume, pause, restart }] = usePlayer();
     return (
         <Grid container alignItems="center" sx={{ height: "100%" }}>
+            <IconButton color="inherit" aria-label="menu" onClick={playPrev}>
+                <PrevIcon />
+            </IconButton>
             <IconButton
                 color="inherit"
                 aria-label="menu"
@@ -46,9 +49,6 @@ const PlayerController: React.FC<Props> = (props) => {
                         <CircularProgress color="inherit" size="35px" />
                     )}
                 </>
-            </IconButton>
-            <IconButton color="inherit" aria-label="menu" onClick={playPrev}>
-                <PrevIcon />
             </IconButton>
             <IconButton color="inherit" aria-label="menu" onClick={playNext}>
                 <NextIcon />

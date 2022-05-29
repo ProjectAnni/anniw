@@ -31,6 +31,9 @@ const Player: React.FC = () => {
         isMute ? unmute() : mute();
         setIsMute((prevIsMute) => !prevIsMute);
     };
+    const onPlayPrev = useCallback(() => {
+        playPrev();
+    }, [playPrev]);
     const onPlayNext = useCallback(() => {
         if (loopMode === LoopMode.LIST_LOOP) {
             setPlayerStatus(PlayerStatus.ENDED);
@@ -59,6 +62,9 @@ const Player: React.FC = () => {
     const onMediaSessionNextTrack = useCallback(() => {
         onPlayNext();
     }, [onPlayNext]);
+    const onMediaSessionPrevTrack = useCallback(() => {
+        onPlayPrev();
+    }, [onPlayPrev]);
     useEffect(() => {
         player.addEventListener("ended", onPlayNext);
         return () => {
@@ -98,9 +104,16 @@ const Player: React.FC = () => {
             });
             navigator.mediaSession.setActionHandler("play", onMediaSessionPlay);
             navigator.mediaSession.setActionHandler("pause", onMediaSessionPause);
+            navigator.mediaSession.setActionHandler("previoustrack", onMediaSessionPrevTrack);
             navigator.mediaSession.setActionHandler("nexttrack", onMediaSessionNextTrack);
         }
-    }, [nowPlayingInfo, onMediaSessionNextTrack, onMediaSessionPause, onMediaSessionPlay]);
+    }, [
+        nowPlayingInfo,
+        onMediaSessionNextTrack,
+        onMediaSessionPause,
+        onMediaSessionPlay,
+        onMediaSessionPrevTrack,
+    ]);
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);
@@ -123,7 +136,7 @@ const Player: React.FC = () => {
             </Grid>
             <Grid item flexShrink={0}>
                 <PlayerController
-                    playPrev={playPrev}
+                    playPrev={onPlayPrev}
                     playNext={onPlayNext}
                     playFirst={onPlayFirst}
                 />
