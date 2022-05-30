@@ -53,6 +53,8 @@ export enum TrackListFeatures {
     SHOW_ADD_TO_PLAYLIST,
     /** 显示 专辑信息 */
     SHOW_ALBUM_INFO,
+    /** 双击高亮特定 Track */
+    DOUBLE_CLICK_TO_HIGHLIGHT,
 }
 
 export const AdvancedFeatures = [

@@ -159,11 +159,14 @@ const TrackListItem: React.FC<Props> = (props) => {
         onPlayQueueAddToLater(itemIndex);
     }, [itemIndex, onPlayQueueAddToLater]);
     const onDoubleClick = useCallback(() => {
-        searchParams.set("highlight", `${listIndex}-${itemIndex}`);
-        setSearchParams(searchParams, {
-            replace: true,
-        });
-    }, [itemIndex, listIndex, searchParams, setSearchParams]);
+        if (features.includes(TrackListFeatures.DOUBLE_CLICK_TO_HIGHLIGHT)) {
+            searchParams.set("highlight", `${listIndex}-${itemIndex}`);
+            setIsHighlightCheckDoneState(false);
+            setSearchParams(searchParams, {
+                replace: true,
+            });
+        }
+    }, [features, itemIndex, listIndex, searchParams, setIsHighlightCheckDoneState, setSearchParams]);
     const secondaryActions = useMemo(
         () => (
             <ItemActions

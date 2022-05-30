@@ -154,6 +154,7 @@ const AlbumDetail: React.FC = () => {
                                                 TrackListFeatures.SHOW_TRACK_NO,
                                                 TrackListFeatures.SHOW_ADD_TO_LATER,
                                                 TrackListFeatures.SHOW_ADD_TO_PLAYLIST,
+                                                TrackListFeatures.DOUBLE_CLICK_TO_HIGHLIGHT,
                                             ]}
                                             onPlayQueueAdd={onPlayQueueAdd}
                                             onPlayQueueAddToLater={onPlayQueueAddToLater}
