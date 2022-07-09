@@ -56,13 +56,14 @@ const NeedLoginPage: React.FC<Props> = (props) => {
         }
     }, [
         currentLoginStatus,
-        history,
         isLoadedExtendUserInfo,
         addMessage,
         setCredential,
         setFavoritePlaylists,
         setFavoriteTracks,
         setIsLoadedExtendUserInfo,
+        navigate,
+        location.pathname,
     ]);
     if (currentLoginStatus === LoginStatus.UNKNOWN || !isLoadedExtendUserInfo) {
         return <Loading />;
