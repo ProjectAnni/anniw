@@ -10,6 +10,9 @@ export function formatResponse(response: any): any {
     if (typeof response === "string") {
         return response;
     }
+    if (typeof response === "number") {
+        return response;
+    }
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(response)) {
         if (typeof response[key] === "object") {
