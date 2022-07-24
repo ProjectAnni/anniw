@@ -1,37 +1,38 @@
 import React from "react";
-import { BottomNavigation, BottomNavigationAction, Grid } from "@mui/material";
+import { Grid, Tab, Box } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import UserIntroForm from "./UserInfoForm";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import PasswordIcon from "@mui/icons-material/Password";
 import ChangePasswordForm from "./ChangePasswordForm";
+import Settings from './Settings';
 
 const UserIndex = () => {
-    const [tab, setTab] = React.useState(0);
-    let content;
-    switch (tab) {
-        case 0: {
-            content = <UserIntroForm />;
-            break;
-        }
-        case 1: {
-            content = <ChangePasswordForm />;
-        }
-    }
+    const [value, setValue] = React.useState("1");
+
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setValue(newValue);
+    };
     return (
         <Grid container justifyContent="center" alignItems="center">
-            <Grid item>
-                <BottomNavigation showLabels value={tab} onChange={(_, val) => setTab(val)}>
-                    <BottomNavigationAction
-                        label="信息"
-                        icon={<AccountCircleIcon />}
-                    ></BottomNavigationAction>
-                    <BottomNavigationAction
-                        label="密码"
-                        icon={<PasswordIcon />}
-                    ></BottomNavigationAction>
-                </BottomNavigation>
+            <Grid item xs={8}>
+                <TabContext value={value}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                            <Tab label="个人信息" value="1" />
+                            <Tab label="密码" value="2" />
+                            <Tab label="设置" value="3" />
+                        </TabList>
+                    </Box>
+                    <TabPanel value="1">
+                        <UserIntroForm />
+                    </TabPanel>
+                    <TabPanel value="2">
+                        <ChangePasswordForm />
+                    </TabPanel>
+                    <TabPanel value="3">
+                        <Settings />
+                    </TabPanel>
+                </TabContext>
             </Grid>
-            {content}
         </Grid>
     );
 };

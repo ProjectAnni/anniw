@@ -36,14 +36,14 @@ const ChangePasswordForm = () => {
         }
     };
     return (
-        <Grid container justifyContent="center">
+        <Grid container justifyContent="flex-start">
             <Grid item xs={12} lg={3}>
                 <Grid
                     container
                     component="form"
                     direction="column"
                     justifyContent="center"
-                    alignItems="center"
+                    alignItems="flex-start"
                     onSubmit={onSubmit}
                 >
                     <br />

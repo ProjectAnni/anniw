@@ -2,10 +2,11 @@ import { useCallback } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
+import useLocalStorageValue from "./useLocalStorageValue";
 
 const audioInfoCache = new Map();
 
-async function getAudioUrl(url: string) {
+async function getAudioUrl(url: string, quality?: string) {
     try {
         const resp = audioInfoCache.has(url)
             ? audioInfoCache.get(url)
@@ -24,16 +25,20 @@ async function getAudioUrl(url: string) {
             useMSE = false;
         }
 
+        const audioUrl = MediaSource.isTypeSupported(mime)
+            ? `${url}${quality ? `&quality=${quality}` : ""}`
+            : `${url}&quality=lossless`;
+
         const result = {
             useMSE,
             duration,
-            url: MediaSource.isTypeSupported(mime) ? url : `${url}&quality=lossless`,
+            url: audioUrl,
         };
 
         if (useMSE) {
             const mediaSource = new MediaSource();
             mediaSource.addEventListener("sourceopen", () => {
-                fetch(url, { cache: "force-cache" }).then((resp) => {
+                fetch(audioUrl, { cache: "force-cache" }).then((resp) => {
                     // set source buffer mime type
                     const sourceBuffer = mediaSource.addSourceBuffer(mime);
                     let isSourceRemoved = false;
@@ -80,6 +85,7 @@ async function getAudioUrl(url: string) {
 
 export default function usePlayer() {
     const player = useRecoilValue(PlayerState);
+    const [quality] = useLocalStorageValue("player.quality", "lossless");
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const setNowPlayingInfo = useSetRecoilState(NowPlayingInfoState);
     const play = useCallback(
@@ -98,7 +104,7 @@ export default function usePlayer() {
             }
             setPlayerStatus(PlayerStatus.BUFFERING);
             // TODO: make use of audioInfo.useMSE and audioInfo.duration
-            const audioInfo = await getAudioUrl(playUrl);
+            const audioInfo = await getAudioUrl(playUrl, quality);
             player.src = audioInfo.url;
             player.addEventListener(
                 "canplay",
@@ -118,7 +124,7 @@ export default function usePlayer() {
                 { once: true }
             );
         },
-        [player, setPlayerStatus, setNowPlayingInfo]
+        [player, quality, setPlayerStatus, setNowPlayingInfo]
     );
     const restart = useCallback(() => {
         player.currentTime = 0;
@@ -150,12 +156,15 @@ export default function usePlayer() {
     const unmute = useCallback(() => {
         player.muted = false;
     }, [player]);
-    const preload = useCallback(({ playUrl }: PlayQueueItem) => {
-        if (!playUrl) {
-            return;
-        }
-        return getAudioUrl(playUrl);
-    }, []);
+    const preload = useCallback(
+        ({ playUrl }: PlayQueueItem) => {
+            if (!playUrl) {
+                return;
+            }
+            return getAudioUrl(playUrl, quality);
+        },
+        [quality]
+    );
     return [
         player,
         {
