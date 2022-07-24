@@ -5,7 +5,17 @@ import { ExportedPlaylist } from "@/types/exported";
 import { getShare } from "@/pages/ShareDetail/services";
 import { getCoverUrl, parsePlaylists } from "@/pages/ShareDetail/util";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
-import { Divider, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import {
+    Divider,
+    Grid,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Skeleton,
+    Typography,
+} from "@mui/material";
 import styles from "./index.module.scss";
 import Cover from "@/components/Cover";
 import { Pause, PlayArrow } from "@mui/icons-material";
@@ -76,8 +86,10 @@ const ShareDetail = () => {
         if (isPlaying(idx)) {
             if (playerStatus === PlayerStatus.PLAYING) {
                 pause();
-            } else {
+            } else if (playerStatus === PlayerStatus.PAUSED) {
                 resume();
+            } else {
+                replacePlayQueueAndPlay(tracks, idx);
             }
         } else {
             replacePlayQueueAndPlay(tracks, idx);
@@ -163,9 +175,19 @@ const ShareDetail = () => {
             </Grid>
             :
             <>
-                <Typography variant="h2">
-                    加载中
-                </Typography>
+                <Skeleton variant="rectangular" height={32} width="20%" />
+                <div style={{ marginTop: "8px" }}></div>
+                {new Array(10).fill(0).map((_, index) => (
+                    <Skeleton
+                        variant="rectangular"
+                        height={62}
+                        sx={{
+                            bgcolor:
+                                index % 2 === 0 ? "rgba(238, 238, 238, 0.2)" : "#fff",
+                        }}
+                        key={index}
+                    />
+                ))}
             </>
     );
 };
