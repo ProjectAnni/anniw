@@ -26,3 +26,32 @@
     top: 0;
   }
 }
+
+.textContainer {
+  max-width: 80%;
+}
+
+.tag {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+  background-color: rgb(25, 118, 210);
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 12px;
+  line-height: normal;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.title {
+  flex-shrink: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.oddItem {
+  background-color: rgba($color: #eee, $alpha: 0.2);
+}
