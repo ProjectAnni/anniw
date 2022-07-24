@@ -28,6 +28,7 @@ import TagDetail from "./pages/TagDetail";
 import NowPlaying from "./pages/NowPlaying";
 import { DrawerIsOpen } from "./state/ui";
 import styles from "./index.module.scss";
+import ShareDetail from "@/pages/ShareDetail";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
@@ -102,9 +103,7 @@ function AppBody() {
                     <Route
                         path="/queue"
                         element={
-                            <NeedLoginPage>
-                                <PlayQueue />
-                            </NeedLoginPage>
+                            <PlayQueue />
                         }
                     />
                     <Route
@@ -145,6 +144,12 @@ function AppBody() {
                             <NeedLoginPage>
                                 <NowPlaying />
                             </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/s/:shareId"
+                        element={
+                            <ShareDetail />
                         }
                     />
                     <Route path="*" element={<NotFound />} />
