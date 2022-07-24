@@ -8,10 +8,13 @@ const audioInfoCache = new Map();
 
 async function getAudioUrl(url: string, quality?: string) {
     try {
-        const resp = audioInfoCache.has(url)
-            ? audioInfoCache.get(url)
-            : await fetch(url, { method: "HEAD" });
-        audioInfoCache.set(url, resp);
+        const audioUrl = MediaSource.isTypeSupported("audio/aac")
+            ? `${url}${quality ? `&quality=${quality}` : ""}`
+            : `${url}&quality=lossless`;
+        const resp = audioInfoCache.has(audioUrl)
+            ? audioInfoCache.get(audioUrl)
+            : await fetch(audioUrl, { method: "HEAD" });
+        audioInfoCache.set(audioUrl, resp);
         const mime = resp.headers.get("Content-Type") || "audio/aac";
         const originalMime = resp.headers.get("X-Origin-Type") || "audio/flac";
         const duration = Number(resp.headers.get("X-Duration-Seconds") || "300");
@@ -24,10 +27,6 @@ async function getAudioUrl(url: string, quality?: string) {
             // if audio is transcoded and duration > 10 minutes, do not use MSE
             useMSE = false;
         }
-
-        const audioUrl = MediaSource.isTypeSupported(mime)
-            ? `${url}${quality ? `&quality=${quality}` : ""}`
-            : `${url}&quality=lossless`;
 
         const result = {
             useMSE,
