@@ -175,19 +175,34 @@ const ShareDetail = () => {
             </Grid>
             :
             <>
-                <Skeleton variant="rectangular" height={32} width="20%" />
-                <div style={{ marginTop: "8px" }}></div>
-                {new Array(10).fill(0).map((_, index) => (
-                    <Skeleton
-                        variant="rectangular"
-                        height={62}
-                        sx={{
-                            bgcolor:
-                                index % 2 === 0 ? "rgba(238, 238, 238, 0.2)" : "#fff",
-                        }}
-                        key={index}
-                    />
-                ))}
+                <Grid container justifyContent="center" className={styles.pageContainer}>
+                    <div style={{ marginTop: "8px" }}></div>
+                    <Grid item xs={12} lg={8}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} lg={3}>
+                                <div className={styles.coverContainer}>
+                                    <Skeleton variant="rectangular" width="100%" height="100%" />
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} lg={8} className={styles.divider}>
+                        <Divider />
+                    </Grid>
+                    <Grid item xs={12} lg={8}>
+                        {new Array(10).fill(0).map((_, index) => (
+                            <Skeleton
+                                variant="rectangular"
+                                height={62}
+                                sx={{
+                                    bgcolor:
+                                        index % 2 === 0 ? "rgba(238, 238, 238, 0.2)" : "#fff",
+                                }}
+                                key={index}
+                            />
+                        ))}
+                    </Grid>
+                </Grid>
             </>
     );
 };
