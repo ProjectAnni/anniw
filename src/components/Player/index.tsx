@@ -5,6 +5,8 @@ import storage from "@/utils/storage";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerController from "@/hooks/usePlayQueueController";
 import usePlayQueue from "@/hooks/usePlayQueue";
+import useLocalStorageValue from "@/hooks/useLocalStorageValue";
+import useTitle from "@/hooks/useTitle";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import PlayerCover from "./components/PlayerCover";
@@ -12,7 +14,6 @@ import PlayerController from "./components/PlayerController";
 import PlayerProgress from "./components/PlayerProgress";
 import PlayerActions from "./components/PlayerActions";
 import { LoopMode } from "./types";
-import useLocalStorageValue from "@/hooks/useLocalStorageValue";
 
 const Player: React.FC = () => {
     const [loopMode, setLoopMode] = useState<LoopMode>(LoopMode.LIST_LOOP);
@@ -22,6 +23,7 @@ const Player: React.FC = () => {
         usePlayer();
     const [playQueue] = usePlayQueue();
     const { playPrev, playNext, playRandom, playIndex, replacePlayQueue } = usePlayerController();
+    const { updateTitleWithSiteName } = useTitle();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const [nowPlayingInfo, setNowPlayingInfo] = useRecoilState(NowPlayingInfoState);
     const onChangeLoopMode = (mode: LoopMode) => {
@@ -114,6 +116,10 @@ const Player: React.FC = () => {
         onMediaSessionPlay,
         onMediaSessionPrevTrack,
     ]);
+    useEffect(() => {
+        const { title } = nowPlayingInfo || {};
+        title && updateTitleWithSiteName(title);
+    }, [nowPlayingInfo, updateTitleWithSiteName]);
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);
