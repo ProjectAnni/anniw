@@ -1,7 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useCallback, useState } from "react";
 import { TrackInfoWithAlbum } from "@/types/common";
-import { List, ListSubheader } from "@mui/material";
+import { Button, List, ListSubheader } from "@mui/material";
 import ShareDialogTrackItem from "./TrackItem";
+import styles from "./index.module.scss";
 
 interface Props {
     tracks: TrackInfoWithAlbum[];
@@ -38,9 +39,41 @@ const ShareDialogTrackList: React.ForwardRefRenderFunction<TrackListImperativeHa
         );
     }, [tracks, checkedIndexes]);
     useImperativeHandle(ref, () => ({ getSelectedTracks }), [getSelectedTracks]);
+    if (!tracks?.length) {
+        return null;
+    }
     return (
         <List sx={{ width: "100%", marginTop: "16px" }} dense>
-            <ListSubheader>选择分享内容</ListSubheader>
+            <ListSubheader>
+                <div className={styles.subHeader}>
+                    <div>选择分享内容</div>
+                    <div>
+                        <Button
+                            size="small"
+                            variant="text"
+                            onClick={() => {
+                                setCheckedIndexes(
+                                    tracks.map(
+                                        (track) =>
+                                            `${track.albumId}-${track.discId}-${track.trackId}`
+                                    )
+                                );
+                            }}
+                        >
+                            全选
+                        </Button>
+                        <Button
+                            size="small"
+                            variant="text"
+                            onClick={() => {
+                                setCheckedIndexes([]);
+                            }}
+                        >
+                            清除所有
+                        </Button>
+                    </div>
+                </div>
+            </ListSubheader>
             {tracks.map((track) => (
                 <ShareDialogTrackItem
                     track={track}
