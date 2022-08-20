@@ -15,6 +15,8 @@ export interface RequestOptions {
     /** 是否从 Anniv 返回格式中直接取出 data 字段 */
     unwrapResponse?: boolean;
     /** 是否自动 snake-case 转 camel-case */
+    formatRequest?: boolean;
+    /** 是否自动 snake-case 转 camel-case */
     formatResponse?: boolean;
 }
 
@@ -55,12 +57,15 @@ class Request {
             params: {},
             data: {},
         };
-        const { unwrapResponse = true, formatResponse: isFormatResponse = true } =
-            requestOptions || {};
+        const {
+            unwrapResponse = true,
+            formatResponse: isFormatResponse = true,
+            formatRequest: isFormatRequest = true,
+        } = requestOptions || {};
         if (method === "GET") {
-            options.params = formatRequest(payload);
+            options.params = isFormatRequest ? formatRequest(payload) : payload;
         } else {
-            options.data = formatRequest(payload);
+            options.data = isFormatRequest ? formatRequest(payload) : payload;
         }
         try {
             const response = await this.instance.request(options);

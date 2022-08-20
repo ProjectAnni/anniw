@@ -57,7 +57,7 @@ function getTrackMeta(meta: Record<string, AlbumInfo>, track: TrackIdentifier): 
 type ShareAudio = Record<AlbumIdentifier, Record<string, number[]>>
 
 function tokenAvailableFor(token: ExportedToken, track: TrackIdentifier): boolean {
-    const decoded = atob(token.token.split(".")[1]);
+    const decoded = window.atob(token.token.split(".")[1]);
     const audios: ShareAudio = JSON.parse(decoded).audios;
     if (track.albumId in audios) {
         const discs = audios[track.albumId];

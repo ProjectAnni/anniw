@@ -5,6 +5,7 @@ import React, {
     useCallback,
     forwardRef,
     useMemo,
+    startTransition,
 } from "react";
 import { useRecoilValue } from "recoil";
 import { keyBy } from "lodash";
@@ -13,7 +14,11 @@ import { PlayQueueItem } from "@/types/common";
 import usePlayer from "@/hooks/usePlayer";
 import usePlayerController from "@/hooks/usePlayQueueController";
 import { CredentialState } from "@/state/credentials";
-import { getAvailableLibraryForTrack, getCoverUrlForTrack, getPlayUrlForTrack } from "@/utils/library";
+import {
+    getAvailableLibraryForTrack,
+    getCoverUrlForTrack,
+    getPlayUrlForTrack,
+} from "@/utils/library";
 import { NormalTrackItem, TrackItem, TrackItemType, TrackListFeatures } from "./types";
 import Item from "./Item";
 
@@ -76,17 +81,16 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
                     tags: track.tags,
                 });
             }
-            setParsedTracks(result);
+            startTransition(() => {
+                setParsedTracks(result);
+            });
         })();
     }, [allCredentials, tracks]);
     const parsedTrackMap = useMemo<Record<string, PlayQueueItem>>(() => {
         if (!parsedTracks.length) {
             return {};
         }
-        return keyBy(
-            parsedTracks,
-            (track) => `${track.albumId}-${track.discId}-${track.trackId}`
-        );
+        return keyBy(parsedTracks, (track) => `${track.albumId}-${track.discId}-${track.trackId}`);
     }, [parsedTracks]);
     const onPlay = useCallback(
         (index: number) => {
@@ -106,18 +110,30 @@ const TrackList: React.ForwardRefRenderFunction<TrackListImperativeHandles, Prop
     const addAllToPlayQueue = useCallback(() => {
         addToPlayQueue(parsedTracks.filter((t) => !!t.playUrl));
     }, [parsedTracks, addToPlayQueue]);
-    const onItemPlay = useCallback((index: number) => {
-        onPlay(index);
-    }, [onPlay]);
-    const onItemPlayQueueAdd = useCallback((index: number) => {
-        onPlayQueueAdd && onPlayQueueAdd(parsedTracks[index]);
-    }, [onPlayQueueAdd, parsedTracks]);
-    const onItemPlayQueueRemove = useCallback((index: number) => {
-        onPlayQueueRemove && onPlayQueueRemove(parsedTracks[index]);
-    }, [onPlayQueueRemove, parsedTracks]);
-    const onItemPlayQueueAddToLater = useCallback((index: number) => {
-        onPlayQueueAddToLater && onPlayQueueAddToLater(parsedTracks[index]);
-    }, [onPlayQueueAddToLater, parsedTracks]);
+    const onItemPlay = useCallback(
+        (index: number) => {
+            onPlay(index);
+        },
+        [onPlay]
+    );
+    const onItemPlayQueueAdd = useCallback(
+        (index: number) => {
+            onPlayQueueAdd && onPlayQueueAdd(parsedTracks[index]);
+        },
+        [onPlayQueueAdd, parsedTracks]
+    );
+    const onItemPlayQueueRemove = useCallback(
+        (index: number) => {
+            onPlayQueueRemove && onPlayQueueRemove(parsedTracks[index]);
+        },
+        [onPlayQueueRemove, parsedTracks]
+    );
+    const onItemPlayQueueAddToLater = useCallback(
+        (index: number) => {
+            onPlayQueueAddToLater && onPlayQueueAddToLater(parsedTracks[index]);
+        },
+        [onPlayQueueAddToLater, parsedTracks]
+    );
     useImperativeHandle(
         ref,
         () => ({ playAll, addAllToPlayQueue, parsedTracks, index: itemIndex }),
