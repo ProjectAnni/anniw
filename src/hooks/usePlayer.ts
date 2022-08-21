@@ -156,11 +156,16 @@ export default function usePlayer() {
         player.muted = false;
     }, [player]);
     const preload = useCallback(
-        ({ playUrl }: PlayQueueItem) => {
+        async ({ playUrl }: PlayQueueItem) => {
             if (!playUrl) {
                 return;
             }
-            return getAudioUrl(playUrl, quality);
+            const finalUrl = await getAudioUrl(playUrl, quality);
+            let preloadAudioEl: HTMLAudioElement | null = new Audio(finalUrl.url);
+            preloadAudioEl.addEventListener("canplay", () => {
+                preloadAudioEl = null;
+            });
+            return finalUrl;
         },
         [quality]
     );
