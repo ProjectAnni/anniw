@@ -29,6 +29,7 @@ import NowPlaying from "./pages/NowPlaying";
 import { DrawerIsOpen } from "./state/ui";
 import styles from "./index.module.scss";
 import ShareDetail from "@/pages/ShareDetail";
+import FavoriteAlbum from "./pages/FavoriteAlbum";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
@@ -135,6 +136,14 @@ function AppBody() {
                         element={
                             <NeedLoginPage>
                                 <Favorite />
+                            </NeedLoginPage>
+                        }
+                    />
+                    <Route
+                        path="/fav/albums"
+                        element={
+                            <NeedLoginPage>
+                                <FavoriteAlbum />
                             </NeedLoginPage>
                         }
                     />

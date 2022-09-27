@@ -4,11 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useMessage from "@/hooks/useMessage";
 import { CurrentLoginStatus, IsLoadedExtendUserInfo } from "@/state/user";
 import { CredentialState } from "@/state/credentials";
-import { FavoriteTracksState } from "@/state/favorite";
+import { FavoriteAlbumsState, FavoriteTracksState } from "@/state/favorite";
 import { PlaylistsState } from "@/state/playlists";
 import { LoginStatus } from "@/types/common";
 import {
     getAvailableAnnilTokens,
+    getFavoriteAlbums,
     getFavoritePlaylists,
     getFavoriteTracks,
 } from "../LoginStatus/services";
@@ -24,12 +25,13 @@ const NeedLoginPage: React.FC<Props> = (props) => {
     const currentLoginStatus = useRecoilValue(CurrentLoginStatus);
     const setCredential = useSetRecoilState(CredentialState);
     const setFavoriteTracks = useSetRecoilState(FavoriteTracksState);
+    const setFavoriteAlbums = useSetRecoilState(FavoriteAlbumsState);
     const setFavoritePlaylists = useSetRecoilState(PlaylistsState);
     const [isLoadedExtendUserInfo, setIsLoadedExtendUserInfo] =
         useRecoilState(IsLoadedExtendUserInfo);
     const navigate = useNavigate();
     const location = useLocation();
-    const [_, { addMessage }] = useMessage();
+    const [, { addMessage }] = useMessage();
     useEffect(() => {
         if (currentLoginStatus === LoginStatus.LOGGED_OUT) {
             navigate(`/user/login?return=${location.pathname}`);
@@ -38,14 +40,16 @@ const NeedLoginPage: React.FC<Props> = (props) => {
         if (!isLoadedExtendUserInfo) {
             (async () => {
                 try {
-                    const [availableTokens, favoriteTracks, favoritePlaylists] = await Promise.all([
+                    const [availableTokens, favoriteTracks, favoritePlaylists, favoriteAlbums] = await Promise.all([
                         getAvailableAnnilTokens(),
                         getFavoriteTracks(),
                         getFavoritePlaylists(),
+                        getFavoriteAlbums()
                     ]);
                     setCredential({ credentials: availableTokens });
                     setFavoriteTracks(favoriteTracks);
                     setFavoritePlaylists(favoritePlaylists);
+                    setFavoriteAlbums(favoriteAlbums);
                     setIsLoadedExtendUserInfo(true);
                 } catch (e) {
                     if (e instanceof Error) {
@@ -61,6 +65,7 @@ const NeedLoginPage: React.FC<Props> = (props) => {
         setCredential,
         setFavoritePlaylists,
         setFavoriteTracks,
+        setFavoriteAlbums,
         setIsLoadedExtendUserInfo,
         navigate,
         location.pathname,
