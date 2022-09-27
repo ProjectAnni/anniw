@@ -1,6 +1,6 @@
-import React, { memo, useCallback, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import { PlayArrow, Share } from "@mui/icons-material";
+import { Favorite, FavoriteBorder, PlayArrow, Share } from "@mui/icons-material";
 import {
     InheritedAlbumDetail,
     InheritedDiscDetail,
@@ -12,6 +12,13 @@ import Artist from "@/components/Artist";
 import ShareDialog from "@/components/ShareDialog";
 import Placeholder from "./Placeholder";
 import styles from "./index.module.scss";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { FavoriteAlbumsState } from "@/state/favorite";
+import {
+    addFavoriteAlbum,
+    deleteFavoriteAlbum,
+    getFavoriteAlbums,
+} from "@/components/LoginStatus/services";
 
 interface Props {
     albumInfo?: InheritedAlbumDetail;
@@ -42,6 +49,23 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
     const onShareCancel = useCallback(() => {
         setIsShowShareDialog(false);
     }, []);
+    const [favoriteAlbums, setFavoriteAlbums] = useRecoilState(FavoriteAlbumsState);
+    const isFavoriteAlbum = useMemo(() => {
+        if (!albumInfo) return false;
+        return favoriteAlbums.indexOf(albumInfo.albumId) !== -1;
+    }, [albumInfo, favoriteAlbums]);
+    const onToggleFavorite = useCallback(() => {
+        if (!albumInfo) return;
+        let prom: Promise<unknown>;
+        if (isFavoriteAlbum) {
+            prom = deleteFavoriteAlbum(albumInfo.albumId);
+        } else {
+            prom = addFavoriteAlbum(albumInfo.albumId);
+        }
+        prom.then(() => {
+            getFavoriteAlbums().then(setFavoriteAlbums);
+        });
+    }, [albumInfo, isFavoriteAlbum, setFavoriteAlbums]);
     if (!albumInfo) {
         return <Placeholder />;
     }
@@ -61,6 +85,11 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
                 ))}
             </div>
             <div className={styles.actions}>
+                <Tooltip title={isFavoriteAlbum ? "取消喜欢" : "添加喜欢"}>
+                    <IconButton onClick={onToggleFavorite}>
+                        {isFavoriteAlbum ? <Favorite /> : <FavoriteBorder />}
+                    </IconButton>
+                </Tooltip>
                 <Tooltip title="分享">
                     <IconButton
                         onClick={() => {
