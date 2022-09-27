@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { Favorite, FavoriteBorder, PlayArrow, Share } from "@mui/icons-material";
 import {
@@ -12,7 +12,7 @@ import Artist from "@/components/Artist";
 import ShareDialog from "@/components/ShareDialog";
 import Placeholder from "./Placeholder";
 import styles from "./index.module.scss";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { FavoriteAlbumsState } from "@/state/favorite";
 import {
     addFavoriteAlbum,
