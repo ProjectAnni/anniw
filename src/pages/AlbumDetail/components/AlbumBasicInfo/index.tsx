@@ -56,13 +56,13 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
     }, [albumInfo, favoriteAlbums]);
     const onToggleFavorite = useCallback(() => {
         if (!albumInfo) return;
-        let prom: Promise<unknown>;
+        let promise: Promise<unknown>;
         if (isFavoriteAlbum) {
-            prom = deleteFavoriteAlbum(albumInfo.albumId);
+            promise = deleteFavoriteAlbum(albumInfo.albumId);
         } else {
-            prom = addFavoriteAlbum(albumInfo.albumId);
+            promise = addFavoriteAlbum(albumInfo.albumId);
         }
-        prom.then(() => {
+        promise.then(() => {
             getFavoriteAlbums().then(setFavoriteAlbums);
         });
     }, [albumInfo, isFavoriteAlbum, setFavoriteAlbums]);
