@@ -2,33 +2,34 @@ import React from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { Container, AppBar, Toolbar, CssBaseline, createTheme, ThemeProvider } from "@mui/material";
-import { AnniwAppBar } from "./components/AppBar";
-import { AnniwDrawer } from "./components/Drawer";
-import ErrorBoundary from "./components/ErrorBoundary";
-import GlobalMessage from "./components/GlobalMessage";
-import LoginStatus from "./components/LoginStatus";
-import NeedLoginPage from "./components/NeedLoginPage";
-import Player from "./components/Player";
-import NotFound from "./pages/NotFound";
-import Loading from "./components/Loading";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Logout from "./pages/Logout";
-import Library from "./pages/Library";
-import AlbumList from "./pages/AlbumList";
-import AlbumDetail from "./pages/AlbumDetail";
-import PlayQueue from "./pages/PlayQueue";
-import Search from "./pages/Search";
-import Favorite from "./pages/Favorite";
-import UserIndex from "./pages/UserIndex";
-import Playlist from "./pages/Playlist";
-import PlaylistDetail from "./pages/PlaylistDetail";
-import Tags from "./pages/Tags";
-import TagDetail from "./pages/TagDetail";
-import NowPlaying from "./pages/NowPlaying";
-import { DrawerIsOpen } from "./state/ui";
-import styles from "./index.module.scss";
+import { AnniwAppBar } from "@/components/AppBar";
+import { AnniwDrawer } from "@/components/Drawer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import GlobalMessage from "@/components/GlobalMessage";
+import LoginStatus from "@/components/LoginStatus";
+import NeedLoginPage from "@/components/NeedLoginPage";
+import Player from "@/components/Player";
+import NotFound from "@/pages/NotFound";
+import Loading from "@/components/Loading";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import Logout from "@/pages/Logout";
+import Library from "@/pages/Library";
+import AlbumList from "@/pages/AlbumList";
+import AlbumDetail from "@/pages/AlbumDetail";
+import PlayQueue from "@/pages/PlayQueue";
+import Search from "@/pages/Search";
+import Favorite from "@/pages/Favorite";
+import UserIndex from "@/pages/UserIndex";
+import Playlist from "@/pages/Playlist";
+import PlaylistDetail from "@/pages/PlaylistDetail";
+import Tags from "@/pages/Tags";
+import TagDetail from "@/pages/TagDetail";
+import NowPlaying from "@/pages/NowPlaying";
+import { DrawerIsOpen } from "@/state/ui";
+import styles from "@/index.module.scss";
 import ShareDetail from "@/pages/ShareDetail";
+import FavoriteAlbum from "@/pages/FavoriteAlbum";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);
@@ -100,12 +101,7 @@ function AppBody() {
                             </NeedLoginPage>
                         }
                     />
-                    <Route
-                        path="/queue"
-                        element={
-                            <PlayQueue />
-                        }
-                    />
+                    <Route path="/queue" element={<PlayQueue />} />
                     <Route
                         path="/playlist"
                         element={
@@ -130,14 +126,24 @@ function AppBody() {
                             </NeedLoginPage>
                         }
                     />
-                    <Route
-                        path="/fav"
-                        element={
-                            <NeedLoginPage>
-                                <Favorite />
-                            </NeedLoginPage>
-                        }
-                    />
+                    <Route path="/fav">
+                        <Route
+                            index
+                            element={
+                                <NeedLoginPage>
+                                    <Favorite />
+                                </NeedLoginPage>
+                            }
+                        />
+                        <Route
+                            path="albums"
+                            element={
+                                <NeedLoginPage>
+                                    <FavoriteAlbum />
+                                </NeedLoginPage>
+                            }
+                        />
+                    </Route>
                     <Route
                         path="/now"
                         element={
@@ -146,12 +152,7 @@ function AppBody() {
                             </NeedLoginPage>
                         }
                     />
-                    <Route
-                        path="/s/:shareId"
-                        element={
-                            <ShareDetail />
-                        }
-                    />
+                    <Route path="/s/:shareId" element={<ShareDetail />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
                 <AppBar

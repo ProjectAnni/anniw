@@ -13,3 +13,8 @@ export const FavoriteTrackAlbumMap = selector({
         return groupBy(get(FavoriteTracksState), "albumId");
     },
 });
+
+export const FavoriteAlbumsState = atom<string[]>({
+    key: "FavoriteAlbumsState",
+    default: [],
+});

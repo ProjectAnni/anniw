@@ -16,6 +16,16 @@ export function getFavoriteTracks() {
 export function getFavoritePlaylists() {
     return request.get<PlaylistInfo[]>("/api/playlists");
 }
+export async function getFavoriteAlbums() {
+    return await request.get<string[]>("/api/favorite/album");
+}
+
+export async function addFavoriteAlbum(albumId: string) {
+    return await request.put("/api/favorite/album", { albumId });
+}
+export async function deleteFavoriteAlbum(albumId: string) {
+    return await request.delete("/api/favorite/album", { albumId });
+}
 
 export function getLibraryAlbums(library: AnnilToken) {
     return request.get<string[]>(
