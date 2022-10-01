@@ -16,7 +16,7 @@ import {
 import Album from '@mui/icons-material/Album';
 
 const Menu = () => {
-    const [favOpen, setFavOpen] = useState(false);
+    const [favOpen, setFavOpen] = useState(true);
     const navigate = useNavigate();
     return (
         <List
@@ -54,7 +54,7 @@ const Menu = () => {
                     <Favorite />
                 </ListItemIcon>
                 <ListItemText primary="喜欢"></ListItemText>
-                {favOpen ? <ExpandMore /> : <ExpandLess />}
+                {favOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={favOpen} timeout="auto" unmountOnExit>
                 <ListItem sx={{ pl: 4 }} button component={Link} to="/fav">
