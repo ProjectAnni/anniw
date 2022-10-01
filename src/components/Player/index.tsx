@@ -13,6 +13,7 @@ import PlayerCover from "./components/PlayerCover";
 import PlayerController from "./components/PlayerController";
 import PlayerProgress from "./components/PlayerProgress";
 import PlayerActions from "./components/PlayerActions";
+import PlayerBackground from "./components/PlayerBackground";
 import { LoopMode } from "./types";
 
 const Player: React.FC = () => {
@@ -162,6 +163,7 @@ const Player: React.FC = () => {
                     onVolumeButtonClick={onVolumeButtonClick}
                 />
             </Grid>
+            <PlayerBackground />
         </Grid>
     );
 };
