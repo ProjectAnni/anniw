@@ -65,3 +65,7 @@ export function parseArtists(artistStr: string) {
         idx: 0,
     });
 }
+
+const requestIdleCallback = window.requestIdleCallback || window.setTimeout;
+
+export { requestIdleCallback };

@@ -11,6 +11,7 @@ import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { FavoriteTrackAlbumMap, FavoriteTracksState } from "@/state/favorite";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { getAvailableLibraryForTrack } from "@/utils/library";
+import { requestIdleCallback } from '@/utils/helper';
 import { IsHighlightCheckDoneState } from "./store";
 import { addFavorite, removeFavorite } from "./services";
 import { TrackListFeatures } from "./types";

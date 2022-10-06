@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
+import { requestIdleCallback } from '@/utils/helper';
 
 interface Props {
     title: string;
