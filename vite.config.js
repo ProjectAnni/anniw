@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import { viteMockServe } from "vite-plugin-mock";
+import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
 
 // https://vitejs.dev/config/
@@ -10,6 +11,15 @@ export default defineConfig({
     },
     plugins: [
         reactRefresh(),
+        VitePWA({
+            strategies: "injectManifest",
+            srcDir: "src",
+            filename: "service-worker.ts",
+            devOptions: {
+                enabled: true,
+                type: "module",
+            },
+        }),
         // viteMockServe({
         //     mockPath: "mock",
         //     supportTs: true,

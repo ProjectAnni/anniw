@@ -19,7 +19,7 @@
         "noImplicitAny": true,
         "noImplicitThis": true,
         "strictNullChecks": true,
-        "types": ["vite/client", "node"],
+        "types": ["vite/client", "vite-plugin-pwa/client", "node"],
         "paths": {
             "@/*": ["src/*"]
         }

@@ -2,18 +2,20 @@ import { useCallback } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
+import { addQueries } from "@/utils/url";
 import useLocalStorageValue from "./useLocalStorageValue";
 
 const audioInfoCache = new Map();
 
 async function getAudioUrl(url: string, quality?: string) {
     try {
-        const audioUrl = MediaSource.isTypeSupported("audio/aac")
-            ? `${url}${quality ? `&quality=${quality}` : ""}`
-            : `${url}&quality=lossless`;
+        const audioUrl = addQueries(url, {
+            quality: MediaSource.isTypeSupported("audio/aac") ? quality ?? "" : "lossless",
+            _xcw: "1", // cache flag
+        });
         const resp = audioInfoCache.has(audioUrl)
             ? audioInfoCache.get(audioUrl)
-            : await fetch(audioUrl, { method: "HEAD" });
+            : await fetch(audioUrl, { method: "HEAD", mode: "cors" });
         audioInfoCache.set(audioUrl, resp);
         const mime = resp.headers.get("Content-Type") || "audio/aac";
         const originalMime = resp.headers.get("X-Origin-Type") || "audio/flac";
@@ -37,7 +39,7 @@ async function getAudioUrl(url: string, quality?: string) {
         if (useMSE) {
             const mediaSource = new MediaSource();
             mediaSource.addEventListener("sourceopen", () => {
-                fetch(audioUrl, { cache: "force-cache" }).then((resp) => {
+                fetch(audioUrl, { cache: "force-cache", mode: "cors" }).then((resp) => {
                     // set source buffer mime type
                     const sourceBuffer = mediaSource.addSourceBuffer(mime);
                     let isSourceRemoved = false;
