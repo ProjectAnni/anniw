@@ -13,11 +13,15 @@ export default defineConfig({
         reactRefresh(),
         VitePWA({
             strategies: "injectManifest",
+            registerType: "autoUpdate",
             srcDir: "src",
             filename: "service-worker.ts",
             devOptions: {
                 enabled: true,
                 type: "module",
+            },
+            injectManifest: {
+                injectionPoint: undefined,
             },
         }),
         // viteMockServe({

@@ -5,6 +5,9 @@ import { CacheableResponsePlugin } from "workbox-cacheable-response";
 import { RangeRequestsPlugin } from "workbox-range-requests";
 import { ExpirationPlugin } from "workbox-expiration";
 
+declare let self: ServiceWorkerGlobalScope;
+
+self.skipWaiting();
 clientsClaim();
 
 registerRoute(
