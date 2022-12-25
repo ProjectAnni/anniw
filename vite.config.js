@@ -12,6 +12,7 @@ export default defineConfig({
     plugins: [
         reactRefresh(),
         VitePWA({
+            mode: "development",
             strategies: "injectManifest",
             registerType: "autoUpdate",
             srcDir: "src",

@@ -29,5 +29,8 @@ registerRoute(
             }),
             new RangeRequestsPlugin(),
         ],
+        matchOptions: {
+            ignoreVary: true,
+        },
     })
 );
