@@ -31,6 +31,9 @@ export function formatRequest(request: any): any {
     if (typeof request === "string") {
         return request;
     }
+    if (typeof request === "number") {
+        return request;
+    }
     if (request === null || request === undefined) {
         request = {};
     }

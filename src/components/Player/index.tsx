@@ -14,6 +14,8 @@ import PlayerController from "./components/PlayerController";
 import PlayerProgress from "./components/PlayerProgress";
 import PlayerActions from "./components/PlayerActions";
 import PlayerBackground from "./components/PlayerBackground";
+import { recordTrackPlayback } from "./services";
+import { PLAYBACK_RECORD_DELAY } from "./constants";
 import { LoopMode } from "./types";
 
 const Player: React.FC = () => {
@@ -121,6 +123,24 @@ const Player: React.FC = () => {
         const { title } = nowPlayingInfo || {};
         title && updateTitleWithSiteName(title);
     }, [nowPlayingInfo, updateTitleWithSiteName]);
+    useEffect(() => {
+        const timer = window.setTimeout(() => {
+            const { albumId, discId, trackId } = nowPlayingInfo || {};
+            if (albumId && discId && trackId && playerStatus === PlayerStatus.PLAYING) {
+                recordTrackPlayback({
+                    track: {
+                        albumId,
+                        discId,
+                        trackId,
+                    },
+                    at: [Math.round(Date.now()) - PLAYBACK_RECORD_DELAY],
+                });
+            }
+        }, PLAYBACK_RECORD_DELAY);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [nowPlayingInfo, playerStatus]);
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);
