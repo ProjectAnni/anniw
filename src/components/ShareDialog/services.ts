@@ -3,6 +3,8 @@ import request from "@/api/request";
 import { groupBy } from "lodash";
 import { getAvailableLibraryForAlbum } from "@/utils/library";
 
+class NoAvailableTokenForShare extends Error {}
+
 export interface CreateShareLinkParams {
     name: string;
     description: string;
@@ -32,9 +34,11 @@ export async function createShareLink({
     const albumIds = Object.keys(groupBy(tracks, (track) => track.albumId));
     const albumTokenIdMap: Record<AlbumIdentifier, string> = {};
     for (const albumId of albumIds) {
-        const tokenIdForAlbum = await getAvailableLibraryForAlbum(albumId, allCredentials);
+        const tokenIdForAlbum = await getAvailableLibraryForAlbum(albumId, allCredentials, true);
         if (tokenIdForAlbum) {
             albumTokenIdMap[albumId] = tokenIdForAlbum.id;
+        } else {
+            throw new NoAvailableTokenForShare("无可用于分享的Token");
         }
     }
     const payload = {

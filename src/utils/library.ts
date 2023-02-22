@@ -2,25 +2,37 @@ import { groupBy } from "lodash";
 import { DiscIdentifier, AnnilToken, PlayQueueItem, TrackIdentifier } from "@/types/common";
 import { default as AlbumDB } from "@/db/album";
 
-export function getAvailableLibraryForAlbum(albumId: string, allCredentials: AnnilToken[]) {
-    return getAvailableLibraryForTrack({ albumId }, allCredentials);
+function isTokenAvailableForShare(token: string): boolean {
+    const tokenPayload = JSON.parse(window.atob(token.split(".")[1]));
+    return tokenPayload?.share?.allowed;
+}
+
+export function getAvailableLibraryForAlbum(
+    albumId: string,
+    allCredentials: AnnilToken[],
+    needSharePermission = false
+) {
+    return getAvailableLibraryForTrack({ albumId }, allCredentials, needSharePermission);
 }
 
 export async function getAvailableLibraryForTrack<T extends { albumId: string } = PlayQueueItem>(
     track: T,
-    allCredentials: AnnilToken[]
+    allCredentials: AnnilToken[],
+    needSharePermission = false
 ): Promise<AnnilToken | undefined> {
     const { albumId } = track;
     const availableLibraries = await AlbumDB.getAvailableLibraries(albumId);
     if (availableLibraries.length > 0) {
         const credentialUrlMap = groupBy(
-            allCredentials.filter((c) => availableLibraries.includes(c.url)),
+            allCredentials
+                .filter((c) => (needSharePermission ? isTokenAvailableForShare(c.token) : true))
+                .filter((c) => availableLibraries.includes(c.url)),
             "url"
         );
         const librariesByPriority = availableLibraries
             .filter((lib) => Object.keys(credentialUrlMap).includes(lib))
             .sort((a, b) => credentialUrlMap[b][0].priority - credentialUrlMap[a][0].priority);
-        return credentialUrlMap[librariesByPriority[0]][0];
+        return credentialUrlMap[librariesByPriority[0]]?.[0];
     }
 }
 

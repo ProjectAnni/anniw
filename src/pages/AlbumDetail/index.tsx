@@ -14,11 +14,11 @@ import {
 } from "@/types/common";
 import TrackList, { TrackListImperativeHandles } from "@/components/TrackList";
 import { TrackItem, TrackItemType, TrackListFeatures } from "@/components/TrackList/types";
+import { getAvailableLibraryForTrack } from "@/utils/library";
 import AlbumCover from "./components/AlbumCover";
 import AlbumBasicInfo from "./components/AlbumBasicInfo";
 import { getAlbumInfo } from "./services";
 import styles from "./index.module.scss";
-import { getAvailableLibraryForTrack } from "@/utils/library";
 
 const AlbumDetail: React.FC = () => {
     const trackListRefs = useRef<TrackListImperativeHandles[]>([]);
