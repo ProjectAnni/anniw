@@ -7,6 +7,7 @@ import usePlayerController from "@/hooks/usePlayQueueController";
 import usePlayQueue from "@/hooks/usePlayQueue";
 import useLocalStorageValue from "@/hooks/useLocalStorageValue";
 import useTitle from "@/hooks/useTitle";
+import useMediaSession from "@/hooks/useMediaSession";
 import { NowPlayingInfoState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import PlayerCover from "./components/PlayerCover";
@@ -29,16 +30,20 @@ const Player: React.FC = () => {
     const { updateTitleWithSiteName } = useTitle();
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const [nowPlayingInfo, setNowPlayingInfo] = useRecoilState(NowPlayingInfoState);
+
     const onChangeLoopMode = (mode: LoopMode) => {
         setLoopMode(mode);
     };
+
     const onVolumeButtonClick = () => {
         isMute ? unmute() : mute();
         setIsMute((prevIsMute) => !prevIsMute);
     };
+
     const onPlayPrev = useCallback(() => {
         playPrev();
     }, [playPrev]);
+
     const onPlayNext = useCallback(() => {
         if (loopMode === LoopMode.LIST_LOOP) {
             setPlayerStatus(PlayerStatus.ENDED);
@@ -51,9 +56,11 @@ const Player: React.FC = () => {
             playRandom();
         }
     }, [loopMode, playNext, playRandom, restart, setPlayerStatus]);
+
     const onPlayFirst = useCallback(() => {
         playIndex(0);
     }, [playIndex]);
+
     const onMediaSessionPlay = useCallback(() => {
         if (playerStatus === PlayerStatus.ENDED) {
             restart();
@@ -61,68 +68,38 @@ const Player: React.FC = () => {
             resume();
         }
     }, [playerStatus, restart, resume]);
+
     const onMediaSessionPause = useCallback(() => {
         pause();
     }, [pause]);
+
     const onMediaSessionNextTrack = useCallback(() => {
         onPlayNext();
     }, [onPlayNext]);
+
     const onMediaSessionPrevTrack = useCallback(() => {
         onPlayPrev();
     }, [onPlayPrev]);
+
     useEffect(() => {
         player.addEventListener("ended", onPlayNext);
         return () => {
             player.removeEventListener("ended", onPlayNext);
         };
-    }, [player, playNext, setPlayerStatus, loopMode, restart, playRandom, onPlayNext]);
-    useEffect(() => {
-        if ("mediaSession" in window.navigator) {
-            if (playerStatus === PlayerStatus.PLAYING) {
-                navigator.mediaSession.playbackState = "playing";
-            } else if (playerStatus === PlayerStatus.PAUSED) {
-                navigator.mediaSession.playbackState = "paused";
-            }
-        }
-    }, [playerStatus]);
-    useEffect(() => {
-        if (
-            "mediaSession" in window.navigator &&
-            !!nowPlayingInfo.title &&
-            nowPlayingInfo.title !== navigator.mediaSession.metadata?.title
-        ) {
-            window.navigator.mediaSession.metadata = new MediaMetadata({
-                title: nowPlayingInfo.title,
-                artist: nowPlayingInfo.artist,
-                album: nowPlayingInfo.albumTitle,
-                ...(nowPlayingInfo.coverUrl
-                    ? {
-                          artwork: [
-                              {
-                                  src: nowPlayingInfo.coverUrl,
-                                  sizes: "512x512",
-                                  type: "image/jpeg",
-                              },
-                          ],
-                      }
-                    : {}),
-            });
-            navigator.mediaSession.setActionHandler("play", onMediaSessionPlay);
-            navigator.mediaSession.setActionHandler("pause", onMediaSessionPause);
-            navigator.mediaSession.setActionHandler("previoustrack", onMediaSessionPrevTrack);
-            navigator.mediaSession.setActionHandler("nexttrack", onMediaSessionNextTrack);
-        }
-    }, [
-        nowPlayingInfo,
-        onMediaSessionNextTrack,
-        onMediaSessionPause,
-        onMediaSessionPlay,
-        onMediaSessionPrevTrack,
-    ]);
+    }, [player, onPlayNext]);
+
+    useMediaSession({
+        onPrevTrack: onMediaSessionPrevTrack,
+        onNextTrack: onMediaSessionNextTrack,
+        onPause: onMediaSessionPause,
+        onPlay: onMediaSessionPlay,
+    });
+
     useEffect(() => {
         const { title } = nowPlayingInfo || {};
         title && updateTitleWithSiteName(title);
     }, [nowPlayingInfo, updateTitleWithSiteName]);
+
     useEffect(() => {
         const timer = window.setTimeout(() => {
             const { albumId, discId, trackId } = nowPlayingInfo || {};
@@ -141,11 +118,13 @@ const Player: React.FC = () => {
             clearTimeout(timer);
         };
     }, [nowPlayingInfo, playerStatus]);
+
     useEffect(() => {
         if (playQueue.length > 0) {
             storage.set("playlist", playQueue);
         }
     }, [playQueue]);
+
     useEffect(() => {
         const localPlayQueue = storage.get<PlayQueueItem[]>("playlist");
         if (localPlayQueue?.length) {
@@ -153,9 +132,11 @@ const Player: React.FC = () => {
             setNowPlayingInfo(localPlayQueue[0]);
         }
     }, [replacePlayQueue, setNowPlayingInfo]);
+
     useEffect(() => {
         setPlayerVolume(+volume / 100);
     }, [player, setPlayerVolume, volume]);
+
     return (
         <Grid container>
             <Grid item flexShrink={0}>
