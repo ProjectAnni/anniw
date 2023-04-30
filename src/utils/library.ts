@@ -4,7 +4,7 @@ import { default as AlbumDB } from "@/db/album";
 
 function isTokenAvailableForShare(token: string): boolean {
     const tokenPayload = JSON.parse(window.atob(token.split(".")[1]));
-    return tokenPayload?.share?.allowed;
+    return !!tokenPayload?.share;
 }
 
 export function getAvailableLibraryForAlbum(
