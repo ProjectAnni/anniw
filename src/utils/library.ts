@@ -2,9 +2,11 @@ import { groupBy } from "lodash";
 import { DiscIdentifier, AnnilToken, PlayQueueItem, TrackIdentifier } from "@/types/common";
 import { default as AlbumDB } from "@/db/album";
 
-function isTokenAvailableForShare(token: string): boolean {
+function isTokenAvailableForShare(token: string, albumId: string): boolean {
     const tokenPayload = JSON.parse(window.atob(token.split(".")[1]));
-    return !!tokenPayload?.share;
+    const share = tokenPayload?.share;
+    const allowed: string[] | null | undefined = share?.allowed;
+    return share && (!allowed || allowed.includes(albumId));
 }
 
 export function getAvailableLibraryForAlbum(
@@ -25,7 +27,7 @@ export async function getAvailableLibraryForTrack<T extends { albumId: string } 
     if (availableLibraries.length > 0) {
         const credentialUrlMap = groupBy(
             allCredentials
-                .filter((c) => (needSharePermission ? isTokenAvailableForShare(c.token) : true))
+                .filter((c) => (needSharePermission ? isTokenAvailableForShare(c.token, albumId) : true))
                 .filter((c) => availableLibraries.includes(c.url)),
             "url"
         );
