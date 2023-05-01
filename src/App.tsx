@@ -9,6 +9,7 @@ import GlobalMessage from "@/components/GlobalMessage";
 import LoginStatus from "@/components/LoginStatus";
 import NeedLoginPage from "@/components/NeedLoginPage";
 import Player from "@/components/Player";
+import { DrawerIsOpen } from "@/state/ui";
 import NotFound from "@/pages/NotFound";
 import Loading from "@/components/Loading";
 import Login from "@/pages/Login";
@@ -26,10 +27,9 @@ import PlaylistDetail from "@/pages/PlaylistDetail";
 import Tags from "@/pages/Tags";
 import TagDetail from "@/pages/TagDetail";
 import NowPlaying from "@/pages/NowPlaying";
-import { DrawerIsOpen } from "@/state/ui";
-import styles from "@/index.module.scss";
 import ShareDetail from "@/pages/ShareDetail";
 import FavoriteAlbum from "@/pages/FavoriteAlbum";
+import styles from "@/index.module.scss";
 
 function AppBody() {
     const open = useRecoilValue(DrawerIsOpen);

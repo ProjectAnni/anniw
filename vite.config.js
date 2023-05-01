@@ -11,20 +11,20 @@ export default defineConfig({
     },
     plugins: [
         reactRefresh(),
-        VitePWA({
-            mode: "development",
-            strategies: "injectManifest",
-            registerType: "autoUpdate",
-            srcDir: "src",
-            filename: "service-worker.ts",
-            devOptions: {
-                enabled: true,
-                type: "module",
-            },
-            injectManifest: {
-                injectionPoint: undefined,
-            },
-        }),
+        // VitePWA({
+        //     mode: "development",
+        //     strategies: "injectManifest",
+        //     registerType: "autoUpdate",
+        //     srcDir: "src",
+        //     filename: "service-worker.ts",
+        //     devOptions: {
+        //         enabled: true,
+        //         type: "module",
+        //     },
+        //     injectManifest: {
+        //         injectionPoint: undefined,
+        //     },
+        // }),
         // viteMockServe({
         //     mockPath: "mock",
         //     supportTs: true,

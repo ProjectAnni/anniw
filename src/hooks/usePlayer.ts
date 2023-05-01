@@ -5,83 +5,97 @@ import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { addQueries } from "@/utils/url";
 import useLocalStorageValue from "./useLocalStorageValue";
 
-const audioInfoCache = new Map();
+interface AudioPlayInfo {
+    duration?: number;
+    url: string;
+    useMSE: boolean;
+}
 
-async function getAudioUrl(url: string, quality?: string) {
-    try {
-        const audioUrl = addQueries(url, {
-            quality: MediaSource.isTypeSupported("audio/aac") ? quality ?? "" : "lossless",
-            _xcw: "1", // cache flag
-        });
-        const resp = audioInfoCache.has(audioUrl)
-            ? audioInfoCache.get(audioUrl)
-            : await fetch(audioUrl, { method: "HEAD", mode: "cors" });
-        audioInfoCache.set(audioUrl, resp);
-        const mime = resp.headers.get("Content-Type") || "audio/aac";
-        const originalMime = resp.headers.get("X-Origin-Type") || "audio/flac";
-        const duration = Number(resp.headers.get("X-Duration-Seconds") || "300");
-
-        let useMSE = !!window.MediaSource && MediaSource.isTypeSupported(mime);
-        if (mime === originalMime) {
-            // if audio is lossless, prefer direct URL
-            useMSE = false;
-        } else if (mime !== originalMime && duration > 10 * 60) {
-            // if audio is transcoded and duration > 10 minutes, do not use MSE
-            useMSE = false;
+async function getAudioPlayInfo(url: string, quality?: string): Promise<AudioPlayInfo> {
+    const audioUrl = addQueries(url, {
+        quality:
+            !!window.MediaSource && MediaSource.isTypeSupported("audio/aac")
+                ? quality ?? ""
+                : "lossless",
+        _xcw: "1", // cache flag
+    });
+    const useMSE = (() => {
+        if (!window.MediaSource) {
+            // MediaSource is not supported by browser.
+            return false;
         }
-
-        const result = {
-            useMSE,
-            duration,
-            url: audioUrl,
-        };
-
-        if (useMSE) {
-            const mediaSource = new MediaSource();
-            mediaSource.addEventListener("sourceopen", () => {
-                fetch(audioUrl, { cache: "force-cache", mode: "cors" }).then((resp) => {
-                    // set source buffer mime type
-                    const sourceBuffer = mediaSource.addSourceBuffer(mime);
-                    let isSourceRemoved = false;
-
-                    // set media source duration
-                    mediaSource.duration = duration;
-
-                    // get body as reader
-                    const reader = resp.body?.getReader();
-                    const appendBuffer = ({
-                        done,
-                        value,
-                    }: ReadableStreamDefaultReadResult<Uint8Array>) => {
-                        if (!isSourceRemoved) {
-                            if (!done && value) {
-                                // body not finished, append buffer
-                                sourceBuffer.appendBuffer(value);
-                            } else {
-                                // update duration after stream ends
-                                mediaSource.endOfStream();
-                            }
-                        }
-                    };
-                    mediaSource.sourceBuffers.addEventListener("removesourcebuffer", () => {
-                        isSourceRemoved = true;
-                    });
-
-                    // read body on source buffer update ends
-                    sourceBuffer.addEventListener("updateend", () =>
-                        reader?.read().then(appendBuffer)
-                    );
-
-                    // read body once
-                    reader?.read().then(appendBuffer);
-                });
-            });
-            result.url = URL.createObjectURL(mediaSource);
+        if (!window.MediaSource.isTypeSupported("audio/aac")) {
+            // Transcoded audio is in aac format.
+            return false;
         }
-        return result;
-    } catch (e) {
-        return { url };
+        return true;
+    })();
+
+    if (!useMSE) {
+        return { url: audioUrl, useMSE };
     }
+
+    let resolveAudioPlayInfo: (info: AudioPlayInfo) => void;
+
+    const mediaSource = new MediaSource();
+
+    fetch(audioUrl, { cache: "force-cache", mode: "cors" }).then((resp) => {
+        const duration = resp.headers.get("x-duration-seconds")!;
+        const mime = resp.headers.get("content-type")!;
+
+        if (!duration || !mime) {
+            // Missing necessary headers to use MediaSource, fallback
+            resolveAudioPlayInfo({ url, useMSE: false });
+            return;
+        }
+
+        if (!MediaSource.isTypeSupported(mime)) {
+            resolveAudioPlayInfo({ url, useMSE: false });
+            return;
+        }
+
+        resolveAudioPlayInfo({
+            url: URL.createObjectURL(mediaSource),
+            duration: +duration,
+            useMSE,
+        });
+
+        mediaSource.addEventListener("sourceopen", () => {
+            // set source buffer mime type
+            const sourceBuffer = mediaSource.addSourceBuffer(mime);
+            let isSourceRemoved = false;
+
+            // set media source duration
+            mediaSource.duration = +duration;
+
+            // get body as reader
+            const reader = resp.body?.getReader();
+            const appendBuffer = ({ done, value }: ReadableStreamReadResult<Uint8Array>) => {
+                if (!isSourceRemoved) {
+                    if (!done && value) {
+                        // body not finished, append buffer
+                        sourceBuffer.appendBuffer(value);
+                    } else {
+                        // update duration after stream ends
+                        mediaSource.endOfStream();
+                    }
+                }
+            };
+            mediaSource.sourceBuffers.addEventListener("removesourcebuffer", () => {
+                isSourceRemoved = true;
+            });
+
+            // read body on source buffer update ends
+            sourceBuffer.addEventListener("updateend", () => reader?.read().then(appendBuffer));
+
+            // read body once
+            reader?.read().then(appendBuffer);
+        });
+    });
+
+    return new Promise((resolve) => {
+        resolveAudioPlayInfo = resolve;
+    });
 }
 
 export default function usePlayer() {
@@ -89,6 +103,7 @@ export default function usePlayer() {
     const [quality] = useLocalStorageValue("player.quality", "lossless");
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const setNowPlayingInfo = useSetRecoilState(NowPlayingInfoState);
+
     const play = useCallback(
         async ({
             playUrl,
@@ -105,7 +120,7 @@ export default function usePlayer() {
             }
             setPlayerStatus(PlayerStatus.BUFFERING);
             // TODO: make use of audioInfo.useMSE and audioInfo.duration
-            const audioInfo = await getAudioUrl(playUrl, quality);
+            const audioInfo = await getAudioPlayInfo(playUrl, quality);
             player.src = audioInfo.url;
             player.addEventListener(
                 "canplay",
@@ -162,7 +177,7 @@ export default function usePlayer() {
             if (!playUrl) {
                 return;
             }
-            const finalUrl = await getAudioUrl(playUrl, quality);
+            const finalUrl = await getAudioPlayInfo(playUrl, quality);
             let preloadAudioEl: HTMLAudioElement | null = new Audio(finalUrl.url);
             preloadAudioEl.addEventListener("canplay", () => {
                 preloadAudioEl = null;
