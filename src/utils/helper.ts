@@ -1,3 +1,5 @@
+import { TagType } from "@/types/common";
+
 export function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -64,6 +66,47 @@ export function parseArtists(artistStr: string) {
         data: artistStr,
         idx: 0,
     });
+}
+
+const tagPrefixes: TagType[] = [
+    "animation",
+    "artist",
+    "category",
+    "default",
+    "game",
+    "group",
+    "organization",
+    "project",
+    "series",
+];
+
+export interface ParsedTag {
+    type: TagType;
+    name: string;
+}
+
+function parseTag(tagString: string): ParsedTag {
+    if (!tagString.includes(":")) {
+        return {
+            type: "default",
+            name: tagString,
+        };
+    }
+    const [prefix, ...suffix] = tagString.split(":");
+    if (!tagPrefixes.includes(prefix as TagType)) {
+        return {
+            type: "default",
+            name: tagString,
+        };
+    }
+    return {
+        type: prefix as TagType,
+        name: suffix.join(""),
+    };
+}
+
+export function parseTags(tags: string[]): ParsedTag[] {
+    return tags.map(parseTag);
 }
 
 const requestIdleCallback = window.requestIdleCallback || window.setTimeout;

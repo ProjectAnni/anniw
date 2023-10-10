@@ -19,6 +19,7 @@ import {
     deleteFavoriteAlbum,
     getFavoriteAlbums,
 } from "@/components/LoginStatus/services";
+import { ParsedTag, parseTags } from "@/utils/helper";
 
 interface Props {
     albumInfo?: InheritedAlbumDetail;
@@ -46,6 +47,12 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
             )
             .flat();
     }, [albumInfo]);
+    const parsedTags = useMemo<ParsedTag[]>(() => {
+        if (!tags.length) {
+            return [];
+        }
+        return parseTags(tags);
+    }, [tags]);
     const onShareCancel = useCallback(() => {
         setIsShowShareDialog(false);
     }, []);
@@ -80,8 +87,8 @@ const AlbumBasicInfo: React.FC<Props> = (props) => {
             </div>
             <div className={styles.artist}>{!!artist && <Artist artist={artist} />}</div>
             <div className={styles.tagsContainer}>
-                {tags.map((tag) => (
-                    <Tag key={tag} tag={tag} />
+                {parsedTags.map((tag) => (
+                    <Tag key={`${tag.type}:${tag.name}`} tag={tag} />
                 ))}
             </div>
             <div className={styles.actions}>

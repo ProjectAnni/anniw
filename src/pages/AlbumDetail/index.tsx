@@ -63,7 +63,7 @@ const AlbumDetail: React.FC = () => {
         const tracksForAdding: PlayQueueItem[] = [];
         trackListRefs.current
             .sort((a, b) => a.index - b.index)
-            .forEach((ref, index) => {
+            .forEach((ref) => {
                 tracksForAdding.push(...ref.parsedTracks.filter((i) => !!i.playUrl));
             });
         replacePlayQueueAndPlay(tracksForAdding, 0);
