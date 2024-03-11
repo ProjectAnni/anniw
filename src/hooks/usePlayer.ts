@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { NowPlayingInfoState, PlayerState, PlayerStatusState } from "@/state/player";
+import { NowPlayingInfoState, PlayerDurationState, PlayerState, PlayerStatusState } from "@/state/player";
 import { PlayerStatus, PlayQueueItem } from "@/types/common";
 import { addQueries } from "@/utils/url";
 import useLocalStorageValue from "./useLocalStorageValue";
@@ -50,7 +50,7 @@ async function getAudioPlayInfo(url: string, quality?: string): Promise<AudioPla
         }
 
         if (!MediaSource.isTypeSupported(mime)) {
-            resolveAudioPlayInfo({ url, useMSE: false });
+            resolveAudioPlayInfo({ url, useMSE: false, duration: +duration });
             return;
         }
 
@@ -100,6 +100,7 @@ async function getAudioPlayInfo(url: string, quality?: string): Promise<AudioPla
 
 export default function usePlayer() {
     const player = useRecoilValue(PlayerState);
+    const [playerDuration, setPlayerDuration] = useRecoilState(PlayerDurationState);
     const [quality] = useLocalStorageValue("player.quality", "lossless");
     const [playerStatus, setPlayerStatus] = useRecoilState(PlayerStatusState);
     const setNowPlayingInfo = useSetRecoilState(NowPlayingInfoState);
@@ -119,7 +120,7 @@ export default function usePlayer() {
                 return;
             }
             setPlayerStatus(PlayerStatus.BUFFERING);
-            // TODO: make use of audioInfo.useMSE and audioInfo.duration
+            // TODO: make use of audioInfo.useMSE
             const audioInfo = await getAudioPlayInfo(playUrl, quality);
             player.src = audioInfo.url;
             player.addEventListener(
@@ -127,6 +128,7 @@ export default function usePlayer() {
                 () => {
                     player.play();
                     setPlayerStatus(PlayerStatus.PLAYING);
+                    if(!!audioInfo.duration) setPlayerDuration(+audioInfo.duration);
                     setNowPlayingInfo({
                         title,
                         artist,

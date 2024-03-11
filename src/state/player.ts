@@ -19,3 +19,8 @@ export const NowPlayingInfoState = atom<Partial<PlayQueueItem>>({
     key: "NowPlayingInfoState",
     default: {},
 });
+
+export const PlayerDurationState = atom({
+    key: "PlayerDurationState",
+    default: 0,
+});
