@@ -110,7 +110,7 @@ const Player: React.FC = () => {
                         discId,
                         trackId,
                     },
-                    at: [Math.round(Date.now()) - PLAYBACK_RECORD_DELAY],
+                    at: [Math.round((Math.round(Date.now()) - PLAYBACK_RECORD_DELAY) / 1000)],
                 });
             }
         }, PLAYBACK_RECORD_DELAY);
